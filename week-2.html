@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Week 1</title>
+<title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Week 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -154,6 +154,12 @@ body {
   font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
   color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
 }
+.kpi-delta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+  margin-top: 6px;
+}
+.kpi-delta.up { color: #45E85C; }
+.kpi-delta.down { color: #FF5C9E; }
 
 /* ---------- CARD ---------- */
 .card {
@@ -201,6 +207,10 @@ body {
   font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
   color: rgba(255,255,255,0.45); text-transform: uppercase;
 }
+.volume-delta {
+  font-size: 10px; font-weight: 500; margin-top: 8px;
+}
+.volume-delta.up { color: #45E85C; }
 
 /* Volume bar chart */
 .vol-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; }
@@ -397,11 +407,20 @@ body {
 
 <script>
 const DATA = {
-  week: 1,
-  dateRange: "Jun 10 – 16, 2026",
+  week: 2,
+  dateRange: "Jun 17 – 23, 2026",
   totalSpend: 48365,
 
   kpi: {
+    impressions: 3488280,
+    clicks: 7350,
+    visitors: 9665,
+    signups: 1922,
+    depositors: 209,
+    activeTraders: 1192
+  },
+
+  week1: {
     impressions: 1454961,
     clicks: 10556,
     visitors: 18079,
@@ -411,6 +430,15 @@ const DATA = {
   },
 
   volume: {
+    outcomeTotal: 5312780,
+    hlTotal: 27697473,
+    platformShare: 19.2,
+    outcomeWC: 4551535,
+    hlWC: 18469623,
+    wcShare: 24.6
+  },
+
+  week1Volume: {
     outcomeTotal: 1394003,
     hlTotal: 36105890,
     platformShare: 3.9,
@@ -420,22 +448,21 @@ const DATA = {
   },
 
   daily: [
-    { date: "Jun 10", day: "Wed", impressions: 140000, clicks: 1528, visitors: 3254, signups: 471, depositors: 30, traders: 164, outcomeVol: 122600, hlVol: 5100000, outcomeWcVol: 65000, hlWcVol: 3200000, wcShare: 2.0 },
-    { date: "Jun 11", day: "Thu", impressions: 170000, clicks: 1607, visitors: 2521, signups: 286, depositors: 22, traders: 159, outcomeVol: 172500, hlVol: 5200000, outcomeWcVol: 95000, hlWcVol: 3300000, wcShare: 2.9 },
-    { date: "Jun 12", day: "Fri", impressions: 195000, clicks: 1493, visitors: 1988, signups: 196, depositors: 21, traders: 158, outcomeVol: 373000, hlVol: 5300000, outcomeWcVol: 195000, hlWcVol: 3400000, wcShare: 5.7 },
-    { date: "Jun 13", day: "Sat", impressions: 240000, clicks: 1488, visitors: 2483, signups: 175, depositors: 20, traders: 167, outcomeVol: 180300, hlVol: 5400000, outcomeWcVol: 100000, hlWcVol: 3500000, wcShare: 2.9 },
-    { date: "Jun 14", day: "Sun", impressions: 227000, clicks: 1399, visitors: 2700, signups: 167, depositors: 23, traders: 157, outcomeVol: 186500, hlVol: 5100000, outcomeWcVol: 105000, hlWcVol: 3200000, wcShare: 3.3 },
-    { date: "Jun 15", day: "Mon", impressions: 237000, clicks: 1520, visitors: 2822, signups: 192, depositors: 27, traders: 164, outcomeVol: 142903, hlVol: 5005890, outcomeWcVol: 80000, hlWcVol: 3100000, wcShare: 2.6 },
-    { date: "Jun 16", day: "Tue", impressions: 245961, clicks: 1521, visitors: 2311, signups: 173, depositors: 26, traders: 168, outcomeVol: 216200, hlVol: 5000000, outcomeWcVol: 170000, hlWcVol: 3400000, wcShare: 5.0 }
+    { date: "Jun 17", day: "Tue", impressions: 615041, clicks: 1517, visitors: 1299, signups: 398, depositors: 24, traders: 183, outcomeVol: 578980, hlVol: 3927457, hlWcVol: 2229735, outcomeWcVol: 362100, wcShare: 16.2 },
+    { date: "Jun 18", day: "Wed", impressions: 357194, clicks: 803, visitors: 1049, signups: 347, depositors: 27, traders: 163, outcomeVol: 466800, hlVol: 3207109, hlWcVol: 2014831, outcomeWcVol: 412900, wcShare: 20.5 },
+    { date: "Jun 19", day: "Thu", impressions: 398999, clicks: 986, visitors: 1011, signups: 343, depositors: 20, traders: 169, outcomeVol: 643200, hlVol: 2764809, hlWcVol: 1642456, outcomeWcVol: 565900, wcShare: 34.5 },
+    { date: "Jun 20", day: "Fri", impressions: 536101, clicks: 914, visitors: 772, signups: 194, depositors: 24, traders: 153, outcomeVol: 1500000, hlVol: 4545678, hlWcVol: 3717826, outcomeWcVol: 1400000, wcShare: 37.7 },
+    { date: "Jun 21", day: "Sat", impressions: 525000, clicks: 892, visitors: 769, signups: 174, depositors: 20, traders: 162, outcomeVol: 1600000, hlVol: 4701217, hlWcVol: 3737293, outcomeWcVol: 1488165, wcShare: 39.8 },
+    { date: "Jun 22", day: "Sun", impressions: 525852, clicks: 1342, visitors: 1095, signups: 204, depositors: 42, traders: 177, outcomeVol: 242800, hlVol: 4402238, hlWcVol: 2261206, outcomeWcVol: 122178, wcShare: 5.4 },
+    { date: "Jun 23", day: "Mon", impressions: 530093, clicks: 896, visitors: 3670, signups: 262, depositors: 52, traders: 185, outcomeVol: 281000, hlVol: 4148965, hlWcVol: 2866276, outcomeWcVol: 200292, wcShare: 7.0 }
   ],
 
   channelImpressions: [
-    { name: "Telegram WC Sponsor", views: 892200, color: "#45E85C" },
-    { name: "X Organic", views: 301500, color: "#3B82F6" },
-    { name: "Telegram Ads", views: 161700, color: "#1FCFA0" },
-    { name: "X Giveaways", views: 79376, color: "#FF5C9E" },
-    { name: "Telegram Organic", views: 119, color: "#F58220" },
-    { name: "CoConnect (Alphabot)", views: 0, color: "#F58220" }
+    { name: "Telegram WC Sponsor", views: 3000000, color: "#45E85C" },
+    { name: "Telegram Ads", views: 434800, color: "#1FCFA0" },
+    { name: "X Organic", views: 61568, color: "#3B82F6" },
+    { name: "CoConnect (Alphabot)", views: 11978, color: "#F58220" },
+    { name: "Telegram Organic", views: 0, color: "#F58220" }
   ],
 
   conversions: [
@@ -475,6 +502,11 @@ function formatCurrencyFull(n) {
   return '$' + formatNumber(n);
 }
 function formatPercent(n) { return n.toFixed(1) + '%'; }
+function calcDelta(current, prev) {
+  if (prev === 0) return { pct: current > 0 ? 100 : 0, dir: 'up' };
+  const pct = ((current - prev) / prev) * 100;
+  return { pct: Math.abs(pct).toFixed(0), dir: pct >= 0 ? 'up' : 'down' };
+}
 </script>
 
 <!-- NAV -->
@@ -493,7 +525,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       <div class="live-dot"></div>
       LIVE
     </div>
-    <div class="date-badge">JUN 10 – 16, 2026</div>
+    <div class="date-badge">JUN 17 – 23, 2026</div>
   </div>
 </nav>
 
@@ -502,14 +534,14 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
   <!-- WEEK NAV -->
   <div class="week-nav">
     <a href="overall.html">Overall</a>
-    <a href="index.html" class="active">Week 1</a>
-    <a href="week-2.html">Week 2</a>
+    <a href="index.html">Week 1</a>
+    <a href="week-2.html" class="active">Week 2</a>
   </div>
 
   <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
-      <div class="title-sub">WEEKLY ROLLUP · WEEK 1</div>
+      <div class="title-sub">WEEKLY ROLLUP · WEEK 2</div>
       <h1 class="title-h1">
         World Cup 2026<br>
         <span class="green">Campaign</span>
@@ -545,28 +577,31 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
 // ===================== KPI CARDS =====================
 (function() {
   const d = DATA.kpi;
-  const spend = DATA.totalSpend;
   const ctr = (d.clicks / d.impressions * 100).toFixed(2);
   const depPct = (d.depositors / d.signups * 100).toFixed(1);
   const traderPct = (d.activeTraders / d.signups * 100).toFixed(0);
 
   const kpis = [
-    { key: 'impressions', label: 'Impressions', color: '#F58220', sub: 'week 1 total' },
-    { key: 'clicks', label: 'Link Clicks', color: '#3B82F6', sub: `${ctr}% CTR` },
-    { key: 'visitors', label: 'Unique Visitors', color: '#1FCFA0', sub: 'site reach' },
-    { key: 'signups', label: 'Signups', color: '#45E85C', sub: 'week 1 total' },
-    { key: 'depositors', label: 'Depositors', color: '#FF5C9E', sub: `${depPct}% of signups` },
-    { key: 'activeTraders', label: 'Active Traders', color: '#9B7CFF', sub: `${traderPct}% of signups` }
+    { key: 'impressions', label: 'Impressions', color: '#F58220', w1key: 'impressions', sub: 'week 2 total' },
+    { key: 'clicks', label: 'Link Clicks', color: '#3B82F6', w1key: 'clicks', sub: `${ctr}% CTR` },
+    { key: 'visitors', label: 'Unique Visitors', color: '#1FCFA0', w1key: 'visitors', sub: 'site reach' },
+    { key: 'signups', label: 'Signups', color: '#45E85C', w1key: 'signups', sub: 'week 2 total' },
+    { key: 'depositors', label: 'Depositors', color: '#FF5C9E', w1key: 'depositors', sub: `${depPct}% of signups` },
+    { key: 'activeTraders', label: 'Active Traders', color: '#9B7CFF', w1key: 'activeTraders', sub: `${traderPct}% of signups` }
   ];
   const grid = document.getElementById('kpiGrid');
   kpis.forEach(k => {
     const val = DATA.kpi[k.key];
+    const w1val = DATA.week1[k.w1key];
+    const delta = calcDelta(val, w1val);
+    const arrow = delta.dir === 'up' ? '&#9650;' : '&#9660;';
     grid.innerHTML += `
       <div class="kpi-card">
         <div class="kpi-bar" style="background:${k.color}"></div>
         <div class="kpi-label" style="color:${k.color}">${k.label}</div>
         <div class="kpi-value">${formatCompact(val)}</div>
         <div class="kpi-sub">${k.sub}</div>
+        <div class="kpi-delta ${delta.dir}">${arrow} ${delta.pct}% vs W1</div>
       </div>`;
   });
 })();
@@ -574,6 +609,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
 // ===================== VOLUME =====================
 (function() {
   const v = DATA.volume;
+  const v1 = DATA.week1Volume;
   const maxVol = Math.max(...DATA.daily.map(d => d.outcomeVol));
 
   let barsHtml = '';
@@ -606,6 +642,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
           <div class="volume-bar-fill" style="width:${v.platformShare}%; background:#45E85C"></div>
         </div>
         <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome ${formatCompactShort(v.outcomeTotal)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL ${formatCompactShort(v.hlTotal)}</div>
+        <div class="volume-delta up">&#9650; +${(v.platformShare - v1.platformShare).toFixed(1)}pp vs W1 (${formatPercent(v1.platformShare)})</div>
       </div>
       <div>
         <div class="volume-col-label">World Cup Markets</div>
@@ -615,6 +652,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
           <div class="volume-bar-fill" style="width:${v.wcShare}%; background:#45E85C"></div>
         </div>
         <div class="volume-legend"><span style="color:#F58220">&#9679;</span> Outcome ${formatCompactShort(v.outcomeWC)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC ${formatCompactShort(v.hlWC)}</div>
+        <div class="volume-delta up">&#9650; +${(v.wcShare - v1.wcShare).toFixed(1)}pp vs W1 (${formatPercent(v1.wcShare)})</div>
       </div>
       <div>
         <div class="volume-col-label">Daily Outcome Volume</div>
@@ -667,7 +705,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
   document.getElementById('impressionsCard').innerHTML = `
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#45E85C"></div> IMPRESSIONS BY CHANNEL</div>
-      <div class="card-meta">REACH · JUN 10 – 16</div>
+      <div class="card-meta">REACH · JUN 17 – 23</div>
     </div>
     <div class="imp-chart">
       ${rowsHtml}
@@ -716,7 +754,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       <div class="card-title"><div class="dot" style="background:#45E85C"></div> DAILY TOTALS</div>
       <div class="metric-switcher">${btnsHtml}</div>
     </div>
-    <div class="daily-subtitle" id="dailySubtitle">${metrics[0].label} · Jun 10 – 16</div>
+    <div class="daily-subtitle" id="dailySubtitle">${metrics[0].label} · Jun 17 – 23</div>
     <div class="daily-chart" id="dailyChartArea">${renderDailyChart(metrics[0].key)}</div>`;
 
   // Interactive switcher
@@ -726,7 +764,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       this.classList.add('active');
       const mk = this.dataset.metric;
       const label = metrics.find(m => m.key === mk).label;
-      document.getElementById('dailySubtitle').textContent = label + ' · Jun 10 – 16';
+      document.getElementById('dailySubtitle').textContent = label + ' · Jun 17 – 23';
       document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
     });
   });
@@ -771,7 +809,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       </tbody>
     </table>
     <div class="conv-footnote">Campaign totals from Channel Summary. Weekly source breakdown not available.</div>
-    <div class="conv-footnote" style="margin-top:8px;font-style:italic">From Jun 10–16, post-sign-in events (deposit, trade) are unattributed due to losing tracking parameters in the sign-in process.</div>`;
+    <div class="conv-footnote" style="margin-top:8px;font-style:italic">From Jun 10–23, post-sign-in events (deposit, trade) are unattributed due to losing tracking parameters in the sign-in process.</div>`;
 })();
 
 // ===================== DAILY BREAKDOWN =====================
@@ -818,7 +856,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       <tbody>
         ${rowsHtml}
         <tr class="summary-row">
-          <td>WEEK 1</td>
+          <td>WEEK 2</td>
           <td>${formatNumber(totals.impressions)}</td>
           <td>${formatNumber(totals.clicks)}</td>
           <td>${formatNumber(totals.visitors)}</td>
