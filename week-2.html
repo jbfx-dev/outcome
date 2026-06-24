@@ -42,16 +42,12 @@ body {
   background: rgba(10,10,11,0.74);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
-.nav-left { display: flex; align-items: center; gap: 0; }
-.nav-logo { color: #45E85C; width: 20px; height: 24px; flex-shrink: 0; }
-.nav-brand {
-  font-family: 'Inter', sans-serif; font-weight: 800; font-size: 17px;
-  letter-spacing: 0.12em; color: white; margin-left: 10px;
-}
-.nav-divider { color: rgba(255,255,255,0.25); margin: 0 2px; font-weight: 300; font-size: 17px; }
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
 .nav-subtitle {
   font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.5); margin-left: 2px;
+  color: rgba(255,255,255,0.5);
 }
 .nav-right { display: flex; align-items: center; gap: 12px; }
 .live-badge {
@@ -512,11 +508,17 @@ function calcDelta(current, prev) {
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-left">
-    <svg class="nav-logo" viewBox="0 0 535 659" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M500.177 0L354.882 276.503H199.008L195.182 284.529L162.665 352.733H0L118.846 127.157H134.912C220.341 127.157 298.979 78.265 343.294 0H500.177Z" fill="currentColor"/>
-      <path d="M534.641 304.729L416.027 531H399.981C314.254 531 235.682 579.705 191.274 658.506H34.3944L179.916 381.165H335.733L339.58 373.205L372.669 304.729H534.641Z" fill="currentColor"/>
+    <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
+      <path d="M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z"/>
+      <path d="M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z"/>
+      <path d="M563.684 339.077C493.476 339.077 454 289.961 454 231.619C454 173.776 493.476 124.659 563.684 124.659C633.892 124.659 673.369 173.776 673.369 231.619C673.369 289.961 633.892 339.077 563.684 339.077ZM490.228 231.619C490.228 271.76 512.465 307.164 563.684 307.164C614.904 307.164 637.14 271.76 637.14 231.619C637.14 192.226 614.904 156.573 563.684 156.573C512.465 156.573 490.228 192.226 490.228 231.619Z"/>
+      <path d="M831.867 336.584V307.912C819.375 326.611 799.637 339.077 771.404 339.077C731.178 339.077 704.694 312.151 704.694 267.771V174.524H738.673V263.283C738.673 293.451 753.414 309.907 782.897 309.907C824.122 309.907 831.867 278.243 831.867 261.289V174.524H865.847V336.584H831.867Z"/>
+      <path d="M1029.93 174.524V203.695H971.711V280.237C971.711 300.682 975.209 307.413 989.451 307.413H1029.93V336.584H983.704C947.726 336.584 938.481 318.633 938.481 286.221V203.695H889.76V174.524H913.496C936.482 174.524 943.228 160.063 942.979 127.152H976.209C976.209 152.334 971.462 171.283 959.719 174.524H1029.93Z"/>
+      <path d="M1186.73 237.852C1185.23 220.898 1170.74 201.451 1137.26 201.451C1099.28 201.451 1084.04 223.89 1084.04 255.554V256.302C1084.04 287.218 1099.28 309.657 1137.51 309.657C1172.99 309.657 1185.23 290.21 1186.98 273.007L1187.73 266.275H1222.21L1221.46 273.007C1217.71 305.917 1191.98 339.077 1136.76 339.077C1078.04 339.077 1049.31 304.92 1049.31 255.554V255.055C1049.31 206.188 1078.04 172.031 1136.76 172.031C1191.48 172.031 1218.46 204.692 1221.46 237.852L1222.21 245.082H1187.73L1186.73 237.852Z"/>
+      <path d="M1331.91 339.077C1274.45 339.077 1246.21 304.92 1246.21 255.554C1246.21 206.188 1274.45 172.031 1331.91 172.031C1389.63 172.031 1417.61 206.188 1417.61 255.554C1417.61 304.92 1389.63 339.077 1331.91 339.077ZM1280.94 255.554C1280.94 287.218 1294.69 309.657 1331.91 309.657C1369.39 309.657 1383.13 287.218 1383.13 255.554C1383.13 223.89 1369.39 201.451 1331.91 201.451C1294.69 201.451 1280.94 223.89 1280.94 255.554Z"/>
+      <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
+      <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
     </svg>
-    <span class="nav-brand">OUTCOME</span>
     <span class="nav-divider">/</span>
     <span class="nav-subtitle">CAMPAIGN TRACKER</span>
   </div>
@@ -578,12 +580,13 @@ function calcDelta(current, prev) {
 (function() {
   const d = DATA.kpi;
   const ctr = (d.clicks / d.impressions * 100).toFixed(2);
+  const uvPct = (d.clicks / d.visitors * 100).toFixed(1);
   const depPct = (d.depositors / d.signups * 100).toFixed(1);
   const traderPct = (d.activeTraders / d.signups * 100).toFixed(0);
 
   const kpis = [
     { key: 'impressions', label: 'Impressions', color: '#F58220', w1key: 'impressions', sub: 'week 2 total' },
-    { key: 'clicks', label: 'Link Clicks', color: '#3B82F6', w1key: 'clicks', sub: `${ctr}% CTR` },
+    { key: 'clicks', label: 'Link Clicks', color: '#3B82F6', w1key: 'clicks', sub: `${ctr}% CTR · ${uvPct}% of UVs` },
     { key: 'visitors', label: 'Unique Visitors', color: '#1FCFA0', w1key: 'visitors', sub: 'site reach' },
     { key: 'signups', label: 'Signups', color: '#45E85C', w1key: 'signups', sub: 'week 2 total' },
     { key: 'depositors', label: 'Depositors', color: '#FF5C9E', w1key: 'depositors', sub: `${depPct}% of signups` },
@@ -631,7 +634,7 @@ function calcDelta(current, prev) {
   document.getElementById('volumeCard').innerHTML = `
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#45E85C"></div> TRADING VOLUME VS HYPERLIQUID</div>
-      <div class="card-meta">OUTCOME SHARE OF HL PERPS VOLUME</div>
+      <div class="card-meta">OUTCOME SHARE OF HL HIP-4 VOLUME</div>
     </div>
     <div class="volume-grid">
       <div>
@@ -720,28 +723,63 @@ function calcDelta(current, prev) {
 // ===================== DAILY TOTALS =====================
 (function() {
   const metrics = [
+    { key: 'visits', label: 'Visits' },
     { key: 'signups', label: 'Signups' },
-    { key: 'clicks', label: 'Clicks' },
-    { key: 'visitors', label: 'Visitors' },
     { key: 'traders', label: 'Traders' }
   ];
 
   function renderDailyChart(metricKey) {
-    const vals = DATA.daily.map(d => d[metricKey]);
-    const maxVal = Math.max(...vals);
-
     let barsHtml = '';
-    DATA.daily.forEach((d, i) => {
-      const h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-      barsHtml += `
-        <div class="daily-bar-wrap">
-          <div class="daily-bar-val">${formatNumber(vals[i])}</div>
-          <div class="daily-bar" style="height:${h}px"></div>
-          <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
-          <div class="daily-bar-day">${d.day}</div>
-        </div>`;
-    });
+    if (metricKey === 'visits') {
+      const maxVal = Math.max(...DATA.daily.map(d => Math.max(d.visitors, d.clicks)));
+      DATA.daily.forEach((d, i) => {
+        const barMax = Math.max(d.visitors, d.clicks);
+        const totalH = maxVal > 0 ? Math.round((barMax / maxVal) * 160) : 0;
+        const clickH = Math.min(totalH, barMax > 0 ? Math.round((d.clicks / barMax) * totalH) : 0);
+        const organicH = totalH - clickH;
+        barsHtml += `
+          <div class="daily-bar-wrap">
+            <div class="daily-bar-val">${formatNumber(barMax)}</div>
+            <div style="display:flex;flex-direction:column;width:100%;height:${totalH}px">
+              <div style="flex:0 0 ${organicH}px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>
+              <div style="flex:0 0 ${clickH}px;background:#3B82F6;border-radius:${organicH === 0 ? '4px 4px' : '0 0'} 0 0"></div>
+            </div>
+            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
+            <div class="daily-bar-day">${d.day}</div>
+          </div>`;
+      });
+    } else {
+      const vals = DATA.daily.map(d => d[metricKey]);
+      const maxVal = Math.max(...vals);
+      DATA.daily.forEach((d, i) => {
+        const h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
+        barsHtml += `
+          <div class="daily-bar-wrap">
+            <div class="daily-bar-val">${formatNumber(vals[i])}</div>
+            <div class="daily-bar" style="height:${h}px"></div>
+            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
+            <div class="daily-bar-day">${d.day}</div>
+          </div>`;
+      });
+    }
     return barsHtml;
+  }
+
+  function getLegend(metricKey) {
+    if (metricKey === 'visits') {
+      return `
+        <div style="display:flex;gap:16px;margin-top:12px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>
+          </div>
+        </div>`;
+    }
+    return '';
   }
 
   let btnsHtml = '';
@@ -755,9 +793,9 @@ function calcDelta(current, prev) {
       <div class="metric-switcher">${btnsHtml}</div>
     </div>
     <div class="daily-subtitle" id="dailySubtitle">${metrics[0].label} · Jun 17 – 23</div>
-    <div class="daily-chart" id="dailyChartArea">${renderDailyChart(metrics[0].key)}</div>`;
+    <div class="daily-chart" id="dailyChartArea">${renderDailyChart(metrics[0].key)}</div>
+    <div id="dailyLegend">${getLegend(metrics[0].key)}</div>`;
 
-  // Interactive switcher
   document.querySelectorAll('.metric-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.metric-btn').forEach(b => b.classList.remove('active'));
@@ -766,6 +804,7 @@ function calcDelta(current, prev) {
       const label = metrics.find(m => m.key === mk).label;
       document.getElementById('dailySubtitle').textContent = label + ' · Jun 17 – 23';
       document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
+      document.getElementById('dailyLegend').innerHTML = getLegend(mk);
     });
   });
 })();
@@ -868,7 +907,7 @@ function calcDelta(current, prev) {
         </tr>
       </tbody>
     </table>
-    <div class="breakdown-footer">SOURCE · OUTCOME WORLD CUP CAMPAIGN TRACKER · CONVERSIONS VIA POSTHOG · VOLUME VS HYPERLIQUID PERPS</div>`;
+    <div class="breakdown-footer">SOURCE · OUTCOME WORLD CUP CAMPAIGN TRACKER · CONVERSIONS VIA POSTHOG · VOLUME VS HYPERLIQUID HIP-4</div>`;
 })();
 </script>
 
