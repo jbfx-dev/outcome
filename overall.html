@@ -1,817 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Overall</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@font-face {
-  font-family: "PP Neue Corp";
-  src: url("fonts/PPNeueCorp-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "PP Neue Corp";
-  src: url("fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
-  font-weight: 800;
-  font-style: normal;
-  font-stretch: condensed;
-  font-display: swap;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-body {
-  background: #0A0A0B;
-  color: #F5F8FF;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-}
-
-/* ---------- NAV ---------- */
-.nav {
-  position: sticky; top: 0; z-index: 20;
-  height: 64px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: rgba(10,10,11,0.74);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-}
-.nav-left { display: flex; align-items: center; gap: 10px; }
-.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
-.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
-.nav-subtitle {
-  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.5);
-}
-.nav-right { display: flex; align-items: center; gap: 12px; }
-.live-badge {
-  height: 30px; padding: 0 14px; border-radius: 8px;
-  border: 1px solid rgba(255,92,92,0.4);
-  display: flex; align-items: center; gap: 8px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
-  color: rgb(255,92,92); text-transform: uppercase;
-}
-.live-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: radial-gradient(circle, rgb(255,92,92) 0%, rgba(255,92,92,0.4) 100%);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
-}
-.date-badge {
-  height: 38px; padding: 0 16px; border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-  display: flex; align-items: center;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.7); text-transform: uppercase;
-}
-
-/* ---------- CONTENT ---------- */
-.content {
-  max-width: 1480px; margin: 0 auto;
-  padding: 44px 40px 64px;
-}
-
-/* ---------- WEEK NAV ---------- */
-.week-nav {
-  display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px;
-}
-.week-nav a {
-  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 8px 16px; border-radius: 8px;
-  cursor: pointer; text-decoration: none;
-  color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.15s ease;
-}
-.week-nav a:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.12); }
-.week-nav a.active {
-  color: #F5F8FF; background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-}
-
-/* ---------- TITLE ---------- */
-.title-area {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 32px; flex-wrap: wrap; margin-bottom: 34px;
-}
-.title-left {}
-.title-sub {
-  font-size: 12px; font-weight: 500; letter-spacing: 0.16em;
-  color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
-}
-.title-h1 {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
-  font-stretch: condensed; text-transform: uppercase;
-  letter-spacing: -0.01em; font-size: 64px; line-height: 0.88;
-  color: #F5F8FF;
-}
-.title-h1 .green { color: #45E85C; }
-.title-badges { display: flex; gap: 10px; align-items: center; }
-.badge {
-  height: 38px; padding: 0 16px; border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-  display: flex; align-items: center;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.7); text-transform: uppercase;
-}
-.badge.orange { color: #F58220; border-color: rgba(245,130,32,0.3); }
-
-/* ---------- KPI CARDS ---------- */
-.kpi-grid {
-  display: grid; grid-template-columns: repeat(6, 1fr);
-  gap: 14px; margin-bottom: 14px;
-}
-.kpi-card {
-  position: relative; padding: 20px; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02); overflow: hidden;
-}
-.kpi-bar {
-  position: absolute; top: 0; left: 0; width: 100%; height: 3px;
-}
-.kpi-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 16px;
-}
-.kpi-value {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
-  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
-  line-height: 1; color: #F5F8FF;
-}
-.kpi-sub {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
-}
-
-/* ---------- CARD ---------- */
-.card {
-  padding: 28px; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02); margin-bottom: 14px;
-}
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 24px;
-}
-.card-title {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.card-meta {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase;
-}
-
-/* ---------- VOLUME EVOLUTION ---------- */
-.evolution-chart {
-  position: relative;
-  display: flex; align-items: flex-end; gap: 6px; height: 280px;
-  padding-top: 60px;
-}
-.evo-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  height: 100%; justify-content: flex-end; position: relative;
-}
-.evo-bar-val {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.55);
-  margin-bottom: 4px; white-space: nowrap;
-}
-.evo-bar {
-  width: 100%; border-radius: 4px 4px 0 0;
-  background: #45E85C; transition: height 0.3s ease;
-}
-.evo-bar-date {
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6);
-  margin-top: 8px;
-}
-.evo-bar-day {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
-}
-.evo-milestones {
-  position: absolute; top: 0; left: 0; right: 0;
-  display: flex; pointer-events: none;
-}
-.milestone-pill {
-  font-size: 8px; font-weight: 600; padding: 2px 6px;
-  border-radius: 4px; white-space: nowrap; line-height: 1.3;
-  position: absolute;
-}
-.milestone-pill.green-pill { background: rgba(69,232,92,0.2); color: #45E85C; }
-.milestone-pill.blue-pill { background: rgba(59,130,246,0.2); color: #3B82F6; }
-.milestone-pill.orange-pill { background: rgba(245,130,32,0.2); color: #F58220; }
-
-.week-divider {
-  position: absolute; top: 0; bottom: 0; width: 1px;
-  background: rgba(255,255,255,0.12);
-}
-.week-divider-label {
-  position: absolute; top: -4px;
-  font-size: 8px; font-weight: 600; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.3); text-transform: uppercase;
-}
-
-/* ---------- BLENDED COST METRICS ---------- */
-.cost-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  margin-bottom: 14px;
-}
-.cost-card {
-  padding: 28px; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02);
-  text-align: center;
-}
-.cost-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
-  text-transform: uppercase; color: rgba(255,255,255,0.45);
-  margin-bottom: 16px;
-}
-.cost-value {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
-  font-size: 44px; font-weight: 500; letter-spacing: -0.04em;
-  line-height: 1; color: #F58220;
-}
-.cost-sub {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.35); margin-top: 12px; text-transform: uppercase;
-}
-
-/* ---------- VOLUME SECTION ---------- */
-.volume-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 32px;
-}
-.volume-col-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 16px;
-}
-.volume-big {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
-  font-size: 52px; font-weight: 600; line-height: 1; margin-bottom: 4px;
-}
-.volume-of {
-  font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 20px;
-}
-.volume-bar-track {
-  width: 100%; height: 6px; border-radius: 3px;
-  background: rgba(255,255,255,0.08); margin-bottom: 12px; overflow: hidden;
-}
-.volume-bar-fill { height: 100%; border-radius: 3px; }
-.volume-legend {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.45); text-transform: uppercase;
-}
-
-/* Stacked volume chart */
-.stacked-chart { display: flex; align-items: flex-end; gap: 6px; height: 220px; }
-.stacked-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; height: 100%;
-  justify-content: flex-end; position: relative;
-}
-.stacked-bar {
-  width: 100%; min-height: 2px;
-}
-.stacked-bar:first-child { border-radius: 3px 3px 0 0; }
-.stacked-bar.outcome { background: #45E85C; }
-.stacked-bar.hl { background: rgba(255,255,255,0.12); border-radius: 3px 3px 0 0; }
-.stacked-bar-date {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.4);
-  text-transform: uppercase; margin-top: 6px;
-}
-.week-divider {
-  position: absolute; left: -3px; top: 0; bottom: 20px;
-  border-left: 1px dashed rgba(255,255,255,0.15);
-}
-.week-divider-label {
-  position: absolute; top: -10px; left: 4px;
-  font-size: 8px; font-weight: 600; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.3); text-transform: uppercase; white-space: nowrap;
-}
-
-/* ---------- IMPRESSIONS SECTION ---------- */
-.imp-chart { margin-top: 8px; }
-.imp-row {
-  display: flex; align-items: center; gap: 0; margin-bottom: 10px;
-}
-.imp-channel {
-  width: 200px; flex-shrink: 0;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.7); text-transform: uppercase;
-  display: flex; align-items: center; gap: 8px;
-}
-.imp-channel .dot { width: 8px; height: 8px; }
-.imp-bar-track {
-  flex: 1; height: 28px; border-radius: 4px;
-  background: rgba(255,255,255,0.03); overflow: hidden; position: relative;
-}
-.imp-bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
-.imp-value {
-  width: 90px; text-align: right; flex-shrink: 0;
-  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.6); padding-left: 12px;
-}
-.imp-axis {
-  display: flex; justify-content: space-between;
-  margin-top: 8px; padding-left: 200px; padding-right: 90px;
-}
-.imp-axis span {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.25);
-  text-transform: uppercase;
-}
-.imp-callouts {
-  display: flex; gap: 32px; margin-top: 20px; padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-.imp-callout {
-  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.45);
-  letter-spacing: 0.04em;
-}
-.imp-callout strong { color: #F5F8FF; font-weight: 600; }
-
-/* ---------- TG SPONSORSHIP FUNNEL ---------- */
-.funnel-row {
-  display: flex; align-items: center; gap: 0; margin-bottom: 10px;
-}
-.funnel-channel {
-  width: 120px; flex-shrink: 0;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.7); text-transform: uppercase;
-  display: flex; align-items: center; gap: 8px;
-}
-.funnel-channel .dot { width: 8px; height: 8px; }
-.funnel-bar-track {
-  flex: 1; height: 28px; border-radius: 4px;
-  background: rgba(255,255,255,0.03); overflow: hidden; position: relative;
-}
-.funnel-bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
-.funnel-value {
-  width: 90px; text-align: right; flex-shrink: 0;
-  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.6); padding-left: 12px;
-}
-.funnel-rate {
-  width: 70px; text-align: right; flex-shrink: 0;
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.35); padding-left: 8px;
-}
-.funnel-est-tag {
-  font-size: 7px; font-weight: 600; letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.25); text-transform: uppercase;
-  padding: 1px 4px; border: 1px dashed rgba(255,255,255,0.12);
-  border-radius: 2px; margin-left: 4px;
-}
-.funnel-callouts {
-  display: flex; gap: 32px; margin-top: 20px; padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-.funnel-callout {
-  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.45);
-  letter-spacing: 0.04em;
-}
-.funnel-callout strong { color: #F5F8FF; font-weight: 600; }
-
-/* ---------- COHORT RETENTION WATERFALL ---------- */
-.waterfall-grid {
-  display: grid; grid-template-columns: 90px 1fr 180px; gap: 0;
-  align-items: stretch;
-}
-.waterfall-row {
-  display: contents;
-}
-.waterfall-label {
-  padding: 6px 12px 6px 0; display: flex; flex-direction: column;
-  justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.waterfall-label-date { font-size: 11px; font-weight: 600; color: #F5F8FF; }
-.waterfall-label-day { font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
-.waterfall-bars {
-  display: flex; align-items: center; gap: 3px;
-  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.waterfall-seg {
-  height: 24px; border-radius: 3px; position: relative;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 8px; font-weight: 600; color: rgba(0,0,0,0.7);
-  min-width: 2px; transition: width 0.3s ease;
-}
-.waterfall-seg.signups { background: #45E85C; }
-.waterfall-seg.traders { background: #3B82F6; }
-.waterfall-seg.depositors { background: #FF5C9E; }
-.waterfall-seg.dormant { background: rgba(255,255,255,0.06); }
-.waterfall-legend {
-  display: flex; gap: 20px; margin-top: 16px;
-}
-.waterfall-legend-item {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
-}
-.waterfall-legend-dot {
-  width: 8px; height: 8px; border-radius: 2px;
-}
-.waterfall-header {
-  display: contents;
-}
-.waterfall-header-label {
-  padding: 0 0 10px 0;
-  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-}
-.cohort-table { width: 100%; border-collapse: collapse; }
-.cohort-table th {
-  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-  text-align: right; padding: 0 0 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.cohort-table th:first-child { text-align: left; }
-.cohort-table td {
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
-  text-align: right;
-}
-.cohort-table td:first-child { text-align: left; }
-.cohort-date-main { color: #F5F8FF; font-weight: 600; }
-.cohort-date-day {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase; margin-left: 6px;
-}
-.cohort-table td.green { color: #45E85C; }
-.cohort-table td.highlight { color: #45E85C; font-weight: 600; }
-.cohort-table tr.week-sep td {
-  border-bottom: 2px solid rgba(69,232,92,0.15);
-}
-.cohort-table tr.summary-row td {
-  border-bottom: none; font-weight: 600; color: #F5F8FF;
-  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
-}
-.cohort-table tr.summary-row td:first-child { color: #45E85C; }
-.cohort-bar {
-  display: inline-block; height: 6px; border-radius: 3px;
-  background: #45E85C; margin-right: 8px; vertical-align: middle;
-}
-
-/* ---------- DAILY + CONVERSIONS SIDE BY SIDE ---------- */
-.side-grid {
-  display: grid; grid-template-columns: 1fr 0.82fr;
-  gap: 14px; margin-bottom: 14px;
-}
-
-/* Daily totals chart */
-.metric-switcher { display: flex; gap: 6px; }
-.metric-btn {
-  padding: 6px 14px; border-radius: 8px;
-  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-  text-transform: uppercase; cursor: pointer; border: none; outline: none;
-  transition: all 0.15s ease;
-  background: transparent; border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.5);
-}
-.metric-btn.active {
-  background: rgba(69,232,92,0.12); border: 1px solid rgba(69,232,92,0.3);
-  color: #45E85C;
-}
-.metric-btn:hover:not(.active) {
-  border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
-}
-.daily-subtitle {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 20px;
-}
-.daily-chart { display: flex; align-items: flex-end; gap: 6px; height: 200px; padding-top: 20px; }
-.daily-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  height: 100%; justify-content: flex-end;
-}
-.daily-bar-val {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.5);
-  margin-bottom: 4px;
-}
-.daily-bar {
-  width: 100%; border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease;
-}
-.daily-bar.w1 { background: #45E85C; }
-.daily-bar.w2 { background: #3B82F6; }
-.daily-bar-date {
-  font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.6);
-  margin-top: 6px;
-}
-.daily-bar-day {
-  font-size: 8px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
-}
-
-/* ---------- CONVERSIONS TABLE ---------- */
-.conv-table { width: 100%; border-collapse: collapse; }
-.conv-table th {
-  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-  text-align: right; padding: 0 0 12px 0;
-}
-.conv-table th:first-child { text-align: left; }
-.conv-table td {
-  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7);
-  text-align: right;
-}
-.conv-table td:first-child {
-  text-align: left; display: flex; align-items: center; gap: 8px;
-}
-.conv-table td:first-child .dot { width: 8px; height: 8px; }
-.conv-table tr.total td {
-  border-bottom: none; font-weight: 600; color: #F5F8FF;
-  padding-top: 14px;
-}
-.conv-table tr.total td:first-child { color: #45E85C; }
-.conv-footnote {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.25);
-  margin-top: 16px; letter-spacing: 0.04em;
-}
-
-/* ---------- ATTRIBUTION / INSIGHT BLOCKS ---------- */
-.insight-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  margin-bottom: 14px;
-}
-.insight-block {
-  padding: 20px; border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02);
-}
-.insight-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 14px; font-size: 16px;
-}
-.insight-label {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.insight-text {
-  font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.55);
-  line-height: 1.5;
-}
-.insight-text strong { color: #F5F8FF; font-weight: 600; }
-
-/* ---------- RETENTION STAT CARDS ---------- */
-.stat-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-}
-.stat-card {
-  padding: 20px; border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02); text-align: center;
-}
-.stat-value {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
-  font-size: 28px; font-weight: 500; letter-spacing: -0.04em;
-  line-height: 1; margin-bottom: 8px;
-}
-.stat-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-}
-
-/* ---------- DAILY BREAKDOWN TABLE ---------- */
-.breakdown-card { padding: 24px 24px 8px; }
-.breakdown-subtitle {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.breakdown-table { width: 100%; border-collapse: collapse; }
-.breakdown-table th {
-  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-  text-align: right; padding: 0 0 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.breakdown-table th:first-child { text-align: left; }
-.breakdown-table td {
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
-  text-align: right;
-}
-.breakdown-table td:first-child { text-align: left; }
-.breakdown-date-main { color: #F5F8FF; font-weight: 600; }
-.breakdown-date-day {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase; margin-left: 6px;
-}
-.breakdown-table td.green { color: #45E85C; }
-.breakdown-table td.orange { color: #F58220; }
-.breakdown-table tr.week-sep td {
-  border-bottom: 2px solid rgba(69,232,92,0.15);
-}
-.breakdown-table tr.summary-row td {
-  border-bottom: none; font-weight: 600; color: #F5F8FF;
-  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
-}
-.breakdown-table tr.summary-row td:first-child { color: #45E85C; }
-.breakdown-footer {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
-  margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
-  text-transform: uppercase; text-align: center;
-}
-
-/* ---------- RESPONSIVE ---------- */
-@media (max-width: 1200px) {
-  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  .cost-grid { grid-template-columns: repeat(2, 1fr); }
-  .volume-grid { grid-template-columns: 1fr; }
-  .side-grid { grid-template-columns: 1fr; }
-  .insight-grid { grid-template-columns: repeat(2, 1fr); }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .cost-grid { grid-template-columns: 1fr; }
-  .nav { padding: 0 20px; }
-  .content { padding: 24px 20px 48px; }
-  .title-h1 { font-size: 40px; }
-  .volume-big { font-size: 36px; }
-  .insight-grid { grid-template-columns: 1fr; }
-  .stat-grid { grid-template-columns: 1fr; }
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,sans-serif;min-height:100vh}
+.nav{position:sticky;top:0;z-index:20;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(10,10,11,.74);backdrop-filter:blur(12px)}
+.nav-left{display:flex;align-items:center;gap:10px}
+.nav-logo{height:20px;width:auto;flex-shrink:0}
+.nav-sep{color:rgba(255,255,255,.25);font-size:14px}
+.nav-label{font-size:11px;font-weight:500;letter-spacing:.12em;color:rgba(255,255,255,.45);text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:10px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.1em;color:#45E85C;border:1px solid rgba(69,232,92,.3);border-radius:20px;padding:5px 14px;text-transform:uppercase}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#45E85C;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.date-badge{font-size:11px;font-weight:500;letter-spacing:.08em;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 14px}
+.content{max-width:1320px;margin:0 auto;padding:32px 40px 60px}
+.week-nav{display:inline-flex;border-radius:10px;border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-bottom:24px}
+.week-nav a{padding:9px 20px;font-size:12px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.45);text-decoration:none;border-right:1px solid rgba(255,255,255,.08);transition:.15s}
+.week-nav a:last-child{border-right:none}
+.week-nav a:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
+.week-nav a.active{background:rgba(255,255,255,.1);color:#F5F8FF}
+.title-area{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px}
+.title-sub{font-size:11px;font-weight:600;letter-spacing:.14em;color:#45E85C;text-transform:uppercase;margin-bottom:4px}
+.title-h1{font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:800;line-height:.95;text-transform:uppercase;letter-spacing:-.02em}
+.green{color:#45E85C}
+.title-badges{display:flex;gap:8px;align-self:flex-end}
+.badge{font-size:11px;font-weight:500;letter-spacing:.06em;padding:7px 16px;border:1px solid rgba(255,255,255,.12);border-radius:20px;color:rgba(255,255,255,.6)}
+.badge.orange{border-color:rgba(245,130,32,.4);color:#F58220}
+.badge.green-bd{border-color:rgba(69,232,92,.4);color:#45E85C}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
+.kpi-card{position:relative;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);overflow:hidden}
+.kpi-bar{position:absolute;top:0;left:0;width:100%;height:3px}
+.kpi-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.kpi-value{font-family:Inter,system-ui,sans-serif;font-size:32px;font-weight:600;letter-spacing:-.04em;line-height:1;color:#F5F8FF}
+.kpi-sub{font-size:10px;font-weight:500;letter-spacing:.04em;color:rgba(255,255,255,.45);margin-top:9px;text-transform:uppercase}
+.card{padding:28px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);margin-bottom:14px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.card-title{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.card-meta{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase}
+.volume-grid{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:32px}
+.volume-col-label{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:16px}
+.volume-big{font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:700;line-height:1;margin-bottom:4px}
+.volume-of{font-size:12px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:20px}
+.volume-bar-track{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin-bottom:12px;overflow:hidden;display:flex}
+.volume-bar-fill{height:100%;border-radius:3px}
+.volume-legend{font-size:10px;font-weight:500;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:12px}
+.volume-delta{font-size:11px;font-weight:500;margin-top:10px}
+.volume-delta.up{color:#45E85C}
+.vol-chart{display:flex;align-items:flex-end;gap:16px;height:180px}
+.vol-bar-group{display:flex;flex-direction:column;align-items:center;flex:1}
+.vol-bar-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:6px}
+.vol-bar-stack{display:flex;flex-direction:column;width:100%;border-radius:6px;overflow:hidden}
+.vol-bar-stack .total-bar{background:#45E85C}
+.vol-bar-stack .wc-bar{background:#DDF23D}
+.vol-day{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);margin-top:8px}
+.vol-legend{display:flex;gap:16px;margin-top:14px;font-size:10px;font-weight:500;color:rgba(255,255,255,.45);align-items:center}
+.vol-legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+.side-grid{display:grid;grid-template-columns:1fr .82fr;gap:14px;margin-bottom:14px}
+.conv-table{width:100%;border-collapse:collapse}
+.conv-table th{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:right;padding:0 0 12px}
+.conv-table th:first-child{text-align:left}
+.conv-table td{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;font-weight:500;color:rgba(255,255,255,.7);text-align:right}
+.conv-table td:first-child{text-align:left;display:flex;align-items:center;gap:8px}
+.conv-table td:first-child .dot{width:8px;height:8px}
+.conv-table tr.total td{border-bottom:none;font-weight:600;color:#F5F8FF;padding-top:14px}
+.conv-table tr.total td:first-child{color:#45E85C}
+.conv-footnote{font-size:10px;font-weight:500;color:rgba(255,255,255,.25);margin-top:16px;letter-spacing:.04em}
+.breakdown-card{padding:24px 24px 8px}
+.breakdown-subtitle{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:16px}
+.breakdown-table{width:100%;border-collapse:collapse}
+.breakdown-table th{font-size:10px;font-weight:500;letter-spacing:.08em;color:rgba(255,255,255,.35);text-transform:uppercase;text-align:right;padding:0 0 10px;white-space:nowrap}
+.breakdown-table th:first-child{text-align:left}
+.breakdown-table td{padding:8px 0;border-top:1px solid rgba(255,255,255,.05);font-size:12px;font-weight:500;color:rgba(255,255,255,.6);text-align:right}
+.breakdown-table td:first-child{color:rgba(255,255,255,.85);text-align:left}
+.breakdown-table tr.week-total td{border-top:2px solid rgba(255,255,255,.12);font-weight:600;color:#F5F8FF;padding-top:12px}
+.breakdown-table tr.week-total td:first-child{color:#45E85C}
+.footer-note{font-size:9px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.2);text-transform:uppercase;text-align:center;padding:24px 0}
+.hero-insight{padding:20px 24px;border-radius:12px;background:rgba(69,232,92,.06);border:1px solid rgba(69,232,92,.15);margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.hero-icon{font-size:22px;flex-shrink:0}
+.hero-text{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:.02em}
+.hero-text strong{color:#45E85C;font-weight:600}
+.growth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.growth-card{padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);text-align:center}
+.growth-week{font-size:10px;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:12px}
+.growth-val{font-family:Inter,system-ui,sans-serif;font-size:28px;font-weight:700;color:#F5F8FF;margin-bottom:4px}
+.growth-label{font-size:10px;font-weight:500;color:rgba(255,255,255,.35);text-transform:uppercase}
+.growth-arrow{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 0}
+.growth-arrow span{font-size:18px;color:rgba(69,232,92,.5)}
+.imp-grid{display:grid;grid-template-columns:1fr .4fr;gap:32px}
+.imp-callout{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.04em;line-height:1.8}
+.imp-callout strong{color:#F5F8FF;font-weight:600}
 </style>
 </head>
 <body>
-
-<script>
-const DATA = {
-  dateRange: "Jun 10 – 23, 2026",
-  totalSpend: 48365,
-  weeks: 2,
-
-  kpi: {
-    impressions: 4943832,
-    clicks: 17906,
-    visitors: 27713,
-    signups: 3579,
-    depositors: 378,
-    activeTraders: 2154
-  },
-
-  volume: {
-    outcomeTotal: 6706783,
-    hlTotal: 63803363,
-    platformShare: 10.5,
-    outcomeWC: 5361535,
-    hlWC: 41569623,
-    wcShare: 12.9
-  },
-
-  week1: {
-    impressions: 1454961, clicks: 10556, visitors: 18079, signups: 1660,
-    depositors: 169, activeTraders: 1137,
-    spend: 48365,
-    outcomeTotal: 1394003, hlTotal: 36105890, platformShare: 3.9,
-    outcomeWC: 810000, hlWC: 23100000, wcShare: 3.5
-  },
-
-  week2: {
-    impressions: 3488280, clicks: 7350, visitors: 9665, signups: 1922,
-    depositors: 209, activeTraders: 1192,
-    spend: 48365,
-    outcomeTotal: 5312780, hlTotal: 27697473, platformShare: 19.2,
-    outcomeWC: 4551535, hlWC: 18469623, wcShare: 24.6
-  },
-
-  daily: [
-    { date: "Jun 10", day: "Wed", week: 1, impressions: 140000, clicks: 1528, visitors: 3254, signups: 471, depositors: 30, traders: 164, outcomeVol: 122600, hlVol: 5100000, outcomeWcVol: 65000, hlWcVol: 3200000 },
-    { date: "Jun 11", day: "Thu", week: 1, impressions: 170000, clicks: 1607, visitors: 2521, signups: 286, depositors: 22, traders: 159, outcomeVol: 172500, hlVol: 5200000, outcomeWcVol: 95000, hlWcVol: 3300000 },
-    { date: "Jun 12", day: "Fri", week: 1, impressions: 195000, clicks: 1493, visitors: 1988, signups: 196, depositors: 21, traders: 158, outcomeVol: 373000, hlVol: 5300000, outcomeWcVol: 195000, hlWcVol: 3400000 },
-    { date: "Jun 13", day: "Sat", week: 1, impressions: 240000, clicks: 1488, visitors: 2483, signups: 175, depositors: 20, traders: 167, outcomeVol: 180300, hlVol: 5400000, outcomeWcVol: 100000, hlWcVol: 3500000 },
-    { date: "Jun 14", day: "Sun", week: 1, impressions: 227000, clicks: 1399, visitors: 2700, signups: 167, depositors: 23, traders: 157, outcomeVol: 186500, hlVol: 5100000, outcomeWcVol: 105000, hlWcVol: 3200000 },
-    { date: "Jun 15", day: "Mon", week: 1, impressions: 237000, clicks: 1520, visitors: 2822, signups: 192, depositors: 27, traders: 164, outcomeVol: 142903, hlVol: 5005890, outcomeWcVol: 80000, hlWcVol: 3100000 },
-    { date: "Jun 16", day: "Tue", week: 1, impressions: 245961, clicks: 1521, visitors: 2311, signups: 173, depositors: 26, traders: 168, outcomeVol: 216200, hlVol: 5000000, outcomeWcVol: 170000, hlWcVol: 3400000 },
-    { date: "Jun 17", day: "Tue", week: 2, impressions: 615041, clicks: 1517, visitors: 1299, signups: 398, depositors: 24, traders: 183, outcomeVol: 578980, hlVol: 3927457, outcomeWcVol: 362100, hlWcVol: 2229735 },
-    { date: "Jun 18", day: "Wed", week: 2, impressions: 357194, clicks: 803, visitors: 1049, signups: 347, depositors: 27, traders: 163, outcomeVol: 466800, hlVol: 3207109, outcomeWcVol: 412900, hlWcVol: 2014831 },
-    { date: "Jun 19", day: "Thu", week: 2, impressions: 398999, clicks: 986, visitors: 1011, signups: 343, depositors: 20, traders: 169, outcomeVol: 643200, hlVol: 2764809, outcomeWcVol: 565900, hlWcVol: 1642456 },
-    { date: "Jun 20", day: "Fri", week: 2, impressions: 536101, clicks: 914, visitors: 772, signups: 194, depositors: 24, traders: 153, outcomeVol: 1500000, hlVol: 4545678, outcomeWcVol: 1400000, hlWcVol: 3717826 },
-    { date: "Jun 21", day: "Sat", week: 2, impressions: 525000, clicks: 892, visitors: 769, signups: 174, depositors: 20, traders: 162, outcomeVol: 1600000, hlVol: 4701217, outcomeWcVol: 1488165, hlWcVol: 3737293 },
-    { date: "Jun 22", day: "Sun", week: 2, impressions: 525852, clicks: 1342, visitors: 1095, signups: 204, depositors: 42, traders: 177, outcomeVol: 242800, hlVol: 4402238, outcomeWcVol: 122178, hlWcVol: 2261206 },
-    { date: "Jun 23", day: "Mon", week: 2, impressions: 530093, clicks: 896, visitors: 3670, signups: 262, depositors: 52, traders: 185, outcomeVol: 281000, hlVol: 4148965, outcomeWcVol: 200292, hlWcVol: 2866276 }
-  ],
-
-  channelImpressions: [
-    { name: "Telegram WC Sponsor", views: 3892200, color: "#45E85C" },
-    { name: "Telegram Ads", views: 596500, color: "#1FCFA0" },
-    { name: "X Organic", views: 363655, color: "#3B82F6" },
-    { name: "X Giveaways", views: 79380, color: "#FF5C9E" },
-    { name: "CoConnect (Alphabot)", views: 11978, color: "#F58220" },
-    { name: "Telegram Organic", views: 119, color: "#F58220" }
-  ],
-
-  conversions: [
-    { name: "Telegram WC Sponsor", visitors: 10058, signups: 285, traders: 0, color: "#45E85C" },
-    { name: "X Organic", visitors: 230, signups: 31, traders: 7, color: "#3B82F6" },
-    { name: "Telegram Ads", visitors: 155, signups: 25, traders: 0, color: "#1FCFA0" },
-    { name: "X Giveaways", visitors: 0, signups: 0, traders: 0, color: "#FF5C9E" },
-    { name: "Telegram Organic", visitors: 35, signups: 5, traders: 0, color: "#F58220" },
-    { name: "Discord Organic", visitors: 0, signups: 0, traders: 4, color: "#9B7CFF" },
-    { name: "CoConnect (Alphabot)", visitors: 268, signups: 85, traders: 0, color: "#F58220" },
-    { name: "Substack", visitors: 23, signups: 1, traders: 6, color: "#FF5C9E" },
-    { name: "HL S2 Analyzer", visitors: 1, signups: 0, traders: 1, color: "#3B82F6" },
-    { name: "Unattributed", visitors: 16918, signups: 3144, traders: 2136, color: "rgba(255,255,255,0.3)" }
-  ],
-
-  attribution: [
-    { label: "97% UNATTRIBUTED WAS A BUG, NOT A SIGNAL", color: "#F58220", bgColor: "rgba(245,130,32,0.12)", text: "PostHog's person ID merge breaks on the login flow, creating a <strong>new person ID</strong> on sign-in and severing the UTM link. Telegram (<strong>315 signups</strong>) and AlphaBot (<strong>88 signups</strong>) show literally <strong>0% funnel conversion</strong>. Not because nobody converted, but because the person ID merge is broken. Web sources where it held show real rates: X/Twitter <strong>34.4%</strong>, Discord <strong>60%</strong>, no-UTM users <strong>25.9%</strong>." },
-    { label: "THE REAL CONVERSION PICTURE", color: "#45E85C", bgColor: "rgba(69,232,92,0.12)", text: "<strong>3,580</strong> signups across 14 days produced <strong>523 first-time traders</strong> (14.6% blended) and <strong>206 first-time depositors</strong> (5.8%). Only <strong>438 signups (12.2%)</strong> carried any UTM attribution at all: 315 from Telegram, 88 from AlphaBot/CoConnect, 31 from X/Twitter. The other <strong>87.8%</strong> had no utm_source." },
-    { label: "PAID CHANNELS WERE WORKING. WE JUST COULDN'T SEE IT.", color: "#3B82F6", bgColor: "rgba(59,130,246,0.12)", text: "Proportional timing model (allocating daily new traders by signup mix): Telegram drove an estimated <strong>~59 first-time traders</strong>, AlphaBot <strong>~6</strong>. This model assumes uniform conversion across sources. The real funnel data for web sources suggests paid traffic converts at <strong>15-25%</strong>, putting paid channel contribution at <strong>60-100 traders</strong> over these 2 weeks. Our paid channels are almost certainly working. We just can't see it in the data." },
-    { label: "WHAT CHANGES FROM HERE", color: "#9B7CFF", bgColor: "rgba(155,124,255,0.12)", text: "Priority fix: implement <strong>posthog.identify()</strong> to merge anon to authenticated users on the login flow. Once deployed, all post-login events carry the original UTM source. We'll have full end-to-end attribution: signup source to first trade to deposit to volume per channel. The proportional timing model used here will be validated against real data." }
-  ],
-
-  retention: [
-    { label: "48.6% EVER-TRADED RATE", color: "#45E85C", bgColor: "rgba(69,232,92,0.12)", text: "PostHog cohort data shows <strong>1,291 of 2,656</strong> campaign signups (Jun 10-23) have traded at least once. That's a <strong>48.6%</strong> conversion rate. Launch day (Jun 10) hit <strong>71.6%</strong>. W2 cohorts (Jun 17-21) averaged <strong>59%</strong>." },
-    { label: "7-DAY RETENTION: 43.6%", color: "#3B82F6", bgColor: "rgba(59,130,246,0.12)", text: "The Jun 8 weekly cohort (1,714 signups, overlapping campaign launch) shows <strong>43.6% 7-day retention</strong> (747 traders returned). Pre-campaign baseline was <strong>66-70%</strong>. Lower rate is expected with larger paid-acquisition cohorts bringing in more casual users." },
-    { label: "14-DAY RETENTION HOLDS", color: "#F58220", bgColor: "rgba(245,130,32,0.12)", text: "Pre-campaign cohorts show <strong>58.6-59.6% 14-day retention</strong>. The dropoff from 7d to 14d is only <strong>~10 percentage points</strong>, meaning users who make it past week 1 tend to stick. Campaign cohorts will have 14d data by end of June." },
-    { label: "RECENT COHORTS STILL CONVERTING", color: "#FF5C9E", bgColor: "rgba(255,92,158,0.12)", text: "Jun 22-23 cohorts show <strong>25.7-43%</strong> conversion rates with only 1-2 days of data. These will climb as users return to trade. Jun 20-21 cohorts reached <strong>57-66%</strong> with just 3-4 days, suggesting final rates will be higher." }
-  ],
-
-  signupCohorts: [
-    { date: "Jun 10", day: "Tue", signups: 88, everTraded: 63, rate: 0.716 },
-    { date: "Jun 11", day: "Wed", signups: 345, everTraded: 151, rate: 0.438 },
-    { date: "Jun 12", day: "Thu", signups: 157, everTraded: 48, rate: 0.306 },
-    { date: "Jun 13", day: "Fri", signups: 120, everTraded: 49, rate: 0.408 },
-    { date: "Jun 14", day: "Sat", signups: 70, everTraded: 23, rate: 0.329 },
-    { date: "Jun 15", day: "Sun", signups: 113, everTraded: 26, rate: 0.230 },
-    { date: "Jun 16", day: "Mon", signups: 163, everTraded: 66, rate: 0.405 },
-    { date: "Jun 17", day: "Tue", signups: 355, everTraded: 210, rate: 0.592 },
-    { date: "Jun 18", day: "Wed", signups: 296, everTraded: 165, rate: 0.557 },
-    { date: "Jun 19", day: "Thu", signups: 303, everTraded: 179, rate: 0.591 },
-    { date: "Jun 20", day: "Fri", signups: 175, everTraded: 115, rate: 0.657 },
-    { date: "Jun 21", day: "Sat", signups: 158, everTraded: 91, rate: 0.576 },
-    { date: "Jun 22", day: "Sun", signups: 142, everTraded: 61, rate: 0.430 },
-    { date: "Jun 23", day: "Mon", signups: 171, everTraded: 44, rate: 0.257 }
-  ],
-
-  weeklyRetention: [
-    { week: "May 25", cohortSize: 1702, ret7d: 1126, rate7d: 0.662, ret14d: 1015, rate14d: 0.596, label: "Pre-campaign" },
-    { week: "Jun 1", cohortSize: 1756, ret7d: 1228, rate7d: 0.699, ret14d: 1029, rate14d: 0.586, label: "Pre-campaign" },
-    { week: "Jun 8", cohortSize: 1714, ret7d: 747, rate7d: 0.436, ret14d: null, rate14d: null, label: "Campaign W1" },
-    { week: "Jun 15", cohortSize: 1676, ret7d: null, rate7d: null, ret14d: null, rate14d: null, label: "Campaign W2" },
-    { week: "Jun 22", cohortSize: 390, ret7d: null, rate7d: null, ret14d: null, rate14d: null, label: "Campaign W2+" }
-  ],
-
-  tgFunnel: {
-    channel: "Telegram WC Sponsorship",
-    spend: 10000,
-    impressions: 3892200,
-    clicks: 16065,
-    signups: 285,
-    estTraders: 54,
-    note: "Trader estimate based on proportional time-based model. Attribution broken pre-Jun 22."
-  },
-
-  milestones: [
-    { dayIndex: 0, label: "Launch", type: "green" },
-    { dayIndex: 1, label: "TG WC Sponsor", type: "green" },
-    { dayIndex: 7, label: "TG Ads Scaled", type: "blue" },
-    { dayIndex: 7, label: "CoConnect Live", type: "orange", offset: 1 },
-    { dayIndex: 10, label: "$1.5M Day", type: "orange" },
-    { dayIndex: 11, label: "$1.6M Day", type: "orange" }
-  ]
-};
-
-// ---------- HELPERS ----------
-function formatNumber(n) {
-  return n.toLocaleString('en-US');
-}
-function formatCompact(n) {
-  if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
-  return formatNumber(n);
-}
-function formatCompactShort(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (n >= 1000) return '$' + (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K';
-  return '$' + n.toString();
-}
-function formatCurrency(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + 'M';
-  if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
-  return '$' + n.toFixed(0);
-}
-function formatCurrencyFull(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + 'M';
-  return '$' + formatNumber(n);
-}
-function formatPercent(n) { return n.toFixed(1) + '%'; }
-</script>
-
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-left">
     <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
@@ -825,794 +112,238 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
       <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
     </svg>
-    <span class="nav-divider">/</span>
-    <span class="nav-subtitle">CAMPAIGN TRACKER</span>
+    <span class="nav-sep">/</span>
+    <span class="nav-label">Campaign Tracker</span>
   </div>
   <div class="nav-right">
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      LIVE
-    </div>
-    <div class="date-badge">JUN 10 – 23, 2026</div>
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+    <div class="date-badge">JUN 10 - 30, 2026</div>
   </div>
 </nav>
 
 <div class="content">
-
-  <!-- WEEK NAV -->
   <div class="week-nav">
     <a href="overall.html" class="active">Overall</a>
     <a href="index.html">Week 1</a>
     <a href="week-2.html">Week 2</a>
+    <a href="week-3.html">Week 3</a>
   </div>
 
-  <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
-      <div class="title-sub">CAMPAIGN OVERVIEW · WEEKS 1–2</div>
-      <h1 class="title-h1">
-        World Cup 2026<br>
-        <span class="green">Campaign</span>
-      </h1>
+      <div class="title-sub">CAMPAIGN OVERVIEW &middot; 3 WEEKS</div>
+      <h1 class="title-h1">World Cup 2026<br><span class="green">Campaign</span></h1>
     </div>
     <div class="title-badges">
-      <div class="badge">14 Days</div>
-      <div class="badge orange" id="totalSpendBadge"></div>
+      <div class="badge">21 Days</div>
+      <div class="badge green-bd">$15.96M WC Volume</div>
     </div>
   </div>
 
-  <!-- KPI CARDS -->
-  <div class="kpi-grid" id="kpiGrid"></div>
+  <!-- HERO INSIGHT -->
+  <div class="hero-insight">
+    <div class="hero-icon">&#9889;</div>
+    <div class="hero-text">
+      <strong>Volume dominance:</strong> $15.96M total WC volume across 3 weeks, <strong>10.6x growth</strong> from Week 1 to Week 3, peaked at <strong>40% of all Hyperliquid WC volume</strong>
+    </div>
+  </div>
 
-  <!-- BLENDED COST METRICS -->
-  <div class="card" style="margin-bottom:14px">
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#1FCFA0"></div>
+      <div class="kpi-label" style="color:#1FCFA0">Total Visitors</div>
+      <div class="kpi-value">45,492</div>
+      <div class="kpi-sub">campaign total</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#45E85C"></div>
+      <div class="kpi-label" style="color:#45E85C">Total Signups</div>
+      <div class="kpi-value">4,595</div>
+      <div class="kpi-sub">campaign total</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#F58220"></div>
+      <div class="kpi-label" style="color:#F58220">Total Depositors</div>
+      <div class="kpi-value">546</div>
+      <div class="kpi-sub">11.9% of signups</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#3B82F6"></div>
+      <div class="kpi-label" style="color:#3B82F6">Active Traders</div>
+      <div class="kpi-value">3,440</div>
+      <div class="kpi-sub">74.9% of signups</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#DDF23D"></div>
+      <div class="kpi-label" style="color:#DDF23D">Total WC Volume</div>
+      <div class="kpi-value">$15.96M</div>
+      <div class="kpi-sub">10.6x W1 to W3</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#FF5C9E"></div>
+      <div class="kpi-label" style="color:#FF5C9E">Peak Market Share</div>
+      <div class="kpi-value">40%</div>
+      <div class="kpi-sub">of HL WC on Jun 26</div>
+    </div>
+  </div>
+
+  <!-- VOLUME GROWTH -->
+  <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#F58220"></div> BLENDED COST PER METRICS</div>
-      <div class="card-meta">CAMPAIGN TOTAL · $48,365 SPEND</div>
-    </div>
-    <div class="cost-grid" id="costGrid" style="margin-bottom:0"></div>
-  </div>
-
-  <!-- VOLUME EVOLUTION -->
-  <div class="card" id="evolutionCard"></div>
-
-  <!-- VOLUME (STACKED) -->
-  <div class="card" id="volumeCard"></div>
-
-  <!-- IMPRESSIONS + TG FUNNEL -->
-  <div class="side-grid">
-    <div class="card" id="impressionsCard"></div>
-    <div class="card" id="tgFunnelCard"></div>
-  </div>
-
-  <!-- ATTRIBUTION INTELLIGENCE -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> ATTRIBUTION INTELLIGENCE</div>
-      <div class="card-meta">POSTHOG TRACKING ANALYSIS · FIX LIVE JUN 22</div>
-    </div>
-    <div class="insight-grid" id="attributionGrid"></div>
-    <div class="stat-cards" id="attributionStats" style="margin-top:14px"></div>
-  </div>
-
-  <!-- DAILY TOTALS + CONVERSIONS -->
-  <div class="side-grid">
-    <div class="card" id="dailyCard"></div>
-    <div class="card" id="conversionsCard"></div>
-  </div>
-
-  <!-- RETENTION & COHORT NARRATIVE -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div> RETENTION &amp; COHORT INSIGHTS</div>
-      <div class="card-meta">POSTHOG DATA</div>
-    </div>
-    <div class="insight-grid" id="retentionGrid" style="margin-bottom:0"></div>
-    <div style="margin-top:14px">
-      <div class="stat-grid" id="retentionStats"></div>
-    </div>
-  </div>
-
-  <!-- COHORT ANALYSIS (POSTHOG) -->
-  <div class="card" id="cohortCard"></div>
-
-  <!-- WEEKLY RETENTION (POSTHOG) -->
-  <div class="card" id="weeklyRetentionCard"></div>
-
-  <!-- DAILY BREAKDOWN -->
-  <div class="card breakdown-card" id="breakdownCard"></div>
-
-</div>
-
-<script>
-// ===================== SPEND BADGE =====================
-document.getElementById('totalSpendBadge').textContent = '$' + formatNumber(DATA.totalSpend) + ' Spend';
-
-// ===================== KPI CARDS =====================
-(function() {
-  const d = DATA.kpi;
-  const ctr = (d.clicks / d.impressions * 100).toFixed(2);
-  const uvPct = (d.clicks / d.visitors * 100).toFixed(1);
-  const depPct = (d.depositors / d.signups * 100).toFixed(1);
-  const traderPct = (d.activeTraders / d.signups * 100).toFixed(0);
-
-  const kpis = [
-    { label: 'Impressions', value: d.impressions, color: '#F58220', sub: 'campaign total' },
-    { label: 'Link Clicks', value: d.clicks, color: '#3B82F6', sub: ctr + '% CTR · ' + uvPct + '% of UVs' },
-    { label: 'Unique Visitors', value: d.visitors, color: '#1FCFA0', sub: 'site reach' },
-    { label: 'Signups', value: d.signups, color: '#45E85C', sub: 'campaign total' },
-    { label: 'Depositors', value: d.depositors, color: '#FF5C9E', sub: depPct + '% of signups' },
-    { label: 'Active Traders', value: d.activeTraders, color: '#9B7CFF', sub: traderPct + '% of signups' }
-  ];
-  const grid = document.getElementById('kpiGrid');
-  kpis.forEach(k => {
-    grid.innerHTML += `
-      <div class="kpi-card">
-        <div class="kpi-bar" style="background:${k.color}"></div>
-        <div class="kpi-label" style="color:${k.color}">${k.label}</div>
-        <div class="kpi-value">${formatCompact(k.value)}</div>
-        <div class="kpi-sub">${k.sub}</div>
-      </div>`;
-  });
-})();
-
-// ===================== BLENDED COST METRICS =====================
-(function() {
-  const spend = DATA.totalSpend;
-  const d = DATA.kpi;
-  const cpm = (spend / d.impressions * 1000).toFixed(2);
-  const cpc = (spend / d.clicks).toFixed(2);
-  const cpa = (spend / d.signups).toFixed(2);
-  const costPerTrader = (spend / d.activeTraders).toFixed(2);
-
-  const costs = [
-    { label: 'CPM', value: '$' + cpm, sub: 'cost per 1,000 impressions' },
-    { label: 'CPC', value: '$' + cpc, sub: 'cost per click' },
-    { label: 'Cost Per Signup', value: '$' + cpa, sub: 'cost per acquisition' },
-    { label: 'Cost Per Trader', value: '$' + costPerTrader, sub: 'cost per active trader' }
-  ];
-  const grid = document.getElementById('costGrid');
-  costs.forEach(c => {
-    grid.innerHTML += `
-      <div class="cost-card">
-        <div class="cost-label">${c.label}</div>
-        <div class="cost-value">${c.value}</div>
-        <div class="cost-sub">${c.sub}</div>
-      </div>`;
-  });
-})();
-
-// ===================== VOLUME EVOLUTION =====================
-(function() {
-  const days = DATA.daily;
-  const maxVol = Math.max(...days.map(d => d.outcomeVol));
-
-  let barsHtml = '';
-  days.forEach((d, i) => {
-    const h = Math.max(Math.round((d.outcomeVol / maxVol) * 200), 4);
-    const dateNum = d.date.split(' ')[1];
-    barsHtml += `
-      <div class="evo-bar-wrap" id="evo-bar-${i}">
-        <div class="evo-bar-val">${formatCurrency(d.outcomeVol)}</div>
-        <div class="evo-bar" style="height:${h}px"></div>
-        <div class="evo-bar-date">${dateNum}</div>
-        <div class="evo-bar-day">${d.day}</div>
-      </div>`;
-  });
-
-  document.getElementById('evolutionCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> VOLUME EVOLUTION</div>
-      <div class="card-meta">DAILY OUTCOME VOLUME &middot; JUN 10 &ndash; 23</div>
-    </div>
-    <div style="position:relative">
-      <div class="evolution-chart" id="evoChart">${barsHtml}</div>
-    </div>`;
-
-  // Add milestone pills and week divider after render
-  requestAnimationFrame(function() {
-    const chart = document.getElementById('evoChart');
-    const barWraps = chart.querySelectorAll('.evo-bar-wrap');
-    if (!barWraps.length) return;
-
-    // Week divider between bar 6 (Jun 16) and bar 7 (Jun 17)
-    const bar6 = barWraps[6];
-    const bar7 = barWraps[7];
-    const chartRect = chart.getBoundingClientRect();
-    const bar6Rect = bar6.getBoundingClientRect();
-    const bar7Rect = bar7.getBoundingClientRect();
-    const dividerX = ((bar6Rect.right + bar7Rect.left) / 2) - chartRect.left;
-
-    const divider = document.createElement('div');
-    divider.className = 'week-divider';
-    divider.style.cssText = 'position:absolute;top:0;bottom:30px;left:' + dividerX + 'px;width:1px;background:rgba(255,255,255,0.12);z-index:2;';
-    chart.style.position = 'relative';
-    chart.appendChild(divider);
-
-    const w1Label = document.createElement('div');
-    w1Label.className = 'week-divider-label';
-    w1Label.textContent = 'W1';
-    w1Label.style.cssText = 'position:absolute;top:0;font-size:8px;font-weight:600;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-transform:uppercase;';
-    w1Label.style.left = (dividerX - 20) + 'px';
-    chart.appendChild(w1Label);
-
-    const w2Label = document.createElement('div');
-    w2Label.className = 'week-divider-label';
-    w2Label.textContent = 'W2';
-    w2Label.style.cssText = 'position:absolute;top:0;font-size:8px;font-weight:600;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-transform:uppercase;';
-    w2Label.style.left = (dividerX + 8) + 'px';
-    chart.appendChild(w2Label);
-
-    // Milestone pills
-    const milestones = DATA.milestones;
-    milestones.forEach(m => {
-      const bar = barWraps[m.dayIndex];
-      if (!bar) return;
-      const barRect = bar.getBoundingClientRect();
-      const pill = document.createElement('div');
-      pill.className = 'milestone-pill ' + m.type + '-pill';
-      pill.textContent = m.label;
-      const pillLeft = barRect.left - chartRect.left + (barRect.width / 2);
-      const verticalOffset = m.offset ? 18 : 0;
-      pill.style.cssText = 'position:absolute;top:' + (20 + verticalOffset) + 'px;left:' + pillLeft + 'px;transform:translateX(-50%);z-index:3;';
-      chart.appendChild(pill);
-    });
-  });
-})();
-
-// ===================== VOLUME (STACKED CHART) =====================
-(function() {
-  const v = DATA.volume;
-  const days = DATA.daily;
-  const maxCombined = Math.max(...days.map(d => d.outcomeVol + d.hlVol));
-
-  let stackedHtml = '';
-  days.forEach((d, i) => {
-    const totalH = Math.max(4, Math.round(((d.outcomeVol + d.hlVol) / maxCombined) * 190));
-    const outcomeH = Math.max(2, Math.round((d.outcomeVol / (d.outcomeVol + d.hlVol)) * totalH));
-    const hlH = totalH - outcomeH;
-    const divider = (i === 7) ? '<div class="week-divider"><div class="week-divider-label">WEEK 2</div></div>' : '';
-    stackedHtml += `
-      <div class="stacked-bar-wrap">
-        ${divider}
-        <div class="stacked-bar hl" style="height:${hlH}px"></div>
-        <div class="stacked-bar outcome" style="height:${outcomeH}px"></div>
-        <div class="stacked-bar-date">${d.date.split(' ')[1]}</div>
-      </div>`;
-  });
-
-  document.getElementById('volumeCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> TRADING VOLUME · OUTCOME vs HYPERLIQUID</div>
-      <div class="card-meta">STACKED DAILY VOLUME</div>
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div> WC VOLUME GROWTH BY WEEK</div>
+      <div class="card-meta">OUTCOME WORLD CUP MARKET VOLUME</div>
     </div>
     <div class="volume-grid">
       <div>
-        <div class="volume-col-label">Platform Volume</div>
-        <div class="volume-big" style="color:#F58220">${formatPercent(v.platformShare)}</div>
-        <div class="volume-of">OF HL</div>
+        <div class="volume-col-label">Total WC Volume</div>
+        <div class="volume-big" style="color:#45E85C">$15.96M</div>
+        <div class="volume-of">ACROSS 3 WEEKS</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:${Math.min(v.platformShare, 100)}%;background:#45E85C"></div>
+          <div class="volume-bar-fill" style="width:100%;background:linear-gradient(90deg,#45E85C,#DDF23D);border-radius:3px"></div>
         </div>
-        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome ${formatCompactShort(v.outcomeTotal)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL ${formatCompactShort(v.hlTotal)}</div>
-        <div style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);margin-top:12px;">W1 ${formatPercent(DATA.week1.platformShare)} → W2 ${formatPercent(DATA.week2.platformShare)}</div>
+        <div class="volume-legend">
+          <span><span style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:#45E85C"></span>W1 $810K</span>
+          <span><span style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:#3B82F6"></span>W2 $4.95M</span>
+          <span><span style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:#DDF23D"></span>W3 $8.6M</span>
+        </div>
+        <div class="volume-delta up">&#9650; 10.6x growth from Week 1 to Week 3</div>
       </div>
       <div>
-        <div class="volume-col-label">World Cup Markets</div>
-        <div class="volume-big" style="color:#F58220">${formatPercent(v.wcShare)}</div>
-        <div class="volume-of">OF HL WC</div>
+        <div class="volume-col-label">Peak HL WC Share</div>
+        <div class="volume-big" style="color:#FF5C9E">40%</div>
+        <div class="volume-of">OF HL WC ON JUN 26</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:${Math.min(v.wcShare, 100)}%;background:#45E85C"></div>
+          <div class="volume-bar-fill" style="width:40%;background:#FF5C9E;border-radius:3px"></div>
         </div>
-        <div class="volume-legend"><span style="color:#F58220">&#9679;</span> Outcome ${formatCompactShort(v.outcomeWC)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC ${formatCompactShort(v.hlWC)}</div>
-        <div style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.35);margin-top:12px;">W1 ${formatPercent(DATA.week1.wcShare)} → W2 ${formatPercent(DATA.week2.wcShare)}</div>
+        <div class="volume-legend">
+          <span><span style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:#FF5C9E"></span>Peak share</span>
+          <span><span style="width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;background:rgba(255,255,255,.2)"></span>W1 avg 3.5%</span>
+        </div>
+        <div class="volume-delta up">&#9650; +36.5pp from W1 avg to W3 peak</div>
       </div>
       <div>
-        <div class="volume-col-label">Outcome vs HL Daily (Stacked)</div>
-        <div class="stacked-chart" style="position:relative">${stackedHtml}</div>
-        <div style="display:flex;gap:16px;margin-top:12px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:#45E85C"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Outcome</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.12)"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Hyperliquid</span>
-          </div>
-        </div>
-      </div>
-    </div>`;
-})();
-
-// ===================== IMPRESSIONS =====================
-(function() {
-  const channels = DATA.channelImpressions;
-  const maxViews = Math.max(...channels.map(c => c.views));
-  const totalViews = channels.reduce((s, c) => s + c.views, 0);
-  const sorted = [...channels].sort((a, b) => b.views - a.views);
-  const topChannel = sorted[0];
-  const secondChannel = sorted[1];
-  const topPct = totalViews > 0 ? ((topChannel.views / totalViews) * 100).toFixed(0) : 0;
-  const ratio = secondChannel && secondChannel.views > 0 ? (topChannel.views / secondChannel.views).toFixed(1) : 'N/A';
-
-  let rowsHtml = '';
-  channels.forEach(c => {
-    const w = maxViews > 0 ? (c.views / maxViews * 100) : 0;
-    rowsHtml += `
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:${c.color}"></div>${c.name}</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:${w}%;background:${c.color};opacity:0.7"></div>
-        </div>
-        <div class="imp-value">${formatCompact(c.views)}</div>
-      </div>`;
-  });
-
-  const axisMax = Math.ceil(maxViews / 1000000) * 1000000;
-  let axisHtml = '';
-  for (let i = 0; i <= 4; i++) {
-    const v = (axisMax / 4) * i;
-    axisHtml += `<span>${v === 0 ? '0' : formatCompact(v)}</span>`;
-  }
-
-  document.getElementById('impressionsCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> IMPRESSIONS BY CHANNEL</div>
-      <div class="card-meta">REACH · JUN 10 – 23</div>
-    </div>
-    <div class="imp-chart">
-      ${rowsHtml}
-      <div class="imp-axis">${axisHtml}</div>
-    </div>
-    <div class="imp-callouts">
-      <div class="imp-callout"><strong>${topPct}%</strong> of reach via ${topChannel.name}</div>
-      <div class="imp-callout"><strong>${ratio}x</strong> larger than the next channel</div>
-    </div>`;
-})();
-
-// ===================== TG SPONSORSHIP FUNNEL =====================
-(function() {
-  const f = DATA.tgFunnel;
-  const stages = [
-    { label: 'Impressions', value: f.impressions, color: '#45E85C', rate: '' },
-    { label: 'Clicks', value: f.clicks, color: '#1FCFA0', rate: (f.clicks / f.impressions * 100).toFixed(2) + '% CTR' },
-    { label: 'Signups', value: f.signups, color: '#3B82F6', rate: (f.signups / f.clicks * 100).toFixed(1) + '% conv' },
-    { label: 'Traders', value: f.estTraders, color: '#9B7CFF', rate: (f.estTraders / f.signups * 100).toFixed(0) + '% conv', estimated: true }
-  ];
-
-  // Log scale: map each value to a percentage of bar width
-  // log10(108) ≈ 2.03, log10(3.89M) ≈ 6.59. Range ~4.5 orders of magnitude.
-  const logMax = Math.log10(stages[0].value);
-  const logMin = Math.log10(stages[stages.length - 1].value);
-
-  let rowsHtml = '';
-  stages.forEach(s => {
-    const logW = ((Math.log10(s.value) - logMin) / (logMax - logMin)) * 90 + 10;
-    const estTag = s.estimated ? '<span class="funnel-est-tag">EST</span>' : '';
-    rowsHtml += `
-      <div class="funnel-row">
-        <div class="funnel-channel"><div class="dot" style="background:${s.color}"></div>${s.label}${estTag}</div>
-        <div class="funnel-bar-track">
-          <div class="funnel-bar-fill" style="width:${logW.toFixed(1)}%;background:${s.color};opacity:0.7"></div>
-        </div>
-        <div class="funnel-value">${formatCompact(s.value)}</div>
-        <div class="funnel-rate">${s.rate}</div>
-      </div>`;
-  });
-
-  const cpm = (f.spend / f.impressions * 1000).toFixed(2);
-  const cpc = (f.spend / f.clicks).toFixed(2);
-  const cpa = (f.spend / f.signups).toFixed(2);
-  const cpt = (f.spend / f.estTraders).toFixed(2);
-
-  document.getElementById('tgFunnelCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> TG WC SPONSORSHIP FUNNEL</div>
-      <div class="card-meta">$${formatNumber(f.spend)} SPEND · 79% OF REACH</div>
-    </div>
-    <div style="margin-top:8px">
-      ${rowsHtml}
-    </div>
-    <div class="cost-grid" style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
-      <div class="cost-card" style="padding:18px">
-        <div class="cost-label" style="margin-bottom:10px">CPM</div>
-        <div class="cost-value" style="font-size:28px">$${cpm}</div>
-        <div class="cost-sub" style="margin-top:8px">per 1,000 impressions</div>
-      </div>
-      <div class="cost-card" style="padding:18px">
-        <div class="cost-label" style="margin-bottom:10px">CPC</div>
-        <div class="cost-value" style="font-size:28px">$${cpc}</div>
-        <div class="cost-sub" style="margin-top:8px">per click</div>
-      </div>
-      <div class="cost-card" style="padding:18px">
-        <div class="cost-label" style="margin-bottom:10px">CPA</div>
-        <div class="cost-value" style="font-size:28px">$${cpa}</div>
-        <div class="cost-sub" style="margin-top:8px">per signup</div>
-      </div>
-      <div class="cost-card" style="padding:18px">
-        <div class="cost-label" style="margin-bottom:10px">CPT</div>
-        <div class="cost-value" style="font-size:28px">$${cpt}</div>
-        <div class="cost-sub" style="margin-top:8px">per first-time trader</div>
-      </div>
-    </div>`;
-})();
-
-// ===================== SIGNUP COHORT CONVERSION (POSTHOG) =====================
-(function() {
-  const cohorts = DATA.signupCohorts;
-  const totalSignups = cohorts.reduce((s, c) => s + c.signups, 0);
-  const totalTraders = cohorts.reduce((s, c) => s + c.everTraded, 0);
-  const maxSignups = Math.max(...cohorts.map(c => c.signups));
-  const overallRate = ((totalTraders / totalSignups) * 100).toFixed(1);
-
-  let rowsHtml = '';
-  cohorts.forEach((c, i) => {
-    const tradedW = (c.everTraded / maxSignups * 100).toFixed(1);
-    const neverW = ((c.signups - c.everTraded) / maxSignups * 100).toFixed(1);
-    const ratePct = (c.rate * 100).toFixed(1);
-    const weekTag = i === 0 ? ' <span style="font-size:8px;color:rgba(255,255,255,0.25);margin-left:4px">W1</span>' : (i === 7 ? ' <span style="font-size:8px;color:rgba(255,255,255,0.25);margin-left:4px">W2</span>' : '');
-    const borderStyle = i === 6 ? 'border-bottom:1px solid rgba(255,255,255,0.15)' : '';
-    const isRecent = i >= 12;
-    const recentNote = isRecent ? '<span style="font-size:7px;color:rgba(255,255,255,0.25);margin-left:4px">NEW</span>' : '';
-
-    rowsHtml += `
-      <div class="waterfall-row">
-        <div class="waterfall-label" style="${borderStyle}">
-          <span class="waterfall-label-date">${c.date}${weekTag}</span>
-          <span class="waterfall-label-day">${c.day}</span>
-        </div>
-        <div class="waterfall-bars" style="${borderStyle}">
-          <div class="waterfall-seg traders" style="width:${tradedW}%" title="${c.everTraded} ever traded">${c.everTraded > 20 ? c.everTraded : ''}</div>
-          <div class="waterfall-seg dormant" style="width:${neverW > 0 ? neverW : 0}%" title="${c.signups - c.everTraded} never traded"></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);${borderStyle};white-space:nowrap">
-          <span style="font-size:9px;color:rgba(255,255,255,0.4)">${c.signups} signups · <span style="color:${c.rate >= 0.5 ? '#45E85C' : c.rate >= 0.35 ? '#F58220' : 'rgba(255,255,255,0.5)'};font-weight:600">${ratePct}%</span>${recentNote}</span>
-        </div>
-      </div>`;
-  });
-
-  document.getElementById('cohortCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> DAILY SIGNUP COHORTS · EVER TRADED</div>
-      <div class="card-meta">POSTHOG DATA · ${overallRate}% OVERALL CONVERSION · ${formatNumber(totalSignups)} SIGNUPS → ${formatNumber(totalTraders)} TRADERS</div>
-    </div>
-    <div class="waterfall-grid">
-      <div class="waterfall-header">
-        <div class="waterfall-header-label">Cohort Day</div>
-        <div class="waterfall-header-label">Signup → Trader Conversion</div>
-        <div class="waterfall-header-label" style="text-align:right"></div>
-      </div>
-      ${rowsHtml}
-    </div>
-    <div class="waterfall-legend">
-      <div class="waterfall-legend-item"><div class="waterfall-legend-dot" style="background:#3B82F6"></div> Ever Traded</div>
-      <div class="waterfall-legend-item"><div class="waterfall-legend-dot" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15)"></div> Never Traded</div>
-      <div class="waterfall-legend-item" style="margin-left:auto;font-size:9px;color:rgba(255,255,255,0.35)">Source: PostHog signup cohort analysis as of Jun 23</div>
-    </div>`;
-})();
-
-// ===================== WEEKLY TRADER RETENTION (POSTHOG) =====================
-(function() {
-  const weeks = DATA.weeklyRetention;
-  const maxCohort = Math.max(...weeks.map(w => w.cohortSize));
-
-  let rowsHtml = '';
-  weeks.forEach((w, i) => {
-    const cohortW = (w.cohortSize / maxCohort * 80).toFixed(1);
-    const ret7W = w.ret7d ? (w.ret7d / maxCohort * 80).toFixed(1) : 0;
-    const ret14W = w.ret14d ? (w.ret14d / maxCohort * 80).toFixed(1) : 0;
-    const rate7 = w.rate7d ? (w.rate7d * 100).toFixed(1) + '%' : '...';
-    const rate14 = w.rate14d ? (w.rate14d * 100).toFixed(1) + '%' : '...';
-    const isCampaign = w.label.startsWith('Campaign');
-
-    rowsHtml += `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.04)">
-        <td style="padding:12px 12px 12px 0;vertical-align:middle">
-          <div style="font-size:11px;font-weight:600;color:#F5F8FF">${w.week}</div>
-          <div style="font-size:9px;color:${isCampaign ? '#45E85C' : 'rgba(255,255,255,0.35)'};text-transform:uppercase">${w.label}</div>
-        </td>
-        <td style="padding:12px 16px;text-align:right;vertical-align:middle">
-          <span style="font-size:13px;font-weight:600;color:#F5F8FF">${formatNumber(w.cohortSize)}</span>
-        </td>
-        <td style="padding:12px 0;vertical-align:middle">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="height:20px;border-radius:3px;background:rgba(69,232,92,0.25);width:${cohortW}%;position:relative">
-              ${w.ret7d ? '<div style="height:100%;border-radius:3px;background:#45E85C;width:' + ((w.ret7d / w.cohortSize) * 100).toFixed(1) + '%"></div>' : ''}
+        <div class="volume-col-label">Weekly WC Volume</div>
+        <div class="vol-chart">
+          <div class="vol-bar-group">
+            <div class="vol-bar-label">$810K</div>
+            <div class="vol-bar-stack">
+              <div class="wc-bar" style="height:16px;background:#45E85C"></div>
             </div>
+            <div class="vol-day">Week 1</div>
           </div>
-        </td>
-        <td style="padding:12px 8px;text-align:center;vertical-align:middle;min-width:50px">
-          <span style="font-size:12px;font-weight:600;color:${w.rate7d ? '#45E85C' : 'rgba(255,255,255,0.2)'}">${rate7}</span>
-        </td>
-        <td style="padding:12px 8px;text-align:center;vertical-align:middle;min-width:50px">
-          <span style="font-size:12px;font-weight:600;color:${w.rate14d ? '#3B82F6' : 'rgba(255,255,255,0.2)'}">${rate14}</span>
-        </td>
-      </tr>`;
-  });
-
-  document.getElementById('weeklyRetentionCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div> WEEKLY TRADER RETENTION</div>
-      <div class="card-meta">POSTHOG DATA · 7-DAY AND 14-DAY RETENTION RATES</div>
-    </div>
-    <table style="width:100%;border-collapse:collapse">
-      <thead><tr>
-        <th style="font-size:9px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:left;padding:0 0 10px 0">Week Of</th>
-        <th style="font-size:9px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:right;padding:0 16px 10px 0">Cohort</th>
-        <th style="font-size:9px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:left;padding:0 0 10px 0">Retention</th>
-        <th style="font-size:9px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:center;padding:0 8px 10px 8px">7d</th>
-        <th style="font-size:9px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:center;padding:0 8px 10px 8px">14d</th>
-      </tr></thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
-    <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.3);font-style:italic">
-      Jun 15 and Jun 22 cohorts are too recent for 7d retention data. Jun 8 (Campaign W1) shows 43.6% at 7d vs pre-campaign baseline of 66-70%.
-      Lower 7d retention for campaign cohorts is expected: larger cohort sizes from paid acquisition include more casual users.
-    </div>`;
-})();
-
-// ===================== DAILY TOTALS =====================
-(function() {
-  const metrics = [
-    { key: 'visits', label: 'Visits' },
-    { key: 'signups', label: 'Signups' },
-    { key: 'traders', label: 'Traders' }
-  ];
-
-  function renderDailyChart(metricKey) {
-    let barsHtml = '';
-    if (metricKey === 'visits') {
-      const maxVal = Math.max(...DATA.daily.map(d => Math.max(d.visitors, d.clicks)));
-      DATA.daily.forEach((d, i) => {
-        const barMax = Math.max(d.visitors, d.clicks);
-        const totalH = maxVal > 0 ? Math.round((barMax / maxVal) * 160) : 0;
-        const clickH = Math.min(totalH, barMax > 0 ? Math.round((d.clicks / barMax) * totalH) : 0);
-        const organicH = totalH - clickH;
-        barsHtml += `
-          <div class="daily-bar-wrap">
-            <div class="daily-bar-val">${formatNumber(barMax)}</div>
-            <div style="display:flex;flex-direction:column;width:100%;height:${totalH}px">
-              <div style="flex:0 0 ${organicH}px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>
-              <div style="flex:0 0 ${clickH}px;background:#3B82F6;border-radius:${organicH === 0 ? '4px 4px' : '0 0'} 0 0"></div>
+          <div class="vol-bar-group" style="position:relative">
+            <div class="vol-bar-label">$4.95M</div>
+            <div class="vol-bar-stack">
+              <div class="wc-bar" style="height:99px;background:#3B82F6"></div>
             </div>
-            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
-            <div class="daily-bar-day">${d.day}</div>
-          </div>`;
-      });
-    } else {
-      const vals = DATA.daily.map(d => d[metricKey]);
-      const maxVal = Math.max(...vals);
-      DATA.daily.forEach((d, i) => {
-        const h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-        const weekClass = d.week === 1 ? 'w1' : 'w2';
-        barsHtml += `
-          <div class="daily-bar-wrap">
-            <div class="daily-bar-val">${formatNumber(vals[i])}</div>
-            <div class="daily-bar ${weekClass}" style="height:${h}px"></div>
-            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
-            <div class="daily-bar-day">${d.day}</div>
-          </div>`;
-      });
-    }
-    return barsHtml;
-  }
-
-  function getLegend(metricKey) {
-    if (metricKey === 'visits') {
-      return `
-        <div style="display:flex;gap:16px;margin-top:12px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>
+            <div class="vol-day">Week 2</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>
+          <div class="vol-bar-group">
+            <div class="vol-bar-label">$8.6M</div>
+            <div class="vol-bar-stack">
+              <div class="wc-bar" style="height:172px;background:#DDF23D"></div>
+            </div>
+            <div class="vol-day">Week 3</div>
           </div>
-        </div>`;
-    }
-    return `
-      <div style="display:flex;gap:16px;margin-top:12px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:10px;height:10px;border-radius:2px;background:#45E85C"></div>
-          <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Week 1</span>
         </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
-          <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Week 2</span>
+        <div class="vol-legend">
+          <span><span class="vol-legend-dot" style="background:#45E85C"></span>Week 1</span>
+          <span><span class="vol-legend-dot" style="background:#3B82F6"></span>Week 2</span>
+          <span><span class="vol-legend-dot" style="background:#DDF23D"></span>Week 3</span>
         </div>
-      </div>`;
-  }
-
-  let btnsHtml = '';
-  metrics.forEach((m, i) => {
-    btnsHtml += `<button class="metric-btn${i === 0 ? ' active' : ''}" data-metric="${m.key}">${m.label}</button>`;
-  });
-
-  document.getElementById('dailyCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> DAILY TOTALS</div>
-      <div class="metric-switcher">${btnsHtml}</div>
+      </div>
     </div>
-    <div class="daily-subtitle" id="dailySubtitle">${metrics[0].label} · Jun 10 – 23</div>
-    <div class="daily-chart" id="dailyChartArea">${renderDailyChart(metrics[0].key)}</div>
-    <div id="dailyLegend">${getLegend(metrics[0].key)}</div>`;
+  </div>
 
-  document.querySelectorAll('.metric-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.metric-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      const mk = this.dataset.metric;
-      const label = metrics.find(m => m.key === mk).label;
-      document.getElementById('dailySubtitle').textContent = label + ' · Jun 10 – 23';
-      document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
-      document.getElementById('dailyLegend').innerHTML = getLegend(mk);
-    });
-  });
-})();
+  <!-- SIDE GRID: WEEKLY COMPARISON + FUNNEL -->
+  <div class="side-grid">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#3B82F6"></div> WEEKLY COMPARISON</div>
+      </div>
+      <table class="breakdown-table">
+        <thead>
+          <tr><th>Metric</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Visitors</td><td>18,079</td><td>9,665</td><td>17,748</td><td style="color:#F5F8FF;font-weight:600">45,492</td></tr>
+          <tr><td>Signups</td><td>1,660</td><td>1,922</td><td>1,013</td><td style="color:#F5F8FF;font-weight:600">4,595</td></tr>
+          <tr><td>Depositors</td><td>169</td><td>209</td><td>168</td><td style="color:#F5F8FF;font-weight:600">546</td></tr>
+          <tr><td>Active Traders</td><td>1,137</td><td>1,192</td><td>1,111</td><td style="color:#F5F8FF;font-weight:600">3,440</td></tr>
+          <tr><td>WC Volume</td><td>$810K</td><td>$4.95M</td><td>$8.6M</td><td style="color:#45E85C;font-weight:600">$15.96M</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-// ===================== CONVERSIONS TABLE =====================
-(function() {
-  const convs = DATA.conversions;
-  const totals = {
-    visitors: convs.reduce((s, c) => s + c.visitors, 0),
-    signups: convs.reduce((s, c) => s + c.signups, 0),
-    traders: convs.reduce((s, c) => s + c.traders, 0)
-  };
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#F58220"></div> CAMPAIGN FUNNEL</div>
+      </div>
+      <table class="conv-table">
+        <thead>
+          <tr><th>Stage</th><th>Total</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>45,492</td><td>100%</td></tr>
+          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>4,595</td><td>10.1%</td></tr>
+          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>546</td><td>11.9%</td></tr>
+          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>3,440</td><td>74.9%</td></tr>
+          <tr class="total"><td>WC Volume</td><td>$15.96M</td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="conv-footnote">Depositors and traders as % of signups. Visitors to signups is 10.1%.</div>
+    </div>
+  </div>
 
-  let rowsHtml = '';
-  convs.forEach(c => {
-    rowsHtml += `
-      <tr>
-        <td><div class="dot" style="background:${c.color}"></div>${c.name}</td>
-        <td>${formatNumber(c.visitors)}</td>
-        <td>${formatNumber(c.signups)}</td>
-        <td>${formatNumber(c.traders)}</td>
-      </tr>`;
-  });
-
-  document.getElementById('conversionsCard').innerHTML = `
+  <!-- CONVERSIONS BY SOURCE -->
+  <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div> CONVERSIONS BY SOURCE</div>
+      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 - 30</div>
     </div>
     <table class="conv-table">
-      <thead><tr>
-        <th>Channel</th><th>Visitors</th><th>Signups</th><th>Traders</th>
-      </tr></thead>
+      <thead>
+        <tr><th>Channel</th><th>Visitors</th><th>Signups</th><th>Traders</th></tr>
+      </thead>
       <tbody>
-        ${rowsHtml}
-        <tr class="total">
-          <td>Total</td>
-          <td>${formatNumber(totals.visitors)}</td>
-          <td>${formatNumber(totals.signups)}</td>
-          <td>${formatNumber(totals.traders)}</td>
-        </tr>
+        <tr><td><div class="dot" style="background:#45E85C"></div>Telegram WC Sponsor</td><td>18,490</td><td>364</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#3B82F6"></div>X Organic</td><td>1,082</td><td>61</td><td>28</td></tr>
+        <tr><td><div class="dot" style="background:#45E85C"></div>Telegram Ads</td><td>182</td><td>25</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#FF5C9E"></div>X Giveaways</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#F58220"></div>Telegram Organic</td><td>321</td><td>5</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#9333EA"></div>Discord Organic</td><td>100</td><td>6</td><td>11</td></tr>
+        <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>652</td><td>98</td><td>2</td></tr>
+        <tr><td><div class="dot" style="background:#FF5C9E"></div>Substack</td><td>122</td><td>3</td><td>26</td></tr>
+        <tr><td><div class="dot" style="background:#3B82F6"></div>HL S2 Analyzer</td><td>14</td><td>0</td><td>1</td></tr>
+        <tr><td><div class="dot" style="background:#1FCFA0"></div>Shortmob</td><td>90</td><td>0</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:rgba(255,255,255,.25)"></div>Unattributed</td><td>28,057</td><td>3,709</td><td>2,888</td></tr>
+        <tr class="total"><td>Total</td><td>49,110</td><td>4,271</td><td>2,956</td></tr>
       </tbody>
     </table>
-    <div class="conv-footnote">Combined totals across Weeks 1 &amp; 2.</div>
-    <div class="conv-footnote" style="margin-top:8px;font-style:italic">From Jun 10–23, post-sign-in events (deposit, trade) are unattributed due to losing tracking parameters in the sign-in process.</div>`;
-})();
+    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jun 30.</div>
+    <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
+  </div>
 
-// ===================== ATTRIBUTION INTELLIGENCE =====================
-(function() {
-  const grid = document.getElementById('attributionGrid');
-  DATA.attribution.forEach(a => {
-    grid.innerHTML += `
-      <div class="insight-block">
-        <div class="insight-icon" style="background:${a.bgColor}">
-          <div class="dot" style="background:${a.color}"></div>
-        </div>
-        <div class="insight-label" style="color:${a.color}">${a.label}</div>
-        <div class="insight-text">${a.text}</div>
-      </div>`;
-  });
-
-  const d = DATA.kpi;
-  const tradeRate = (d.activeTraders / d.signups * 100).toFixed(1);
-  const stats = document.getElementById('attributionStats');
-  const statData = [
-    { value: '14.6%', label: 'Blended Signup-to-Trader', color: '#45E85C' },
-    { value: '87.8%', label: 'Signups w/ No UTM', color: '#F58220' },
-    { value: '~59', label: 'Est. Telegram Traders', color: '#3B82F6' },
-    { value: '60-100', label: 'Est. Total Paid Traders', color: '#FF5C9E' }
-  ];
-  stats.innerHTML = '<div class="stat-grid">' + statData.map(s => `
-    <div class="stat-card">
-      <div class="stat-value" style="color:${s.color}">${s.value}</div>
-      <div class="stat-label">${s.label}</div>
-    </div>`).join('') + '</div>';
-})();
-
-// ===================== RETENTION & COHORT INSIGHTS =====================
-(function() {
-  const grid = document.getElementById('retentionGrid');
-  DATA.retention.forEach(r => {
-    grid.innerHTML += `
-      <div class="insight-block">
-        <div class="insight-icon" style="background:${r.bgColor}">
-          <div class="dot" style="background:${r.color}"></div>
-        </div>
-        <div class="insight-label" style="color:${r.color}">${r.label}</div>
-        <div class="insight-text">${r.text}</div>
-      </div>`;
-  });
-
-  const stats = document.getElementById('retentionStats');
-  const statData = [
-    { value: '48.6%', label: 'Ever-Traded (PostHog)', color: '#45E85C' },
-    { value: '43.6%', label: '7d Retention (Jun 8)', color: '#3B82F6' },
-    { value: '~59%', label: '14d Retention (Baseline)', color: '#F58220' },
-    { value: '79.9%', label: 'WC Share of Volume', color: '#FF5C9E' }
-  ];
-  statData.forEach(s => {
-    stats.innerHTML += `
-      <div class="stat-card">
-        <div class="stat-value" style="color:${s.color}">${s.value}</div>
-        <div class="stat-label">${s.label}</div>
-      </div>`;
-  });
-})();
-
-// ===================== DAILY BREAKDOWN =====================
-(function() {
-  const days = DATA.daily;
-  const totals = {
-    impressions: days.reduce((s, d) => s + d.impressions, 0),
-    clicks: days.reduce((s, d) => s + d.clicks, 0),
-    visitors: days.reduce((s, d) => s + d.visitors, 0),
-    signups: days.reduce((s, d) => s + d.signups, 0),
-    depositors: days.reduce((s, d) => s + d.depositors, 0),
-    traders: days.reduce((s, d) => s + d.traders, 0),
-    outcomeVol: days.reduce((s, d) => s + d.outcomeVol, 0)
-  };
-  const hlShare = DATA.volume.platformShare;
-
-  let rowsHtml = '';
-  days.forEach((d, i) => {
-    const share = d.hlVol > 0 ? ((d.outcomeVol / d.hlVol) * 100).toFixed(1) : '0.0';
-    const sepClass = i === 6 ? ' class="week-sep"' : '';
-    rowsHtml += `
-      <tr${sepClass}>
-        <td><span class="breakdown-date-main">${d.date}</span><span class="breakdown-date-day">${d.day}</span></td>
-        <td>${formatNumber(d.impressions)}</td>
-        <td>${formatNumber(d.clicks)}</td>
-        <td>${formatNumber(d.visitors)}</td>
-        <td class="green">${formatNumber(d.signups)}</td>
-        <td>${formatNumber(d.depositors)}</td>
-        <td>${formatNumber(d.traders)}</td>
-        <td class="orange">${formatCurrency(d.outcomeVol)}</td>
-        <td>${share}%</td>
-      </tr>`;
-  });
-
-  document.getElementById('breakdownCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#F58220"></div> DAILY BREAKDOWN</div>
+  <!-- GROWTH CARDS -->
+  <div class="growth-grid">
+    <div class="growth-card" style="border-color:rgba(69,232,92,.2)">
+      <div class="growth-week">Week 1 &middot; Jun 10-16</div>
+      <div class="growth-val" style="color:#45E85C">$810K</div>
+      <div class="growth-label">WC Volume &middot; Baseline</div>
     </div>
-    <div class="breakdown-subtitle">ACQUISITION FUNNEL & OUTCOME VOLUME BY DAY · 14 DAYS</div>
-    <table class="breakdown-table">
-      <thead><tr>
-        <th>Date</th><th>Impressions</th><th>Clicks</th><th>Visitors</th>
-        <th>Signups</th><th>Depositors</th><th>Traders</th><th>Outcome Vol.</th><th>HL Share</th>
-      </tr></thead>
-      <tbody>
-        ${rowsHtml}
-        <tr class="summary-row">
-          <td>OVERALL</td>
-          <td>${formatNumber(totals.impressions)}</td>
-          <td>${formatNumber(totals.clicks)}</td>
-          <td>${formatNumber(totals.visitors)}</td>
-          <td class="green">${formatNumber(totals.signups)}</td>
-          <td>${formatNumber(totals.depositors)}</td>
-          <td>${formatNumber(totals.traders)}</td>
-          <td class="orange">${formatCurrencyFull(totals.outcomeVol)}</td>
-          <td>${formatPercent(hlShare)}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="breakdown-footer">SOURCE · OUTCOME WORLD CUP CAMPAIGN TRACKER · CONVERSIONS VIA POSTHOG · VOLUME VS HYPERLIQUID HIP-4</div>`;
-})();
-</script>
+    <div class="growth-card" style="border-color:rgba(59,130,246,.2)">
+      <div class="growth-week">Week 2 &middot; Jun 17-23</div>
+      <div class="growth-val" style="color:#3B82F6">$4.95M</div>
+      <div class="growth-label">WC Volume &middot; 6.1x W1</div>
+    </div>
+    <div class="growth-card" style="border-color:rgba(221,242,61,.2)">
+      <div class="growth-week">Week 3 &middot; Jun 24-30</div>
+      <div class="growth-val" style="color:#DDF23D">$8.6M</div>
+      <div class="growth-label">WC Volume &middot; 10.6x W1</div>
+    </div>
+  </div>
 
+  <div class="footer-note">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; CONVERSIONS VIA POSTHOG &middot; VOLUME VS HYPERLIQUID HIP-4</div>
+</div>
 </body>
 </html>
