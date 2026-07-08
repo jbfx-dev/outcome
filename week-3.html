@@ -1,118 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Week 3</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased}
-body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,sans-serif;min-height:100vh}
-.nav{position:sticky;top:0;z-index:20;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(10,10,11,.74);backdrop-filter:blur(12px)}
-.nav-left{display:flex;align-items:center;gap:10px}
-.nav-logo{height:20px;width:auto;flex-shrink:0}
-.nav-sep{color:rgba(255,255,255,.25);font-size:14px}
-.nav-label{font-size:11px;font-weight:500;letter-spacing:.12em;color:rgba(255,255,255,.45);text-transform:uppercase}
-.nav-right{display:flex;align-items:center;gap:10px}
-.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.1em;color:#45E85C;border:1px solid rgba(69,232,92,.3);border-radius:20px;padding:5px 14px;text-transform:uppercase}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#45E85C;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.date-badge{font-size:11px;font-weight:500;letter-spacing:.08em;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 14px}
-.content{max-width:1320px;margin:0 auto;padding:32px 40px 60px}
-.week-nav{display:inline-flex;border-radius:10px;border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-bottom:24px}
-.week-nav a{padding:9px 20px;font-size:12px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.45);text-decoration:none;border-right:1px solid rgba(255,255,255,.08);transition:.15s}
-.week-nav a:last-child{border-right:none}
-.week-nav a:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.04)}
-.week-nav a.active{background:rgba(255,255,255,.1);color:#F5F8FF}
-.title-area{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px}
-.title-sub{font-size:11px;font-weight:600;letter-spacing:.14em;color:#45E85C;text-transform:uppercase;margin-bottom:4px}
-.title-h1{font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:800;line-height:.95;text-transform:uppercase;letter-spacing:-.02em}
-.green{color:#45E85C}
-.title-badges{display:flex;gap:8px;align-self:flex-end}
-.badge{font-size:11px;font-weight:500;letter-spacing:.06em;padding:7px 16px;border:1px solid rgba(255,255,255,.12);border-radius:20px;color:rgba(255,255,255,.6)}
-.badge.orange{border-color:rgba(245,130,32,.4);color:#F58220}
-.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
-.kpi-card{position:relative;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);overflow:hidden}
-.kpi-bar{position:absolute;top:0;left:0;width:100%;height:3px}
-.kpi-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
-.kpi-value{font-family:Inter,system-ui,sans-serif;font-size:32px;font-weight:600;letter-spacing:-.04em;line-height:1;color:#F5F8FF}
-.kpi-sub{font-size:10px;font-weight:500;letter-spacing:.04em;color:rgba(255,255,255,.45);margin-top:9px;text-transform:uppercase}
-.card{padding:28px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);margin-bottom:14px}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.card-title{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.card-meta{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase}
-.volume-grid{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:32px}
-.volume-col-label{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:16px}
-.volume-big{font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:700;line-height:1;margin-bottom:4px}
-.volume-of{font-size:12px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:20px}
-.volume-bar-track{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin-bottom:12px;overflow:hidden;display:flex}
-.volume-bar-fill{height:100%;border-radius:3px}
-.volume-legend{font-size:10px;font-weight:500;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:12px}
-.volume-legend .ldot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
-.volume-delta{font-size:11px;font-weight:500;margin-top:10px}
-.volume-delta.up{color:#45E85C}
-.vol-chart{display:flex;align-items:flex-end;gap:10px;height:150px}
-.vol-bar-group{display:flex;flex-direction:column;align-items:center;flex:1}
-.vol-bar-label{font-size:10px;font-weight:500;color:rgba(255,255,255,.5);margin-bottom:6px}
-.vol-bar-stack{display:flex;flex-direction:column;width:100%;border-radius:4px;overflow:hidden}
-.vol-bar-stack .total-bar{background:#45E85C}
-.vol-bar-stack .wc-bar{background:#DDF23D}
-.vol-day{font-size:10px;font-weight:500;color:rgba(255,255,255,.35);margin-top:6px}
-.vol-legend{display:flex;gap:16px;margin-top:14px;font-size:10px;font-weight:500;color:rgba(255,255,255,.45);align-items:center}
-.vol-legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
-.side-grid{display:grid;grid-template-columns:1fr .82fr;gap:14px;margin-bottom:14px}
-.metric-switcher{display:flex;gap:6px}
-.metric-btn{padding:6px 14px;border-radius:8px;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;outline:none;transition:.15s;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
-.metric-btn.active{background:rgba(69,232,92,.12);border:1px solid rgba(69,232,92,.3);color:#45E85C}
-.daily-subtitle{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:20px}
-.daily-chart{display:flex;align-items:flex-end;gap:10px;height:140px;margin-bottom:10px}
-.daily-col{flex:1;display:flex;flex-direction:column;align-items:center}
-.daily-val{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:4px}
-.daily-bar-wrap{width:100%;display:flex;flex-direction:column;border-radius:4px 4px 0 0;overflow:hidden}
-.daily-bar-wrap .mkt{background:#3B82F6}
-.daily-bar-wrap .org{background:rgba(59,130,246,.35)}
-.daily-day{font-size:10px;font-weight:500;color:rgba(255,255,255,.3);margin-top:6px}
-.daily-legend{display:flex;gap:16px;font-size:10px;color:rgba(255,255,255,.35);align-items:center}
-.conv-table{width:100%;border-collapse:collapse}
-.conv-table th{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:right;padding:0 0 12px}
-.conv-table th:first-child{text-align:left}
-.conv-table td{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;font-weight:500;color:rgba(255,255,255,.7);text-align:right}
-.conv-table td:first-child{text-align:left;display:flex;align-items:center;gap:8px}
-.conv-table td:first-child .dot{width:8px;height:8px}
-.conv-table tr.total td{border-bottom:none;font-weight:600;color:#F5F8FF;padding-top:14px}
-.conv-table tr.total td:first-child{color:#45E85C}
-.conv-footnote{font-size:10px;font-weight:500;color:rgba(255,255,255,.25);margin-top:16px;letter-spacing:.04em}
-.breakdown-card{padding:24px 24px 8px}
-.breakdown-subtitle{font-size:10px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:16px}
-.breakdown-table{width:100%;border-collapse:collapse}
-.breakdown-table th{font-size:10px;font-weight:500;letter-spacing:.08em;color:rgba(255,255,255,.35);text-transform:uppercase;text-align:right;padding:0 0 10px;white-space:nowrap}
-.breakdown-table th:first-child,.breakdown-table th:nth-child(2){text-align:left}
-.breakdown-table td{padding:8px 0;border-top:1px solid rgba(255,255,255,.05);font-size:12px;font-weight:500;color:rgba(255,255,255,.6);text-align:right}
-.breakdown-table td:first-child{color:rgba(255,255,255,.85);text-align:left}
-.breakdown-table td:nth-child(2){text-align:left;color:rgba(255,255,255,.3);font-size:10px}
-.breakdown-table tr.week-total td{border-top:2px solid rgba(255,255,255,.12);font-weight:600;color:#F5F8FF;padding-top:12px}
-.breakdown-table tr.week-total td:first-child{color:#45E85C}
-.footer-note{font-size:9px;font-weight:500;letter-spacing:.06em;color:rgba(255,255,255,.2);text-transform:uppercase;text-align:center;padding:24px 0}
-.imp-grid{display:grid;grid-template-columns:1fr .4fr;gap:32px}
-.imp-bars{display:flex;flex-direction:column;gap:8px}
-.imp-row{display:flex;align-items:center;gap:12px}
-.imp-label{width:160px;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);flex-shrink:0;text-align:right}
-.imp-track{flex:1;height:24px;border-radius:4px;background:rgba(255,255,255,.04);overflow:hidden;position:relative}
-.imp-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
-.imp-val{font-size:10px;font-weight:600;color:rgba(255,255,255,.85)}
-.imp-axis{display:flex;justify-content:space-between;margin-top:4px;padding-left:172px}
-.imp-axis span{font-size:9px;font-weight:500;color:rgba(255,255,255,.2)}
-.imp-callout{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.04em;line-height:1.8}
-.imp-callout strong{color:#F5F8FF;font-weight:600}
-.hero-insight{padding:20px 24px;border-radius:12px;background:rgba(69,232,92,.06);border:1px solid rgba(69,232,92,.15);margin-bottom:14px;display:flex;align-items:center;gap:14px}
-.hero-icon{font-size:22px}
-.hero-text{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:.02em}
-.hero-text strong{color:#45E85C;font-weight:600}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: condensed;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  background: #0A0A0B;
+  color: #F5F8FF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,11,0.74);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.live-badge {
+  height: 30px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid rgba(255,92,92,0.4);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  color: rgb(255,92,92); text-transform: uppercase;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle, rgb(255,92,92) 0%, rgba(255,92,92,0.4) 100%);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+.date-badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- CONTENT ---------- */
+.content {
+  max-width: 1480px; margin: 0 auto;
+  padding: 44px 40px 64px;
+}
+
+/* ---------- WEEK NAV ---------- */
+.week-nav {
+  display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px;
+}
+.week-nav a {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 8px 16px; border-radius: 8px;
+  cursor: pointer; text-decoration: none;
+  color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.15s ease;
+}
+.week-nav a:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.12); }
+.week-nav a.active {
+  color: #F5F8FF; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ---------- TITLE ---------- */
+.title-area {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 32px; flex-wrap: wrap; margin-bottom: 34px;
+}
+.title-left {}
+.title-sub {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.16em;
+  color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
+}
+.title-h1 {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
+  font-stretch: condensed; text-transform: uppercase;
+  letter-spacing: -0.01em; font-size: 64px; line-height: 0.88;
+  color: #F5F8FF;
+}
+.title-h1 .green { color: #45E85C; }
+.title-badges { display: flex; gap: 10px; align-items: center; }
+.badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+.badge.orange { color: #F58220; border-color: rgba(245,130,32,0.3); }
+
+/* ---------- KPI CARDS ---------- */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+.kpi-card {
+  position: relative; padding: 20px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); overflow: hidden;
+}
+.kpi-bar {
+  position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+}
+.kpi-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.kpi-value {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
+  line-height: 1; color: #F5F8FF;
+}
+.kpi-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
+}
+.kpi-delta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+  margin-top: 6px;
+}
+.kpi-delta.up { color: #45E85C; }
+.kpi-delta.down { color: #FF5C9E; }
+
+/* ---------- CARD ---------- */
+.card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.card-meta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+}
+
+/* ---------- VOLUME SECTION ---------- */
+.volume-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 32px;
+}
+.volume-col-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 16px;
+}
+.volume-big {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 52px; font-weight: 600; line-height: 1; margin-bottom: 4px;
+}
+.volume-of {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 20px;
+}
+.volume-bar-track {
+  width: 100%; height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.08); margin-bottom: 12px; overflow: hidden;
+}
+.volume-bar-fill { height: 100%; border-radius: 3px; }
+.volume-legend {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); text-transform: uppercase;
+}
+.volume-delta {
+  font-size: 10px; font-weight: 500; margin-top: 8px;
+}
+.volume-delta.up { color: #45E85C; }
+
+/* Volume bar chart */
+.vol-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; }
+.vol-bar-wrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%;
+  justify-content: flex-end;
+}
+.vol-bar-label {
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.vol-bar-stack {
+  width: 100%; border-radius: 4px 4px 0 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.vol-bar-total { background: #45E85C; }
+.vol-bar-wc { background: #C4E84A; }
+.vol-bar-day {
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; margin-top: 6px;
+}
+
+/* ---------- IMPRESSIONS / SHARE BARS ---------- */
+.imp-chart { margin-top: 8px; }
+.imp-row {
+  display: flex; align-items: center; gap: 0; margin-bottom: 10px;
+}
+.imp-channel {
+  width: 200px; flex-shrink: 0;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.imp-channel .dot { width: 8px; height: 8px; }
+.imp-bar-track {
+  flex: 1; height: 28px; border-radius: 4px;
+  background: rgba(255,255,255,0.03); overflow: hidden; position: relative;
+}
+.imp-bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
+.imp-value {
+  width: 90px; text-align: right; flex-shrink: 0;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.6); padding-left: 12px;
+}
+.imp-axis {
+  display: flex; justify-content: space-between;
+  margin-top: 8px; padding-left: 200px; padding-right: 90px;
+}
+.imp-axis span {
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+.imp-callouts {
+  display: flex; gap: 32px; margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.imp-callout {
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.45);
+  letter-spacing: 0.04em;
+}
+.imp-callout strong { color: #F5F8FF; font-weight: 600; }
+
+/* ---------- DAILY + SUMMARY SIDE BY SIDE ---------- */
+.side-grid {
+  display: grid; grid-template-columns: 1fr 0.82fr;
+  gap: 14px; margin-bottom: 14px;
+}
+
+/* Daily totals chart */
+.metric-switcher { display: flex; gap: 6px; }
+.metric-btn {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; border: none; outline: none;
+  transition: all 0.15s ease;
+  background: transparent; border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+}
+.metric-btn.active {
+  background: rgba(69,232,92,0.12); border: 1px solid rgba(69,232,92,0.3);
+  color: #45E85C;
+}
+.metric-btn:hover:not(.active) {
+  border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
+}
+.daily-subtitle {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 20px;
+}
+.daily-chart { display: flex; align-items: flex-end; gap: 10px; height: 200px; padding-top: 20px; }
+.daily-bar-wrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  height: 100%; justify-content: flex-end;
+}
+.daily-bar-val {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.daily-bar {
+  width: 100%; border-radius: 4px 4px 0 0;
+  background: #45E85C; transition: height 0.3s ease;
+}
+.daily-bar-date {
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6);
+  margin-top: 8px;
+}
+.daily-bar-day {
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+/* ---------- CONVERSIONS TABLE ---------- */
+.conv-table { width: 100%; border-collapse: collapse; }
+.conv-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 0 12px 0;
+}
+.conv-table th:first-child { text-align: left; }
+.conv-table td {
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7);
+  text-align: right;
+}
+.conv-table td:first-child {
+  text-align: left; display: flex; align-items: center; gap: 8px;
+}
+.conv-table td:first-child .dot { width: 8px; height: 8px; }
+.conv-table tr.total td {
+  border-bottom: none; font-weight: 600; color: #F5F8FF;
+  padding-top: 14px;
+}
+.conv-table tr.total td:first-child { color: #45E85C; }
+.conv-footnote {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.25);
+  margin-top: 16px; letter-spacing: 0.04em;
+}
+
+/* ---------- DAILY BREAKDOWN TABLE ---------- */
+.breakdown-card { padding: 24px 24px 8px; }
+.breakdown-subtitle {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.breakdown-table { width: 100%; border-collapse: collapse; }
+.breakdown-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 0 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.breakdown-table th:first-child { text-align: left; }
+.breakdown-table td {
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  text-align: right;
+}
+.breakdown-table td:first-child { text-align: left; }
+.breakdown-date-main { color: #F5F8FF; font-weight: 600; }
+.breakdown-date-day {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; margin-left: 6px;
+}
+.breakdown-table td.green { color: #45E85C; }
+.breakdown-table td.orange { color: #F58220; }
+.breakdown-table tr.summary-row td {
+  border-bottom: none; font-weight: 600; color: #F5F8FF;
+  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
+}
+.breakdown-table tr.summary-row td:first-child { color: #45E85C; }
+.breakdown-footer {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
+  margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
+  text-transform: uppercase; text-align: center;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .volume-grid { grid-template-columns: 1fr; }
+  .side-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav { padding: 0 20px; }
+  .content { padding: 24px 20px 48px; }
+  .title-h1 { font-size: 40px; }
+  .volume-big { font-size: 36px; }
+}
 </style>
 </head>
 <body>
+
+<!-- NAV -->
 <nav class="nav">
   <div class="nav-left">
     <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
@@ -126,27 +415,36 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
       <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
       <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
     </svg>
-    <span class="nav-sep">/</span>
-    <span class="nav-label">Campaign Tracker</span>
+    <span class="nav-divider">/</span>
+    <span class="nav-subtitle">CAMPAIGN TRACKER</span>
   </div>
   <div class="nav-right">
-    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
-    <div class="date-badge">JUN 24 - 30, 2026</div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE
+    </div>
+    <div class="date-badge">JUN 24 – 30, 2026</div>
   </div>
 </nav>
 
 <div class="content">
+
+  <!-- WEEK NAV -->
   <div class="week-nav">
-    <a href="overall.html">Overall</a>
-    <a href="index.html">Week 1</a>
+    <a href="index.html">Overall</a>
+    <a href="week-1.html">Week 1</a>
     <a href="week-2.html">Week 2</a>
     <a href="week-3.html" class="active">Week 3</a>
   </div>
 
+  <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
       <div class="title-sub">WEEKLY ROLLUP &middot; WEEK 3</div>
-      <h1 class="title-h1">World Cup 2026<br><span class="green">Campaign</span></h1>
+      <h1 class="title-h1">
+        World Cup 2026<br>
+        <span class="green">Campaign</span>
+      </h1>
     </div>
     <div class="title-badges">
       <div class="badge">7 Days</div>
@@ -154,10 +452,11 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
     </div>
   </div>
 
+  <!-- KPI CARDS -->
   <div class="kpi-grid" id="kpiGrid">
     <div class="kpi-card">
-      <div class="kpi-bar" style="background:#DDF23D"></div>
-      <div class="kpi-label" style="color:#DDF23D">WC Volume</div>
+      <div class="kpi-bar" style="background:#C4E84A"></div>
+      <div class="kpi-label" style="color:#C4E84A">WC Volume</div>
       <div class="kpi-value">$8.6M</div>
       <div class="kpi-sub">10.6x from W1</div>
     </div>
@@ -171,25 +470,25 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
       <div class="kpi-bar" style="background:#1FCFA0"></div>
       <div class="kpi-label" style="color:#1FCFA0">Unique Visitors</div>
       <div class="kpi-value">17,748</div>
-      <div class="kpi-sub">+84% vs W2</div>
+      <div class="kpi-delta up">&#9650; +84% vs W2</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#45E85C"></div>
       <div class="kpi-label" style="color:#45E85C">Signups</div>
       <div class="kpi-value">1,013</div>
-      <div class="kpi-sub">-47% vs W2</div>
+      <div class="kpi-delta down">&#9660; -47% vs W2</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#F58220"></div>
       <div class="kpi-label" style="color:#F58220">Depositors</div>
       <div class="kpi-value">168</div>
-      <div class="kpi-sub">-20% vs W2</div>
+      <div class="kpi-delta down">&#9660; -20% vs W2</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#3B82F6"></div>
       <div class="kpi-label" style="color:#3B82F6">Active Traders</div>
       <div class="kpi-value">1,111</div>
-      <div class="kpi-sub">-7% vs W2</div>
+      <div class="kpi-delta down">&#9660; -7% vs W2</div>
     </div>
   </div>
 
@@ -205,12 +504,9 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
         <div class="volume-big" style="color:#45E85C">20.0%</div>
         <div class="volume-of">OF HL WC</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:20%;background:#45E85C;border-radius:3px"></div>
+          <div class="volume-bar-fill" style="width:20%; background:#45E85C"></div>
         </div>
-        <div class="volume-legend">
-          <span><span class="ldot" style="background:#45E85C;width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px"></span>Outcome $8.6M</span>
-          <span><span class="ldot" style="background:rgba(255,255,255,.2);width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px"></span>HL WC $43.2M</span>
-        </div>
+        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome $8.6M &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC $43.2M</div>
         <div class="volume-delta up">&#9650; +16.5pp vs W1 (3.5%)</div>
       </div>
       <div>
@@ -218,183 +514,166 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
         <div class="volume-big" style="color:#3B82F6">$8,331</div>
         <div class="volume-of">PER ACTIVE TRADER</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:65%;background:#3B82F6;border-radius:3px"></div>
+          <div class="volume-bar-fill" style="width:65%; background:#3B82F6"></div>
         </div>
-        <div class="volume-legend">
-          <span><span class="ldot" style="background:#3B82F6;width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px"></span>1,111 traders</span>
-          <span><span class="ldot" style="background:rgba(255,255,255,.2);width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px"></span>$8.6M total WC</span>
-        </div>
+        <div class="volume-legend"><span style="color:#3B82F6">&#9679;</span> 1,111 traders &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> $8.6M total WC</div>
         <div class="volume-delta up">&#9650; 10.6x WC vol vs W1</div>
       </div>
       <div>
         <div class="volume-col-label">Daily Outcome WC Volume</div>
         <div class="vol-chart">
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.3M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:8px"></div>
-              <div class="wc-bar" style="height:102px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:8px"></div>
+              <div class="vol-bar-wc" style="height:102px"></div>
             </div>
-            <div class="vol-day">24</div>
+            <div class="vol-bar-day">24</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.2M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:7px"></div>
-              <div class="wc-bar" style="height:97px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:7px"></div>
+              <div class="vol-bar-wc" style="height:97px"></div>
             </div>
-            <div class="vol-day">25</div>
+            <div class="vol-bar-day">25</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.4M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:8px"></div>
-              <div class="wc-bar" style="height:112px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:8px"></div>
+              <div class="vol-bar-wc" style="height:112px"></div>
             </div>
-            <div class="vol-day">26</div>
+            <div class="vol-bar-day">26</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.2M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:6px"></div>
-              <div class="wc-bar" style="height:91px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:6px"></div>
+              <div class="vol-bar-wc" style="height:91px"></div>
             </div>
-            <div class="vol-day">27</div>
+            <div class="vol-bar-day">27</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.1M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:6px"></div>
-              <div class="wc-bar" style="height:89px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:6px"></div>
+              <div class="vol-bar-wc" style="height:89px"></div>
             </div>
-            <div class="vol-day">28</div>
+            <div class="vol-bar-day">28</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.1M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:6px"></div>
-              <div class="wc-bar" style="height:89px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:6px"></div>
+              <div class="vol-bar-wc" style="height:89px"></div>
             </div>
-            <div class="vol-day">29</div>
+            <div class="vol-bar-day">29</div>
           </div>
-          <div class="vol-bar-group">
+          <div class="vol-bar-wrap">
             <div class="vol-bar-label">$1.3M</div>
-            <div class="vol-bar-stack">
-              <div class="total-bar" style="height:7px"></div>
-              <div class="wc-bar" style="height:99px"></div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:7px"></div>
+              <div class="vol-bar-wc" style="height:99px"></div>
             </div>
-            <div class="vol-day">30</div>
+            <div class="vol-bar-day">30</div>
           </div>
         </div>
-        <div class="vol-legend">
-          <span><span class="vol-legend-dot" style="background:#45E85C"></span>Total</span>
-          <span><span class="vol-legend-dot" style="background:#DDF23D"></span>World Cup</span>
+        <div style="display:flex;gap:16px;margin-top:12px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#45E85C"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Total</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#C4E84A"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">World Cup</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MARKET SHARE PEAK -->
+  <!-- MARKET SHARE TRAJECTORY -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#DDF23D"></div> MARKET SHARE TRAJECTORY</div>
-      <div class="card-meta">OUTCOME vs HL WC &middot; JUN 24 - 30</div>
+      <div class="card-title"><div class="dot" style="background:#C4E84A"></div> MARKET SHARE TRAJECTORY</div>
+      <div class="card-meta">OUTCOME VS HL WC &middot; JUN 24 – 30</div>
     </div>
-    <div class="imp-grid">
-      <div class="imp-bars">
-        <div class="imp-row">
-          <div class="imp-label">Jun 24</div>
-          <div class="imp-track"><div class="imp-fill" style="width:45%;background:rgba(221,242,61,.7)"><span class="imp-val">18%</span></div></div>
+    <div class="imp-chart">
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 24</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:45%;background:#C4E84A;opacity:0.7"></div>
         </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 25</div>
-          <div class="imp-track"><div class="imp-fill" style="width:43%;background:rgba(221,242,61,.7)"><span class="imp-val">17%</span></div></div>
-        </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 26 (Peak)</div>
-          <div class="imp-track"><div class="imp-fill" style="width:100%;background:rgba(221,242,61,.9)"><span class="imp-val">40%</span></div></div>
-        </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 27</div>
-          <div class="imp-track"><div class="imp-fill" style="width:48%;background:rgba(221,242,61,.7)"><span class="imp-val">19%</span></div></div>
-        </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 28</div>
-          <div class="imp-track"><div class="imp-fill" style="width:45%;background:rgba(221,242,61,.7)"><span class="imp-val">18%</span></div></div>
-        </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 29</div>
-          <div class="imp-track"><div class="imp-fill" style="width:50%;background:rgba(221,242,61,.7)"><span class="imp-val">20%</span></div></div>
-        </div>
-        <div class="imp-row">
-          <div class="imp-label">Jun 30</div>
-          <div class="imp-track"><div class="imp-fill" style="width:50%;background:rgba(221,242,61,.7)"><span class="imp-val">20%</span></div></div>
-        </div>
-        <div class="imp-axis">
-          <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span>
-        </div>
+        <div class="imp-value">18%</div>
       </div>
-      <div class="imp-callout" style="padding-top:20px">
-        <strong>40%</strong> peak share on Jun 26<br><br>
-        <strong>20.0%</strong> average share for the week<br><br>
-        <strong>5.7x</strong> higher share than W1 avg (3.5%)
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 25</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:43%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">17%</div>
       </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 26 (Peak)</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:100%;background:#C4E84A;opacity:0.9"></div>
+        </div>
+        <div class="imp-value">40%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 27</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:48%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">19%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 28</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:45%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">18%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 29</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:50%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">20%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jun 30</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:50%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">20%</div>
+      </div>
+      <div class="imp-axis">
+        <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span>
+      </div>
+    </div>
+    <div class="imp-callouts">
+      <div class="imp-callout"><strong>40%</strong> peak share on Jun 26</div>
+      <div class="imp-callout"><strong>20.0%</strong> average share for the week</div>
+      <div class="imp-callout"><strong>5.7x</strong> higher share than W1 avg (3.5%)</div>
     </div>
   </div>
 
-  <!-- SIDE GRID: DAILY TOTALS + KEY METRICS -->
+  <!-- DAILY TOTALS + WEEK 3 SUMMARY -->
   <div class="side-grid">
-    <div class="card">
+    <div class="card" id="dailyCard">
       <div class="card-header">
-        <div class="card-title"><div class="dot" style="background:#3B82F6"></div> DAILY TOTALS</div>
+        <div class="card-title"><div class="dot" style="background:#45E85C"></div> DAILY TOTALS</div>
         <div class="metric-switcher">
-          <button class="metric-btn active" onclick="showMetric('visits')">Visits</button>
-          <button class="metric-btn" onclick="showMetric('signups')">Signups</button>
-          <button class="metric-btn" onclick="showMetric('traders')">Traders</button>
+          <button class="metric-btn active" data-metric="visits">Visits</button>
+          <button class="metric-btn" data-metric="signups">Signups</button>
+          <button class="metric-btn" data-metric="traders">Traders</button>
         </div>
       </div>
-      <div class="daily-subtitle" id="dailyLabel">Visits &middot; Jun 24 - 30</div>
-      <div class="daily-chart" id="dailyChart">
-        <div class="daily-col">
-          <div class="daily-val">2,839</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:87px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Tue</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">2,625</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:79px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Wed</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">3,072</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:96px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Thu</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">2,416</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:71px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Fri</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">2,145</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:60px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Sat</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">3,894</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:120px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Sun</div>
-        </div>
-        <div class="daily-col">
-          <div class="daily-val">2,751</div>
-          <div class="daily-bar-wrap"><div class="mkt" style="height:82px"></div><div class="org" style="height:18px"></div></div>
-          <div class="daily-day">Mon</div>
-        </div>
-      </div>
-      <div class="daily-legend">
-        <span><span class="vol-legend-dot" style="background:#3B82F6"></span>Marketing Clicks</span>
-        <span><span class="vol-legend-dot" style="background:rgba(59,130,246,.35)"></span>Organic / Direct</span>
-      </div>
+      <div class="daily-subtitle" id="dailySubtitle">Visits &middot; Jun 24 – 30</div>
+      <div class="daily-chart" id="dailyChartArea"></div>
+      <div id="dailyLegend"></div>
     </div>
 
     <div class="card">
@@ -407,10 +686,10 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
         </thead>
         <tbody>
           <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>17,748</td><td style="color:#45E85C">+84%</td></tr>
-          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>1,013</td><td style="color:#FF5C5C">-47%</td></tr>
-          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>168</td><td style="color:#FF5C5C">-20%</td></tr>
-          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>1,111</td><td style="color:#FF5C5C">-7%</td></tr>
-          <tr><td><div class="dot" style="background:#DDF23D"></div>WC Volume</td><td>$8.6M</td><td style="color:#45E85C">+74%</td></tr>
+          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>1,013</td><td style="color:#FF5C9E">-47%</td></tr>
+          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>168</td><td style="color:#FF5C9E">-20%</td></tr>
+          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>1,111</td><td style="color:#FF5C9E">-7%</td></tr>
+          <tr><td><div class="dot" style="background:#C4E84A"></div>WC Volume</td><td>$8.6M</td><td style="color:#45E85C">+74%</td></tr>
           <tr><td><div class="dot" style="background:#FF5C9E"></div>HL WC Share</td><td>20.0%</td><td style="color:#45E85C">+16.5pp</td></tr>
           <tr class="total"><td>Vol / Trader</td><td>$8,331</td><td></td></tr>
         </tbody>
@@ -422,8 +701,8 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
   <!-- CONVERSIONS BY SOURCE -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> CONVERSIONS BY SOURCE</div>
-      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 - 30</div>
+      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
+      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 – 30</div>
     </div>
     <table class="conv-table">
       <thead>
@@ -432,15 +711,15 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
       <tbody>
         <tr><td><div class="dot" style="background:#45E85C"></div>Telegram WC Sponsor</td><td>18,490</td><td>364</td><td>0</td></tr>
         <tr><td><div class="dot" style="background:#3B82F6"></div>X Organic</td><td>1,082</td><td>61</td><td>28</td></tr>
-        <tr><td><div class="dot" style="background:#45E85C"></div>Telegram Ads</td><td>182</td><td>25</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#1FCFA0"></div>Telegram Ads</td><td>182</td><td>25</td><td>0</td></tr>
         <tr><td><div class="dot" style="background:#FF5C9E"></div>X Giveaways</td><td>0</td><td>0</td><td>0</td></tr>
         <tr><td><div class="dot" style="background:#F58220"></div>Telegram Organic</td><td>321</td><td>5</td><td>0</td></tr>
-        <tr><td><div class="dot" style="background:#9333EA"></div>Discord Organic</td><td>100</td><td>6</td><td>11</td></tr>
+        <tr><td><div class="dot" style="background:#9B7CFF"></div>Discord Organic</td><td>100</td><td>6</td><td>11</td></tr>
         <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>652</td><td>98</td><td>2</td></tr>
         <tr><td><div class="dot" style="background:#FF5C9E"></div>Substack</td><td>122</td><td>3</td><td>26</td></tr>
         <tr><td><div class="dot" style="background:#3B82F6"></div>HL S2 Analyzer</td><td>14</td><td>0</td><td>1</td></tr>
         <tr><td><div class="dot" style="background:#1FCFA0"></div>Shortmob</td><td>90</td><td>0</td><td>0</td></tr>
-        <tr><td><div class="dot" style="background:rgba(255,255,255,.25)"></div>Unattributed</td><td>28,057</td><td>3,709</td><td>2,888</td></tr>
+        <tr><td><div class="dot" style="background:rgba(255,255,255,0.3)"></div>Unattributed</td><td>28,057</td><td>3,709</td><td>2,888</td></tr>
         <tr class="total"><td>Total</td><td>49,110</td><td>4,271</td><td>2,956</td></tr>
       </tbody>
     </table>
@@ -448,56 +727,125 @@ body{background:#0A0A0B;color:#F5F8FF;font-family:Inter,system-ui,-apple-system,
     <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
   </div>
 
-  <!-- DAILY BREAKDOWN TABLE -->
+  <!-- DAILY BREAKDOWN -->
   <div class="card breakdown-card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#1FCFA0"></div> DAILY BREAKDOWN</div>
-      <div class="card-meta">ACQUISITION FUNNEL &middot; WEEK 3</div>
+      <div class="card-title"><div class="dot" style="background:#F58220"></div> DAILY BREAKDOWN</div>
     </div>
+    <div class="breakdown-subtitle">ACQUISITION FUNNEL &middot; WEEK 3</div>
     <table class="breakdown-table">
       <thead>
         <tr>
-          <th>Date</th><th></th><th>Visitors</th><th>Signups</th><th>Depositors</th><th>Traders</th><th>Est. WC Vol.</th>
+          <th>Date</th><th>Visitors</th><th>Signups</th><th>Depositors</th><th>Traders</th><th>Est. WC Vol.</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>Jun 24</td><td>Tue</td><td>2,839</td><td>170</td><td>30</td><td>166</td><td>$1.3M</td></tr>
-        <tr><td>Jun 25</td><td>Wed</td><td>2,625</td><td>159</td><td>28</td><td>158</td><td>$1.2M</td></tr>
-        <tr><td>Jun 26</td><td>Thu</td><td>3,072</td><td>172</td><td>32</td><td>181</td><td>$1.4M</td></tr>
-        <tr><td>Jun 27</td><td>Fri</td><td>2,416</td><td>131</td><td>19</td><td>149</td><td>$1.2M</td></tr>
-        <tr><td>Jun 28</td><td>Sat</td><td>2,145</td><td>125</td><td>21</td><td>145</td><td>$1.1M</td></tr>
-        <tr><td>Jun 29</td><td>Sun</td><td>3,894</td><td>169</td><td>16</td><td>145</td><td>$1.1M</td></tr>
-        <tr><td>Jun 30</td><td>Mon</td><td>2,751</td><td>146</td><td>26</td><td>161</td><td>$1.3M</td></tr>
-        <tr class="week-total">
-          <td>WEEK 3</td><td></td><td>17,748</td><td>1,013</td><td>168</td><td>1,111</td><td>$8.6M</td>
+        <tr><td><span class="breakdown-date-main">Jun 24</span><span class="breakdown-date-day">Tue</span></td><td>2,839</td><td class="green">170</td><td>30</td><td>166</td><td class="orange">$1.3M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 25</span><span class="breakdown-date-day">Wed</span></td><td>2,625</td><td class="green">159</td><td>28</td><td>158</td><td class="orange">$1.2M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 26</span><span class="breakdown-date-day">Thu</span></td><td>3,072</td><td class="green">172</td><td>32</td><td>181</td><td class="orange">$1.4M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 27</span><span class="breakdown-date-day">Fri</span></td><td>2,416</td><td class="green">131</td><td>19</td><td>149</td><td class="orange">$1.2M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 28</span><span class="breakdown-date-day">Sat</span></td><td>2,145</td><td class="green">125</td><td>21</td><td>145</td><td class="orange">$1.1M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 29</span><span class="breakdown-date-day">Sun</span></td><td>3,894</td><td class="green">169</td><td>16</td><td>145</td><td class="orange">$1.1M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jun 30</span><span class="breakdown-date-day">Mon</span></td><td>2,751</td><td class="green">146</td><td>26</td><td>161</td><td class="orange">$1.3M</td></tr>
+        <tr class="summary-row">
+          <td>WEEK 3</td><td>17,748</td><td class="green">1,013</td><td>168</td><td>1,111</td><td class="orange">$8.6M</td>
         </tr>
       </tbody>
     </table>
+    <div class="breakdown-footer">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; CONVERSIONS VIA POSTHOG &middot; VOLUME VS HYPERLIQUID HIP-4</div>
   </div>
 
-  <div class="footer-note">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; CONVERSIONS VIA POSTHOG &middot; VOLUME VS HYPERLIQUID HIP-4</div>
 </div>
 
 <script>
-const data = {
-  visits: {label:'Visits', values:[2839,2625,3072,2416,2145,3894,2751], days:['Tue','Wed','Thu','Fri','Sat','Sun','Mon']},
-  signups: {label:'Signups', values:[170,159,172,131,125,169,146], days:['Tue','Wed','Thu','Fri','Sat','Sun','Mon']},
-  traders: {label:'Traders', values:[166,158,181,149,145,145,161], days:['Tue','Wed','Thu','Fri','Sat','Sun','Mon']}
-};
-function showMetric(key) {
-  const d = data[key];
-  const max = Math.max(...d.values);
-  document.getElementById('dailyLabel').textContent = d.label + ' · Jun 24 - 30';
-  const chart = document.getElementById('dailyChart');
-  chart.innerHTML = d.values.map((v,i) => {
-    const h = Math.round(v/max*120);
-    const mh = Math.round(h*0.82);
-    const oh = h - mh;
-    return '<div class="daily-col"><div class="daily-val">'+v.toLocaleString()+'</div><div class="daily-bar-wrap"><div class="mkt" style="height:'+mh+'px"></div><div class="org" style="height:'+oh+'px"></div></div><div class="daily-day">'+d.days[i]+'</div></div>';
-  }).join('');
-  document.querySelectorAll('.metric-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-}
+// ===================== DAILY TOTALS =====================
+(function() {
+  const DAILY = [
+    { date: "Jun 24", day: "Tue", visits: 2839, signups: 170, traders: 166 },
+    { date: "Jun 25", day: "Wed", visits: 2625, signups: 159, traders: 158 },
+    { date: "Jun 26", day: "Thu", visits: 3072, signups: 172, traders: 181 },
+    { date: "Jun 27", day: "Fri", visits: 2416, signups: 131, traders: 149 },
+    { date: "Jun 28", day: "Sat", visits: 2145, signups: 125, traders: 145 },
+    { date: "Jun 29", day: "Sun", visits: 3894, signups: 169, traders: 145 },
+    { date: "Jun 30", day: "Mon", visits: 2751, signups: 146, traders: 161 }
+  ];
+
+  const metrics = [
+    { key: 'visits', label: 'Visits' },
+    { key: 'signups', label: 'Signups' },
+    { key: 'traders', label: 'Traders' }
+  ];
+
+  function formatNumber(n) { return n.toLocaleString('en-US'); }
+
+  function renderDailyChart(metricKey) {
+    let barsHtml = '';
+    const vals = DAILY.map(d => d[metricKey]);
+    const maxVal = Math.max(...vals);
+    if (metricKey === 'visits') {
+      DAILY.forEach((d, i) => {
+        const totalH = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
+        const clickH = Math.round(totalH * 0.82);
+        const organicH = totalH - clickH;
+        barsHtml += `
+          <div class="daily-bar-wrap">
+            <div class="daily-bar-val">${formatNumber(vals[i])}</div>
+            <div style="display:flex;flex-direction:column;width:100%;height:${totalH}px">
+              <div style="flex:0 0 ${organicH}px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>
+              <div style="flex:0 0 ${clickH}px;background:#3B82F6;border-radius:${organicH === 0 ? '4px 4px' : '0 0'} 0 0"></div>
+            </div>
+            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
+            <div class="daily-bar-day">${d.day}</div>
+          </div>`;
+      });
+    } else {
+      DAILY.forEach((d, i) => {
+        const h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
+        barsHtml += `
+          <div class="daily-bar-wrap">
+            <div class="daily-bar-val">${formatNumber(vals[i])}</div>
+            <div class="daily-bar" style="height:${h}px"></div>
+            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
+            <div class="daily-bar-day">${d.day}</div>
+          </div>`;
+      });
+    }
+    return barsHtml;
+  }
+
+  function getLegend(metricKey) {
+    if (metricKey === 'visits') {
+      return `
+        <div style="display:flex;gap:16px;margin-top:12px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>
+          </div>
+        </div>`;
+    }
+    return '';
+  }
+
+  document.getElementById('dailyChartArea').innerHTML = renderDailyChart('visits');
+  document.getElementById('dailyLegend').innerHTML = getLegend('visits');
+
+  document.querySelectorAll('.metric-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.metric-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const mk = this.dataset.metric;
+      const label = metrics.find(m => m.key === mk).label;
+      document.getElementById('dailySubtitle').textContent = label + ' · Jun 24 – 30';
+      document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
+      document.getElementById('dailyLegend').innerHTML = getLegend(mk);
+    });
+  });
+})();
 </script>
+
 </body>
 </html>

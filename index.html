@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Week 1</title>
+<title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Overall</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -123,6 +123,7 @@ body {
   color: rgba(255,255,255,0.7); text-transform: uppercase;
 }
 .badge.orange { color: #F58220; border-color: rgba(245,130,32,0.3); }
+.badge.green { color: #45E85C; border-color: rgba(69,232,92,0.3); }
 
 /* ---------- KPI CARDS ---------- */
 .kpi-grid {
@@ -150,6 +151,12 @@ body {
   font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
   color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
 }
+.kpi-delta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.02em;
+  margin-top: 6px;
+}
+.kpi-delta.up { color: #45E85C; }
+.kpi-delta.down { color: #FF5C9E; }
 
 /* ---------- CARD ---------- */
 .card {
@@ -197,6 +204,10 @@ body {
   font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
   color: rgba(255,255,255,0.45); text-transform: uppercase;
 }
+.volume-delta {
+  font-size: 10px; font-weight: 500; margin-top: 8px;
+}
+.volume-delta.up { color: #45E85C; }
 
 /* Volume bar chart */
 .vol-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; }
@@ -219,93 +230,10 @@ body {
   text-transform: uppercase; margin-top: 6px;
 }
 
-/* ---------- IMPRESSIONS SECTION ---------- */
-.imp-chart { margin-top: 8px; }
-.imp-row {
-  display: flex; align-items: center; gap: 0; margin-bottom: 10px;
-}
-.imp-channel {
-  width: 200px; flex-shrink: 0;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.7); text-transform: uppercase;
-  display: flex; align-items: center; gap: 8px;
-}
-.imp-channel .dot { width: 8px; height: 8px; }
-.imp-bar-track {
-  flex: 1; height: 28px; border-radius: 4px;
-  background: rgba(255,255,255,0.03); overflow: hidden; position: relative;
-}
-.imp-bar-fill { height: 100%; border-radius: 4px; min-width: 2px; }
-.imp-value {
-  width: 90px; text-align: right; flex-shrink: 0;
-  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
-  color: rgba(255,255,255,0.6); padding-left: 12px;
-}
-.imp-axis {
-  display: flex; justify-content: space-between;
-  margin-top: 8px; padding-left: 200px; padding-right: 90px;
-}
-.imp-axis span {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.25);
-  text-transform: uppercase;
-}
-.imp-callouts {
-  display: flex; gap: 32px; margin-top: 20px; padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-.imp-callout {
-  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.45);
-  letter-spacing: 0.04em;
-}
-.imp-callout strong { color: #F5F8FF; font-weight: 600; }
-
-/* ---------- DAILY + CONVERSIONS SIDE BY SIDE ---------- */
+/* ---------- SIDE GRID ---------- */
 .side-grid {
   display: grid; grid-template-columns: 1fr 0.82fr;
   gap: 14px; margin-bottom: 14px;
-}
-
-/* Daily totals chart */
-.metric-switcher { display: flex; gap: 6px; }
-.metric-btn {
-  padding: 6px 14px; border-radius: 8px;
-  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-  text-transform: uppercase; cursor: pointer; border: none; outline: none;
-  transition: all 0.15s ease;
-  background: transparent; border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.5);
-}
-.metric-btn.active {
-  background: rgba(69,232,92,0.12); border: 1px solid rgba(69,232,92,0.3);
-  color: #45E85C;
-}
-.metric-btn:hover:not(.active) {
-  border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
-}
-.daily-subtitle {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 20px;
-}
-.daily-chart { display: flex; align-items: flex-end; gap: 10px; height: 200px; padding-top: 20px; }
-.daily-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  height: 100%; justify-content: flex-end;
-}
-.daily-bar-val {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
-  margin-bottom: 4px;
-}
-.daily-bar {
-  width: 100%; border-radius: 4px 4px 0 0;
-  background: #45E85C; transition: height 0.3s ease;
-}
-.daily-bar-date {
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6);
-  margin-top: 8px;
-}
-.daily-bar-day {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
 }
 
 /* ---------- CONVERSIONS TABLE ---------- */
@@ -335,7 +263,7 @@ body {
   margin-top: 16px; letter-spacing: 0.04em;
 }
 
-/* ---------- DAILY BREAKDOWN TABLE ---------- */
+/* ---------- BREAKDOWN TABLE ---------- */
 .breakdown-card { padding: 24px 24px 8px; }
 .breakdown-subtitle {
   font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
@@ -368,7 +296,44 @@ body {
   border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
 }
 .breakdown-table tr.summary-row td:first-child { color: #45E85C; }
-.breakdown-footer {
+
+/* ---------- PAGE-SPECIFIC: OVERALL ---------- */
+.hero-insight {
+  padding: 20px 24px; border-radius: 14px;
+  background: rgba(69,232,92,0.06); border: 1px solid rgba(69,232,92,0.15);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 14px;
+}
+.hero-icon { font-size: 22px; flex-shrink: 0; }
+.hero-text {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+  letter-spacing: 0.02em;
+}
+.hero-text strong { color: #45E85C; font-weight: 600; }
+
+.growth-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+.growth-card {
+  padding: 20px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); text-align: center;
+}
+.growth-week {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 12px;
+}
+.growth-val {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
+  line-height: 1; color: #F5F8FF; margin-bottom: 8px;
+}
+.growth-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); text-transform: uppercase;
+}
+
+.footer-note {
   font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
   margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
   text-transform: uppercase; text-align: center;
@@ -382,6 +347,7 @@ body {
 }
 @media (max-width: 768px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .growth-grid { grid-template-columns: 1fr; }
   .nav { padding: 0 20px; }
   .content { padding: 24px 20px 48px; }
   .title-h1 { font-size: 40px; }
@@ -390,88 +356,6 @@ body {
 </style>
 </head>
 <body>
-
-<script>
-const DATA = {
-  week: 1,
-  dateRange: "Jun 10 – 16, 2026",
-  totalSpend: 48365,
-
-  kpi: {
-    impressions: 1454961,
-    clicks: 10556,
-    visitors: 18079,
-    signups: 1660,
-    depositors: 169,
-    activeTraders: 1137
-  },
-
-  volume: {
-    outcomeTotal: 1394003,
-    hlTotal: 36105890,
-    platformShare: 3.9,
-    outcomeWC: 810000,
-    hlWC: 23100000,
-    wcShare: 3.5
-  },
-
-  daily: [
-    { date: "Jun 10", day: "Wed", impressions: 140000, clicks: 1528, visitors: 3254, signups: 471, depositors: 30, traders: 164, outcomeVol: 122600, hlVol: 5100000, outcomeWcVol: 65000, hlWcVol: 3200000, wcShare: 2.0 },
-    { date: "Jun 11", day: "Thu", impressions: 170000, clicks: 1607, visitors: 2521, signups: 286, depositors: 22, traders: 159, outcomeVol: 172500, hlVol: 5200000, outcomeWcVol: 95000, hlWcVol: 3300000, wcShare: 2.9 },
-    { date: "Jun 12", day: "Fri", impressions: 195000, clicks: 1493, visitors: 1988, signups: 196, depositors: 21, traders: 158, outcomeVol: 373000, hlVol: 5300000, outcomeWcVol: 195000, hlWcVol: 3400000, wcShare: 5.7 },
-    { date: "Jun 13", day: "Sat", impressions: 240000, clicks: 1488, visitors: 2483, signups: 175, depositors: 20, traders: 167, outcomeVol: 180300, hlVol: 5400000, outcomeWcVol: 100000, hlWcVol: 3500000, wcShare: 2.9 },
-    { date: "Jun 14", day: "Sun", impressions: 227000, clicks: 1399, visitors: 2700, signups: 167, depositors: 23, traders: 157, outcomeVol: 186500, hlVol: 5100000, outcomeWcVol: 105000, hlWcVol: 3200000, wcShare: 3.3 },
-    { date: "Jun 15", day: "Mon", impressions: 237000, clicks: 1520, visitors: 2822, signups: 192, depositors: 27, traders: 164, outcomeVol: 142903, hlVol: 5005890, outcomeWcVol: 80000, hlWcVol: 3100000, wcShare: 2.6 },
-    { date: "Jun 16", day: "Tue", impressions: 245961, clicks: 1521, visitors: 2311, signups: 173, depositors: 26, traders: 168, outcomeVol: 216200, hlVol: 5000000, outcomeWcVol: 170000, hlWcVol: 3400000, wcShare: 5.0 }
-  ],
-
-  channelImpressions: [
-    { name: "Telegram WC Sponsor", views: 892200, color: "#45E85C" },
-    { name: "X Organic", views: 301500, color: "#3B82F6" },
-    { name: "Telegram Ads", views: 161700, color: "#1FCFA0" },
-    { name: "X Giveaways", views: 79376, color: "#FF5C9E" },
-    { name: "Telegram Organic", views: 119, color: "#F58220" },
-    { name: "CoConnect (Alphabot)", views: 0, color: "#F58220" }
-  ],
-
-  conversions: [
-    { name: "Telegram WC Sponsor", visitors: 10058, signups: 285, traders: 0, color: "#45E85C" },
-    { name: "X Organic", visitors: 230, signups: 31, traders: 7, color: "#3B82F6" },
-    { name: "Telegram Ads", visitors: 155, signups: 25, traders: 0, color: "#1FCFA0" },
-    { name: "X Giveaways", visitors: 0, signups: 0, traders: 0, color: "#FF5C9E" },
-    { name: "Telegram Organic", visitors: 35, signups: 5, traders: 0, color: "#F58220" },
-    { name: "Discord Organic", visitors: 25, signups: 3, traders: 4, color: "#9B7CFF" },
-    { name: "CoConnect (Alphabot)", visitors: 268, signups: 85, traders: 0, color: "#F58220" },
-    { name: "Substack", visitors: 23, signups: 1, traders: 6, color: "#FF5C9E" },
-    { name: "HL S2 Analyzer", visitors: 1, signups: 0, traders: 1, color: "#3B82F6" },
-    { name: "Unattributed", visitors: 16918, signups: 3144, traders: 2136, color: "rgba(255,255,255,0.3)" }
-  ]
-};
-
-// ---------- HELPERS ----------
-function formatNumber(n) {
-  return n.toLocaleString('en-US');
-}
-function formatCompact(n) {
-  if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
-  return formatNumber(n);
-}
-function formatCompactShort(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (n >= 1000) return '$' + (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K';
-  return '$' + n.toString();
-}
-function formatCurrency(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + 'M';
-  if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
-  return '$' + n.toFixed(0);
-}
-function formatCurrencyFull(n) {
-  if (n >= 1000000) return '$' + (n / 1000000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + 'M';
-  return '$' + formatNumber(n);
-}
-function formatPercent(n) { return n.toFixed(1) + '%'; }
-</script>
 
 <!-- NAV -->
 <nav class="nav">
@@ -495,7 +379,7 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
       <div class="live-dot"></div>
       LIVE
     </div>
-    <div class="date-badge">JUN 10 – 16, 2026</div>
+    <div class="date-badge">JUN 10 – 30, 2026</div>
   </div>
 </nav>
 
@@ -503,375 +387,236 @@ function formatPercent(n) { return n.toFixed(1) + '%'; }
 
   <!-- WEEK NAV -->
   <div class="week-nav">
-    <a href="overall.html">Overall</a>
-    <a href="index.html" class="active">Week 1</a>
+    <a href="index.html" class="active">Overall</a>
+    <a href="week-1.html">Week 1</a>
     <a href="week-2.html">Week 2</a>
+    <a href="week-3.html">Week 3</a>
   </div>
 
   <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
-      <div class="title-sub">WEEKLY ROLLUP · WEEK 1</div>
+      <div class="title-sub">CAMPAIGN OVERVIEW &middot; 3 WEEKS</div>
       <h1 class="title-h1">
         World Cup 2026<br>
         <span class="green">Campaign</span>
       </h1>
     </div>
     <div class="title-badges">
-      <div class="badge">7 Days</div>
-      <div class="badge orange">$48,365 Spend</div>
+      <div class="badge">21 Days</div>
+      <div class="badge green">$15.96M WC Volume</div>
+    </div>
+  </div>
+
+  <!-- HERO INSIGHT -->
+  <div class="hero-insight">
+    <div class="hero-icon">&#9889;</div>
+    <div class="hero-text">
+      <strong>Volume dominance:</strong> $15.96M total WC volume across 3 weeks, <strong>10.6x growth</strong> from Week 1 to Week 3, peaked at <strong>40% of all Hyperliquid WC volume</strong>
     </div>
   </div>
 
   <!-- KPI CARDS -->
-  <div class="kpi-grid" id="kpiGrid"></div>
-
-  <!-- VOLUME -->
-  <div class="card" id="volumeCard"></div>
-
-  <!-- IMPRESSIONS -->
-  <div class="card" id="impressionsCard"></div>
-
-  <!-- DAILY + CONVERSIONS -->
-  <div class="side-grid">
-    <div class="card" id="dailyCard"></div>
-    <div class="card" id="conversionsCard"></div>
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#1FCFA0"></div>
+      <div class="kpi-label" style="color:#1FCFA0">Total Visitors</div>
+      <div class="kpi-value">45,492</div>
+      <div class="kpi-sub">campaign total</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#45E85C"></div>
+      <div class="kpi-label" style="color:#45E85C">Total Signups</div>
+      <div class="kpi-value">4,595</div>
+      <div class="kpi-sub">campaign total</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#F58220"></div>
+      <div class="kpi-label" style="color:#F58220">Total Depositors</div>
+      <div class="kpi-value">546</div>
+      <div class="kpi-sub">11.9% of signups</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#3B82F6"></div>
+      <div class="kpi-label" style="color:#3B82F6">Active Traders</div>
+      <div class="kpi-value">3,440</div>
+      <div class="kpi-sub">74.9% of signups</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#C4E84A"></div>
+      <div class="kpi-label" style="color:#C4E84A">Total WC Volume</div>
+      <div class="kpi-value">$15.96M</div>
+      <div class="kpi-sub">10.6x W1 to W3</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#FF5C9E"></div>
+      <div class="kpi-label" style="color:#FF5C9E">Peak Market Share</div>
+      <div class="kpi-value">40%</div>
+      <div class="kpi-sub">of HL WC on Jun 26</div>
+    </div>
   </div>
 
-  <!-- DAILY BREAKDOWN -->
-  <div class="card breakdown-card" id="breakdownCard"></div>
-
-</div>
-
-<script>
-// ===================== KPI CARDS =====================
-(function() {
-  const d = DATA.kpi;
-  const spend = DATA.totalSpend;
-  const ctr = (d.clicks / d.impressions * 100).toFixed(2);
-  const uvPct = (d.clicks / d.visitors * 100).toFixed(1);
-  const depPct = (d.depositors / d.signups * 100).toFixed(1);
-  const traderPct = (d.activeTraders / d.signups * 100).toFixed(0);
-
-  const kpis = [
-    { key: 'impressions', label: 'Impressions', color: '#F58220', sub: 'week 1 total' },
-    { key: 'clicks', label: 'Link Clicks', color: '#3B82F6', sub: `${ctr}% CTR · ${uvPct}% of UVs` },
-    { key: 'visitors', label: 'Unique Visitors', color: '#1FCFA0', sub: 'site reach' },
-    { key: 'signups', label: 'Signups', color: '#45E85C', sub: 'week 1 total' },
-    { key: 'depositors', label: 'Depositors', color: '#FF5C9E', sub: `${depPct}% of signups` },
-    { key: 'activeTraders', label: 'Active Traders', color: '#9B7CFF', sub: `${traderPct}% of signups` }
-  ];
-  const grid = document.getElementById('kpiGrid');
-  kpis.forEach(k => {
-    const val = DATA.kpi[k.key];
-    grid.innerHTML += `
-      <div class="kpi-card">
-        <div class="kpi-bar" style="background:${k.color}"></div>
-        <div class="kpi-label" style="color:${k.color}">${k.label}</div>
-        <div class="kpi-value">${formatCompact(val)}</div>
-        <div class="kpi-sub">${k.sub}</div>
-      </div>`;
-  });
-})();
-
-// ===================== VOLUME =====================
-(function() {
-  const v = DATA.volume;
-  const maxVol = Math.max(...DATA.daily.map(d => d.outcomeVol));
-
-  let barsHtml = '';
-  DATA.daily.forEach(d => {
-    const totalH = Math.round((d.outcomeVol / maxVol) * 160);
-    const wcH = Math.round((d.outcomeWcVol / maxVol) * 160);
-    const nonWcH = totalH - wcH;
-    barsHtml += `
-      <div class="vol-bar-wrap">
-        <div class="vol-bar-label">${formatCurrency(d.outcomeVol)}</div>
-        <div class="vol-bar-stack" style="width:100%">
-          <div class="vol-bar-total" style="height:${nonWcH > 0 ? nonWcH : 0}px"></div>
-          <div class="vol-bar-wc" style="height:${wcH}px"></div>
-        </div>
-        <div class="vol-bar-day">${d.date.split(' ')[1]}</div>
-      </div>`;
-  });
-
-  document.getElementById('volumeCard').innerHTML = `
+  <!-- VOLUME GROWTH -->
+  <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> TRADING VOLUME VS HYPERLIQUID</div>
-      <div class="card-meta">OUTCOME SHARE OF HL HIP-4 VOLUME</div>
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div> WC VOLUME GROWTH BY WEEK</div>
+      <div class="card-meta">OUTCOME WORLD CUP MARKET VOLUME</div>
     </div>
     <div class="volume-grid">
       <div>
-        <div class="volume-col-label">Platform Volume</div>
-        <div class="volume-big" style="color:#F58220">${formatPercent(v.platformShare)}</div>
-        <div class="volume-of">OF HL</div>
+        <div class="volume-col-label">Total WC Volume</div>
+        <div class="volume-big" style="color:#45E85C">$15.96M</div>
+        <div class="volume-of">ACROSS 3 WEEKS</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:${v.platformShare}%; background:#45E85C"></div>
+          <div class="volume-bar-fill" style="width:100%; background:linear-gradient(90deg,#45E85C,#C4E84A)"></div>
         </div>
-        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome ${formatCompactShort(v.outcomeTotal)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL ${formatCompactShort(v.hlTotal)}</div>
+        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> W1 $810K &nbsp; <span style="color:#3B82F6">&#9679;</span> W2 $4.95M &nbsp; <span style="color:#C4E84A">&#9679;</span> W3 $8.6M</div>
+        <div class="volume-delta up">&#9650; 10.6x growth from Week 1 to Week 3</div>
       </div>
       <div>
-        <div class="volume-col-label">World Cup Markets</div>
-        <div class="volume-big" style="color:#F58220">${formatPercent(v.wcShare)}</div>
-        <div class="volume-of">OF HL WC</div>
+        <div class="volume-col-label">Peak HL WC Share</div>
+        <div class="volume-big" style="color:#FF5C9E">40%</div>
+        <div class="volume-of">OF HL WC ON JUN 26</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:${v.wcShare}%; background:#45E85C"></div>
+          <div class="volume-bar-fill" style="width:40%; background:#FF5C9E"></div>
         </div>
-        <div class="volume-legend"><span style="color:#F58220">&#9679;</span> Outcome ${formatCompactShort(v.outcomeWC)} &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC ${formatCompactShort(v.hlWC)}</div>
+        <div class="volume-legend"><span style="color:#FF5C9E">&#9679;</span> Peak share &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> W1 avg 3.5%</div>
+        <div class="volume-delta up">&#9650; +36.5pp from W1 avg to W3 peak</div>
       </div>
       <div>
-        <div class="volume-col-label">Daily Outcome Volume</div>
-        <div class="vol-chart">${barsHtml}</div>
+        <div class="volume-col-label">Weekly WC Volume</div>
+        <div class="vol-chart">
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$810K</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div style="height:15px;background:#45E85C"></div>
+            </div>
+            <div class="vol-bar-day">Week 1</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$4.95M</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div style="height:92px;background:#3B82F6"></div>
+            </div>
+            <div class="vol-bar-day">Week 2</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$8.6M</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div style="height:160px;background:#C4E84A"></div>
+            </div>
+            <div class="vol-bar-day">Week 3</div>
+          </div>
+        </div>
         <div style="display:flex;gap:16px;margin-top:12px">
           <div style="display:flex;align-items:center;gap:6px">
             <div style="width:10px;height:10px;border-radius:2px;background:#45E85C"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Total</span>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Week 1</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Week 2</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
             <div style="width:10px;height:10px;border-radius:2px;background:#C4E84A"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">World Cup</span>
+            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Week 3</span>
           </div>
         </div>
       </div>
-    </div>`;
-})();
-
-// ===================== IMPRESSIONS =====================
-(function() {
-  const channels = DATA.channelImpressions;
-  const maxViews = Math.max(...channels.map(c => c.views));
-  const totalViews = channels.reduce((s, c) => s + c.views, 0);
-  const sorted = [...channels].sort((a, b) => b.views - a.views);
-  const topChannel = sorted[0];
-  const secondChannel = sorted[1];
-  const topPct = totalViews > 0 ? ((topChannel.views / totalViews) * 100).toFixed(0) : 0;
-  const ratio = secondChannel && secondChannel.views > 0 ? (topChannel.views / secondChannel.views).toFixed(1) : 'N/A';
-
-  let rowsHtml = '';
-  channels.forEach(c => {
-    const w = maxViews > 0 ? (c.views / maxViews * 100) : 0;
-    rowsHtml += `
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:${c.color}"></div>${c.name}</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:${w}%;background:${c.color};opacity:0.7"></div>
-        </div>
-        <div class="imp-value">${formatCompact(c.views)}</div>
-      </div>`;
-  });
-
-  const axisMax = Math.ceil(maxViews / 100000) * 100000;
-  let axisHtml = '';
-  for (let i = 0; i <= 5; i++) {
-    const v = (axisMax / 5) * i;
-    axisHtml += `<span>${v === 0 ? '0' : formatCompact(v)}</span>`;
-  }
-
-  document.getElementById('impressionsCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> IMPRESSIONS BY CHANNEL</div>
-      <div class="card-meta">REACH · JUN 10 – 16</div>
     </div>
-    <div class="imp-chart">
-      ${rowsHtml}
-      <div class="imp-axis">${axisHtml}</div>
+  </div>
+
+  <!-- SIDE GRID: WEEKLY COMPARISON + FUNNEL -->
+  <div class="side-grid">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#3B82F6"></div> WEEKLY COMPARISON</div>
+      </div>
+      <table class="breakdown-table">
+        <thead>
+          <tr><th>Metric</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Visitors</td><td>18,079</td><td>9,665</td><td>17,748</td><td style="color:#F5F8FF;font-weight:600">45,492</td></tr>
+          <tr><td>Signups</td><td>1,660</td><td>1,922</td><td>1,013</td><td style="color:#F5F8FF;font-weight:600">4,595</td></tr>
+          <tr><td>Depositors</td><td>169</td><td>209</td><td>168</td><td style="color:#F5F8FF;font-weight:600">546</td></tr>
+          <tr><td>Active Traders</td><td>1,137</td><td>1,192</td><td>1,111</td><td style="color:#F5F8FF;font-weight:600">3,440</td></tr>
+          <tr><td>WC Volume</td><td>$810K</td><td>$4.95M</td><td>$8.6M</td><td style="color:#45E85C;font-weight:600">$15.96M</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="imp-callouts">
-      <div class="imp-callout"><strong>${topPct}%</strong> of reach via ${topChannel.name}</div>
-      <div class="imp-callout"><strong>${ratio}x</strong> larger than the next channel</div>
-    </div>`;
-})();
 
-// ===================== DAILY TOTALS =====================
-(function() {
-  const metrics = [
-    { key: 'visits', label: 'Visits' },
-    { key: 'signups', label: 'Signups' },
-    { key: 'traders', label: 'Traders' }
-  ];
-
-  function renderDailyChart(metricKey) {
-    let barsHtml = '';
-    if (metricKey === 'visits') {
-      const maxVal = Math.max(...DATA.daily.map(d => Math.max(d.visitors, d.clicks)));
-      DATA.daily.forEach((d, i) => {
-        const barMax = Math.max(d.visitors, d.clicks);
-        const totalH = maxVal > 0 ? Math.round((barMax / maxVal) * 160) : 0;
-        const clickH = Math.min(totalH, barMax > 0 ? Math.round((d.clicks / barMax) * totalH) : 0);
-        const organicH = totalH - clickH;
-        barsHtml += `
-          <div class="daily-bar-wrap">
-            <div class="daily-bar-val">${formatNumber(barMax)}</div>
-            <div style="display:flex;flex-direction:column;width:100%;height:${totalH}px">
-              <div style="flex:0 0 ${organicH}px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>
-              <div style="flex:0 0 ${clickH}px;background:#3B82F6;border-radius:${organicH === 0 ? '4px 4px' : '0 0'} 0 0"></div>
-            </div>
-            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
-            <div class="daily-bar-day">${d.day}</div>
-          </div>`;
-      });
-    } else {
-      const vals = DATA.daily.map(d => d[metricKey]);
-      const maxVal = Math.max(...vals);
-      DATA.daily.forEach((d, i) => {
-        const h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-        barsHtml += `
-          <div class="daily-bar-wrap">
-            <div class="daily-bar-val">${formatNumber(vals[i])}</div>
-            <div class="daily-bar" style="height:${h}px"></div>
-            <div class="daily-bar-date">${d.date.split(' ')[1]}</div>
-            <div class="daily-bar-day">${d.day}</div>
-          </div>`;
-      });
-    }
-    return barsHtml;
-  }
-
-  function getLegend(metricKey) {
-    if (metricKey === 'visits') {
-      return `
-        <div style="display:flex;gap:16px;margin-top:12px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>
-          </div>
-        </div>`;
-    }
-    return '';
-  }
-
-  let btnsHtml = '';
-  metrics.forEach((m, i) => {
-    btnsHtml += `<button class="metric-btn${i === 0 ? ' active' : ''}" data-metric="${m.key}">${m.label}</button>`;
-  });
-
-  document.getElementById('dailyCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> DAILY TOTALS</div>
-      <div class="metric-switcher">${btnsHtml}</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#F58220"></div> CAMPAIGN FUNNEL</div>
+      </div>
+      <table class="conv-table">
+        <thead>
+          <tr><th>Stage</th><th>Total</th><th>Rate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>45,492</td><td>100%</td></tr>
+          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>4,595</td><td>10.1%</td></tr>
+          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>546</td><td>11.9%</td></tr>
+          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>3,440</td><td>74.9%</td></tr>
+          <tr class="total"><td>WC Volume</td><td>$15.96M</td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="conv-footnote">Depositors and traders as % of signups. Visitors to signups is 10.1%.</div>
     </div>
-    <div class="daily-subtitle" id="dailySubtitle">${metrics[0].label} · Jun 10 – 16</div>
-    <div class="daily-chart" id="dailyChartArea">${renderDailyChart(metrics[0].key)}</div>
-    <div id="dailyLegend">${getLegend(metrics[0].key)}</div>`;
+  </div>
 
-  document.querySelectorAll('.metric-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.metric-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      const mk = this.dataset.metric;
-      const label = metrics.find(m => m.key === mk).label;
-      document.getElementById('dailySubtitle').textContent = label + ' · Jun 10 – 16';
-      document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
-      document.getElementById('dailyLegend').innerHTML = getLegend(mk);
-    });
-  });
-})();
-
-// ===================== CONVERSIONS TABLE =====================
-(function() {
-  const convs = DATA.conversions;
-  const totals = {
-    visitors: convs.reduce((s, c) => s + c.visitors, 0),
-    signups: convs.reduce((s, c) => s + c.signups, 0),
-    traders: convs.reduce((s, c) => s + c.traders, 0)
-  };
-
-  let rowsHtml = '';
-  convs.forEach(c => {
-    rowsHtml += `
-      <tr>
-        <td><div class="dot" style="background:${c.color}"></div>${c.name}</td>
-        <td>${formatNumber(c.visitors)}</td>
-        <td>${formatNumber(c.signups)}</td>
-        <td>${formatNumber(c.traders)}</td>
-      </tr>`;
-  });
-
-  document.getElementById('conversionsCard').innerHTML = `
+  <!-- CONVERSIONS BY SOURCE -->
+  <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div> CONVERSIONS BY SOURCE</div>
+      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 – 30</div>
     </div>
     <table class="conv-table">
-      <thead><tr>
-        <th>Channel</th><th>Visitors</th><th>Signups</th><th>Traders</th>
-      </tr></thead>
+      <thead>
+        <tr><th>Channel</th><th>Visitors</th><th>Signups</th><th>Traders</th></tr>
+      </thead>
       <tbody>
-        ${rowsHtml}
-        <tr class="total">
-          <td>Total</td>
-          <td>${formatNumber(totals.visitors)}</td>
-          <td>${formatNumber(totals.signups)}</td>
-          <td>${formatNumber(totals.traders)}</td>
-        </tr>
+        <tr><td><div class="dot" style="background:#45E85C"></div>Telegram WC Sponsor</td><td>18,490</td><td>364</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#3B82F6"></div>X Organic</td><td>1,082</td><td>61</td><td>28</td></tr>
+        <tr><td><div class="dot" style="background:#1FCFA0"></div>Telegram Ads</td><td>182</td><td>25</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#FF5C9E"></div>X Giveaways</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#F58220"></div>Telegram Organic</td><td>321</td><td>5</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:#9B7CFF"></div>Discord Organic</td><td>100</td><td>6</td><td>11</td></tr>
+        <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>652</td><td>98</td><td>2</td></tr>
+        <tr><td><div class="dot" style="background:#FF5C9E"></div>Substack</td><td>122</td><td>3</td><td>26</td></tr>
+        <tr><td><div class="dot" style="background:#3B82F6"></div>HL S2 Analyzer</td><td>14</td><td>0</td><td>1</td></tr>
+        <tr><td><div class="dot" style="background:#1FCFA0"></div>Shortmob</td><td>90</td><td>0</td><td>0</td></tr>
+        <tr><td><div class="dot" style="background:rgba(255,255,255,0.3)"></div>Unattributed</td><td>28,057</td><td>3,709</td><td>2,888</td></tr>
+        <tr class="total"><td>Total</td><td>49,110</td><td>4,271</td><td>2,956</td></tr>
       </tbody>
     </table>
-    <div class="conv-footnote">Campaign totals from Channel Summary. Weekly source breakdown not available.</div>
-    <div class="conv-footnote" style="margin-top:8px;font-style:italic">From Jun 10–16, post-sign-in events (deposit, trade) are unattributed due to losing tracking parameters in the sign-in process.</div>`;
-})();
+    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jun 30.</div>
+    <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
+  </div>
 
-// ===================== DAILY BREAKDOWN =====================
-(function() {
-  const days = DATA.daily;
-  const totals = {
-    impressions: days.reduce((s, d) => s + d.impressions, 0),
-    clicks: days.reduce((s, d) => s + d.clicks, 0),
-    visitors: days.reduce((s, d) => s + d.visitors, 0),
-    signups: days.reduce((s, d) => s + d.signups, 0),
-    depositors: days.reduce((s, d) => s + d.depositors, 0),
-    traders: days.reduce((s, d) => s + d.traders, 0),
-    outcomeVol: days.reduce((s, d) => s + d.outcomeVol, 0),
-    hlShare: DATA.volume.platformShare
-  };
-
-  let rowsHtml = '';
-  days.forEach(d => {
-    const share = d.hlVol > 0 ? ((d.outcomeVol / d.hlVol) * 100).toFixed(1) : '0.0';
-    rowsHtml += `
-      <tr>
-        <td><span class="breakdown-date-main">${d.date}</span><span class="breakdown-date-day">${d.day}</span></td>
-        <td>${formatNumber(d.impressions)}</td>
-        <td>${formatNumber(d.clicks)}</td>
-        <td>${formatNumber(d.visitors)}</td>
-        <td class="green">${formatNumber(d.signups)}</td>
-        <td>${formatNumber(d.depositors)}</td>
-        <td>${formatNumber(d.traders)}</td>
-        <td class="orange">${formatCurrency(d.outcomeVol)}</td>
-        <td>${share}%</td>
-      </tr>`;
-  });
-
-  document.getElementById('breakdownCard').innerHTML = `
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#F58220"></div> DAILY BREAKDOWN</div>
+  <!-- GROWTH CARDS -->
+  <div class="growth-grid">
+    <div class="growth-card" style="border-color:rgba(69,232,92,0.2)">
+      <div class="growth-week">Week 1 &middot; Jun 10 – 16</div>
+      <div class="growth-val" style="color:#45E85C">$810K</div>
+      <div class="growth-label">WC Volume &middot; Baseline</div>
     </div>
-    <div class="breakdown-subtitle">ACQUISITION FUNNEL & OUTCOME VOLUME BY DAY</div>
-    <table class="breakdown-table">
-      <thead><tr>
-        <th>Date</th><th>Impressions</th><th>Clicks</th><th>Visitors</th>
-        <th>Signups</th><th>Depositors</th><th>Traders</th><th>Outcome Vol.</th><th>HL Share</th>
-      </tr></thead>
-      <tbody>
-        ${rowsHtml}
-        <tr class="summary-row">
-          <td>WEEK 1</td>
-          <td>${formatNumber(totals.impressions)}</td>
-          <td>${formatNumber(totals.clicks)}</td>
-          <td>${formatNumber(totals.visitors)}</td>
-          <td class="green">${formatNumber(totals.signups)}</td>
-          <td>${formatNumber(totals.depositors)}</td>
-          <td>${formatNumber(totals.traders)}</td>
-          <td class="orange">${formatCurrencyFull(totals.outcomeVol)}</td>
-          <td>${formatPercent(totals.hlShare)}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="breakdown-footer">SOURCE · OUTCOME WORLD CUP CAMPAIGN TRACKER · CONVERSIONS VIA POSTHOG · VOLUME VS HYPERLIQUID HIP-4</div>`;
-})();
-</script>
+    <div class="growth-card" style="border-color:rgba(59,130,246,0.2)">
+      <div class="growth-week">Week 2 &middot; Jun 17 – 23</div>
+      <div class="growth-val" style="color:#3B82F6">$4.95M</div>
+      <div class="growth-label">WC Volume &middot; 6.1x W1</div>
+    </div>
+    <div class="growth-card" style="border-color:rgba(196,232,74,0.2)">
+      <div class="growth-week">Week 3 &middot; Jun 24 – 30</div>
+      <div class="growth-val" style="color:#C4E84A">$8.6M</div>
+      <div class="growth-label">WC Volume &middot; 10.6x W1</div>
+    </div>
+  </div>
+
+  <div class="footer-note">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; CONVERSIONS VIA POSTHOG &middot; VOLUME VS HYPERLIQUID HIP-4</div>
+
+</div>
 
 </body>
 </html>
