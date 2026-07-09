@@ -325,6 +325,16 @@ body {
   color: rgba(255,255,255,0.4); text-transform: uppercase;
   text-align: right; padding: 0 0 12px 0;
 }
+.conv-table th.sortable {
+  cursor: pointer; user-select: none; transition: color 0.15s ease;
+}
+.conv-table th.sortable:hover { color: rgba(255,255,255,0.7); }
+.conv-table th.sortable.active { color: #45E85C; }
+.conv-table th.sortable .sort-arrow {
+  display: inline-block; margin-left: 4px; font-size: 8px;
+  opacity: 0; transition: opacity 0.15s ease;
+}
+.conv-table th.sortable.active .sort-arrow { opacity: 1; }
 .conv-table th:first-child { text-align: left; }
 .conv-table td {
   padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -705,24 +715,16 @@ body {
       <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
       <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 7</div>
     </div>
-    <table class="conv-table">
+    <table class="conv-table" id="convTable">
       <thead>
-        <tr><th>Channel</th><th>Visitors</th><th>Signups</th><th>Traders</th></tr>
+        <tr>
+          <th>Channel</th>
+          <th class="sortable active" data-sort="visitors">Visitors <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-sort="signups">Signups <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-sort="traders">Traders <span class="sort-arrow">&#9660;</span></th>
+        </tr>
       </thead>
-      <tbody>
-        <tr><td><div class="dot" style="background:#45E85C"></div>Telegram WC Sponsor</td><td>30,115</td><td>612</td><td>2</td></tr>
-        <tr><td><div class="dot" style="background:#3B82F6"></div>X Organic</td><td>1,616</td><td>123</td><td>93</td></tr>
-        <tr><td><div class="dot" style="background:#1FCFA0"></div>Telegram Ads</td><td>189</td><td>25</td><td>0</td></tr>
-        <tr><td><div class="dot" style="background:#FF5C9E"></div>X Giveaways</td><td>0</td><td>0</td><td>0</td></tr>
-        <tr><td><div class="dot" style="background:#F58220"></div>Telegram Organic</td><td>750</td><td>18</td><td>1</td></tr>
-        <tr><td><div class="dot" style="background:#9B7CFF"></div>Discord Organic</td><td>133</td><td>9</td><td>17</td></tr>
-        <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>708</td><td>110</td><td>10</td></tr>
-        <tr><td><div class="dot" style="background:#FF5C9E"></div>Substack</td><td>196</td><td>14</td><td>74</td></tr>
-        <tr><td><div class="dot" style="background:#3B82F6"></div>HL S2 Analyzer</td><td>18</td><td>0</td><td>1</td></tr>
-        <tr><td><div class="dot" style="background:#1FCFA0"></div>Shortmob</td><td>498</td><td>15</td><td>0</td></tr>
-        <tr><td><div class="dot" style="background:rgba(255,255,255,0.3)"></div>Unattributed</td><td>34,976</td><td>4,601</td><td>4,206</td></tr>
-        <tr class="total"><td>Total</td><td>69,199</td><td>5,527</td><td>4,404</td></tr>
-      </tbody>
+      <tbody id="convBody"></tbody>
     </table>
     <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jul 7.</div>
     <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
@@ -737,16 +739,16 @@ body {
     <table class="breakdown-table">
       <thead>
         <tr>
-          <th>Week</th><th>Visitors</th><th>Signups</th><th>Depositors</th><th>Traders</th><th>WC Vol.</th>
+          <th>Week</th><th>Visitors</th><th>Mktg Clicks</th><th>Signups</th><th>Depositors</th><th>Traders</th><th>WC Vol.</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td><span class="breakdown-date-main">Week 1</span><span class="breakdown-date-day">(Jun 10-16)</span></td><td>18,079</td><td class="green">1,660</td><td>169</td><td>1,137</td><td class="orange">$810K</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 2</span><span class="breakdown-date-day">(Jun 17-23)</span></td><td>9,665</td><td class="green">1,922</td><td>209</td><td>1,192</td><td class="orange">$4.6M</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 3</span><span class="breakdown-date-day">(Jun 24-30)</span></td><td>17,798</td><td class="green">1,013</td><td>168</td><td>1,112</td><td class="orange">$8.6M</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 4</span><span class="breakdown-date-day">(Jul 1-7)</span></td><td>25,029</td><td class="green">935</td><td>151</td><td>1,111</td><td class="orange">$4.5M</td></tr>
+        <tr><td><span class="breakdown-date-main">Week 1</span><span class="breakdown-date-day">(Jun 10-16)</span></td><td>18,079</td><td style="color:#3B82F6">10,672</td><td class="green">1,660</td><td>169</td><td>1,137</td><td class="orange">$810K</td></tr>
+        <tr><td><span class="breakdown-date-main">Week 2</span><span class="breakdown-date-day">(Jun 17-23)</span></td><td>9,665</td><td style="color:#3B82F6">8,036</td><td class="green">1,922</td><td>209</td><td>1,192</td><td class="orange">$4.6M</td></tr>
+        <tr><td><span class="breakdown-date-main">Week 3</span><span class="breakdown-date-day">(Jun 24-30)</span></td><td>17,798</td><td style="color:#3B82F6">7,326</td><td class="green">1,013</td><td>168</td><td>1,112</td><td class="orange">$8.6M</td></tr>
+        <tr><td><span class="breakdown-date-main">Week 4</span><span class="breakdown-date-day">(Jul 1-7)</span></td><td>25,029</td><td style="color:#3B82F6">11,087</td><td class="green">935</td><td>151</td><td>1,111</td><td class="orange">$4.5M</td></tr>
         <tr class="summary-row">
-          <td>CAMPAIGN</td><td>70,571</td><td class="green">5,530</td><td>697</td><td>4,404</td><td class="orange">$18.5M</td>
+          <td>CAMPAIGN</td><td>70,571</td><td style="color:#3B82F6">37,121</td><td class="green">5,530</td><td>697</td><td>4,404</td><td class="orange">$18.5M</td>
         </tr>
       </tbody>
     </table>
@@ -866,13 +868,63 @@ body {
 </div>
 
 <script>
+// ===================== SORTABLE CONVERSIONS TABLE =====================
+(function() {
+  var channels = [
+    { name: 'Telegram WC Sponsor', color: '#45E85C', visitors: 30115, signups: 612, traders: 2 },
+    { name: 'X Organic', color: '#3B82F6', visitors: 1616, signups: 123, traders: 93 },
+    { name: 'Telegram Ads', color: '#1FCFA0', visitors: 189, signups: 25, traders: 0 },
+    { name: 'X Giveaways', color: '#FF5C9E', visitors: 0, signups: 0, traders: 0 },
+    { name: 'Telegram Organic', color: '#F58220', visitors: 750, signups: 18, traders: 1 },
+    { name: 'Discord Organic', color: '#9B7CFF', visitors: 133, signups: 9, traders: 17 },
+    { name: 'CoConnect (Alphabot)', color: '#F58220', visitors: 708, signups: 110, traders: 10 },
+    { name: 'Substack', color: '#FF5C9E', visitors: 196, signups: 14, traders: 74 },
+    { name: 'HL S2 Analyzer', color: '#3B82F6', visitors: 18, signups: 0, traders: 1 },
+    { name: 'Shortmob', color: '#1FCFA0', visitors: 498, signups: 15, traders: 0 },
+    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', visitors: 34976, signups: 4601, traders: 4206 }
+  ];
+  var totals = { visitors: 69199, signups: 5527, traders: 4404 };
+
+  function fmt(n) { return n.toLocaleString('en-US'); }
+
+  function renderConvTable(sortKey) {
+    var sorted = channels.slice().sort(function(a, b) { return b[sortKey] - a[sortKey]; });
+    var html = '';
+    sorted.forEach(function(ch) {
+      html += '<tr>' +
+        '<td><div class="dot" style="background:' + ch.color + '"></div>' + ch.name + '</td>' +
+        '<td>' + fmt(ch.visitors) + '</td>' +
+        '<td>' + fmt(ch.signups) + '</td>' +
+        '<td>' + fmt(ch.traders) + '</td>' +
+        '</tr>';
+    });
+    html += '<tr class="total">' +
+      '<td>Total</td>' +
+      '<td>' + fmt(totals.visitors) + '</td>' +
+      '<td>' + fmt(totals.signups) + '</td>' +
+      '<td>' + fmt(totals.traders) + '</td>' +
+      '</tr>';
+    document.getElementById('convBody').innerHTML = html;
+  }
+
+  renderConvTable('visitors');
+
+  document.querySelectorAll('#convTable th.sortable').forEach(function(th) {
+    th.addEventListener('click', function() {
+      document.querySelectorAll('#convTable th.sortable').forEach(function(h) { h.classList.remove('active'); });
+      this.classList.add('active');
+      renderConvTable(this.dataset.sort);
+    });
+  });
+})();
+
 // ===================== WEEKLY TOTALS =====================
 (function() {
   const WEEKLY = [
-    { week: "W1", label: "Jun 10-16", visits: 18079, signups: 1660, traders: 1137 },
-    { week: "W2", label: "Jun 17-23", visits: 9665, signups: 1922, traders: 1192 },
-    { week: "W3", label: "Jun 24-30", visits: 17798, signups: 1013, traders: 1112 },
-    { week: "W4", label: "Jul 1-7", visits: 25029, signups: 935, traders: 1111 }
+    { week: "W1", label: "Jun 10-16", visits: 18079, clicks: 10672, signups: 1660, traders: 1137 },
+    { week: "W2", label: "Jun 17-23", visits: 9665, clicks: 8036, signups: 1922, traders: 1192 },
+    { week: "W3", label: "Jun 24-30", visits: 17798, clicks: 7326, signups: 1013, traders: 1112 },
+    { week: "W4", label: "Jul 1-7", visits: 25029, clicks: 11087, signups: 935, traders: 1111 }
   ];
 
   const metrics = [
@@ -887,19 +939,54 @@ body {
     var barsHtml = '';
     var vals = WEEKLY.map(function(d) { return d[metricKey]; });
     var maxVal = Math.max.apply(null, vals);
-    WEEKLY.forEach(function(d, i) {
-      var h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-      barsHtml += '<div class="daily-bar-wrap">' +
-        '<div class="daily-bar-val">' + formatNumber(vals[i]) + '</div>' +
-        '<div class="daily-bar" style="height:' + h + 'px"></div>' +
-        '<div class="daily-bar-date">' + d.week + '</div>' +
-        '<div class="daily-bar-day">' + d.label + '</div>' +
-        '</div>';
-    });
+    if (metricKey === 'visits') {
+      WEEKLY.forEach(function(d, i) {
+        var totalH = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
+        var clickRatio = d.clicks / d.visits;
+        var clickH = Math.round(totalH * clickRatio);
+        var organicH = totalH - clickH;
+        barsHtml += '<div class="daily-bar-wrap">' +
+          '<div class="daily-bar-val">' + formatNumber(vals[i]) + '</div>' +
+          '<div style="display:flex;flex-direction:column;width:100%;height:' + totalH + 'px">' +
+            '<div style="flex:0 0 ' + organicH + 'px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>' +
+            '<div style="flex:0 0 ' + clickH + 'px;background:#3B82F6;border-radius:' + (organicH === 0 ? '4px 4px' : '0 0') + ' 0 0"></div>' +
+          '</div>' +
+          '<div class="daily-bar-date">' + d.week + '</div>' +
+          '<div class="daily-bar-day">' + d.label + '</div>' +
+          '</div>';
+      });
+    } else {
+      WEEKLY.forEach(function(d, i) {
+        var h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
+        barsHtml += '<div class="daily-bar-wrap">' +
+          '<div class="daily-bar-val">' + formatNumber(vals[i]) + '</div>' +
+          '<div class="daily-bar" style="height:' + h + 'px"></div>' +
+          '<div class="daily-bar-date">' + d.week + '</div>' +
+          '<div class="daily-bar-day">' + d.label + '</div>' +
+          '</div>';
+      });
+    }
     return barsHtml;
   }
 
+  function getLegend(metricKey) {
+    if (metricKey === 'visits') {
+      return '<div style="display:flex;gap:16px;margin-top:12px">' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>' +
+          '<span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>' +
+          '<span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>' +
+        '</div>' +
+      '</div>';
+    }
+    return '';
+  }
+
   document.getElementById('weeklyChartArea').innerHTML = renderWeeklyChart('visits');
+  document.getElementById('weeklyLegend').innerHTML = getLegend('visits');
 
   document.querySelectorAll('#weeklyCard .metric-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -909,6 +996,7 @@ body {
       var label = metrics.find(function(m) { return m.key === mk; }).label;
       document.getElementById('weeklySubtitle').textContent = label + ' · W1 – W4';
       document.getElementById('weeklyChartArea').innerHTML = renderWeeklyChart(mk);
+      document.getElementById('weeklyLegend').innerHTML = getLegend(mk);
     });
   });
 })();
