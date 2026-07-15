@@ -156,20 +156,16 @@
   .rewards-row .chip-note{font-size:13px;font-weight:600;color:var(--ink-muted)}
   .rewards-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .cta{
-    margin-left:auto;display:inline-flex;align-items:center;gap:8px;
+    display:inline-flex;align-items:center;gap:8px;margin-top:22px;
     background:#E1FF01;color:#17121f;text-decoration:none;
     font-weight:800;font-size:14px;letter-spacing:.02em;
     padding:10px 18px;border-radius:999px;transition:transform .15s ease;
     box-shadow:0 1px 3px rgba(23,18,31,.25);
   }
   .cta:hover{transform:translateY(-1px)}
-  .lockup, .venue img.lockup{
-    height:44px;width:auto;background:transparent;box-shadow:none;border-radius:0;
-  }
-  .lockup{display:block}
-  .lockup-sm, .venue img.lockup-sm{height:20px}
-  .lockup-link{display:inline-block}
-  .venue-hero{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+  .lockup{height:34px;width:auto;display:block}
+  .lockup-sm{height:34px}
+
 
   .offboard{font-size:12px;font-weight:600;color:var(--ink-muted);padding:14px 8px 0}
 
@@ -188,6 +184,9 @@
   @media (max-width:760px){
     header{grid-template-columns:1fr}
     .head-side{align-items:flex-start;text-align:left}
+    .bar{font-size:14px;padding:0 10px;gap:6px}
+    .bar .sub{display:none}
+    .venue a{font-size:15px}
     .board-scroll{overflow-x:auto;margin:0 -16px;padding:0 16px}
     .board{min-width:640px}
     .rewards-row td{padding-left:8px}
@@ -197,7 +196,10 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>Winnings on a $100 prediction</h1>
+    <div class="head-main">
+      <h1>Winnings on a $100 prediction</h1>
+      <a class="cta" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">Trade on Outcome <span aria-hidden="true">→</span></a>
+    </div>
     <div class="head-side">
       <span class="live-badge"><span class="live-dot" aria-hidden="true"></span> Live odds</span>
       <p class="head-note" id="headNote"><strong>2026 World Cup · Winner market.</strong> Loading venues…</p>
@@ -205,7 +207,7 @@
   </header>
 
   <div class="controls">
-    <span class="kicker" id="marketLabel">World Cup · Winner market</span>
+    <span class="kicker" id="marketLabel">World Cup · Winner market · payouts net of fees</span>
     <div class="stake-group" role="group" aria-label="Stake size">
       <button class="stake-btn" data-stake="100" aria-pressed="true">$100</button>
       <button class="stake-btn" data-stake="500" aria-pressed="false">$500</button>
@@ -230,8 +232,11 @@
       <p class="fineprint" id="fineprint">
         Payout = stake × decimal odds; profit = payout − stake. Prediction-market prices use the current
         ask (cost to buy Yes). Sportsbook odds via The Odds API; exchange prices fetched directly from each
-        venue's public API. Betfair Exchange payouts shown before commission. Odds move constantly — a ✦ marks today's best payout per team. Availability and
-        pricing vary by region. 21+ where applicable.
+        venue's public API. Payouts are net of platform fees: Kalshi's trading fee (0.07·P·(1−P) per contract),
+        Polymarket's 3% sports taker fee, Betfair's 5% base commission on winnings. Outcome and Hyperliquid
+        (HIP-4 fees currently zero), SX Bet singles, and sportsbooks charge no explicit fees — book margin is
+        embedded in the odds. Odds move constantly — a ✦ marks today's best net payout per team. Availability
+        and pricing vary by region. 21+ where applicable.
       </p>
     </div>
     <a class="brand" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener"><img class="lockup lockup-sm" src="" alt="Outcome" id="footerLockup"></a>
@@ -294,9 +299,9 @@ const LOGOS = {
 const VENUES = [
   { id:'outcome',     name:'Outcome',     domain:'outcome.xyz',     url:'https://outcome.xyz/world-cup', kind:'exchange', hero:true },
   { id:'hyperliquid', name:'Hyperliquid', domain:'hyperliquid.xyz', url:'https://app.hyperliquid.xyz/outcomes', kind:'exchange' },
-  { id:'sxbet',       name:'SX Bet',      domain:'sx.bet',          url:'https://sx.bet', kind:'exchange' },
-  { id:'polymarket',  name:'Polymarket',  domain:'polymarket.com',  url:'https://polymarket.com/event/world-cup-winner', kind:'exchange' },
-  { id:'kalshi',      name:'Kalshi',      domain:'kalshi.com',      url:'https://kalshi.com', kind:'exchange' },
+  { id:'sxbet',       name:'SX Bet',      domain:'sx.bet',          url:'https://sx.bet', kind:'exchange' }, // 0% on singles
+  { id:'polymarket',  name:'Polymarket',  domain:'polymarket.com',  url:'https://polymarket.com/event/world-cup-winner', kind:'exchange', fees:{kind:'trade', coeff:0.03, label:'3% sports taker fee'} },
+  { id:'kalshi',      name:'Kalshi',      domain:'kalshi.com',      url:'https://kalshi.com', kind:'exchange', fees:{kind:'trade', coeff:0.07, label:'trading fee (0.07·P·(1−P))'} },
   { id:'fanduel',     name:'FanDuel',     domain:'fanduel.com',     url:'https://sportsbook.fanduel.com', kind:'book', bookKey:'fanduel' },
   { id:'draftkings',  name:'DraftKings',  domain:'draftkings.com',  url:'https://sportsbook.draftkings.com/leagues/soccer/world-cup-2026', kind:'book', bookKey:'draftkings' },
   // Fanatics Markets intentionally excluded: its public API exposes only a
@@ -306,7 +311,7 @@ const VENUES = [
   { id:'onexbet',     name:'1xBet',       domain:'1xbet.com',       url:'https://1xbet.com', kind:'book', bookKey:'onexbet' },
   { id:'betus',       name:'BetUS',       domain:'betus.com.pa',    url:'https://www.betus.com.pa', kind:'book', bookKey:'betus' },
   { id:'ladbrokes',   name:'Ladbrokes',   domain:'ladbrokes.com',   url:'https://sports.ladbrokes.com', kind:'book', bookKey:'ladbrokes_uk' },
-  { id:'betfair',     name:'Betfair',     domain:'betfair.com',     url:'https://www.betfair.com/exchange', kind:'book', bookKey:'betfair_ex_uk' },
+  { id:'betfair',     name:'Betfair',     domain:'betfair.com',     url:'https://www.betfair.com/exchange', kind:'book', bookKey:'betfair_ex_uk', fees:{kind:'commission', rate:0.05, label:'5% commission on winnings'} },
   { id:'williamhill', name:'William Hill',domain:'williamhill.com', url:'https://sports.williamhill.com', kind:'book', bookKey:'williamhill' },
   { id:'unibet',      name:'Unibet',      domain:'unibet.com',      url:'https://www.unibet.com', kind:'book', bookKey:'unibet' },
   { id:'tab',         name:'TAB',         domain:'tab.com.au',      url:'https://www.tab.com.au', kind:'book', bookKey:'tab' },
@@ -432,6 +437,26 @@ function agoLabel(iso) {
   return 'live · ' + Math.round(s / 3600) + 'h ago';
 }
 
+/* Net payout after platform fees.
+   - trade fee (Kalshi, Polymarket): fee = coeff·C·P·(1−P) paid on trade, so a
+     $S budget buys C = S / (P + coeff·P·(1−P)) contracts paying $1 each.
+   - commission (Betfair): rate on net winnings at settlement.
+   - everyone else: none (Outcome/Hyperliquid HIP-4 fees are currently zero;
+     SX Bet singles are 0%; sportsbook margin is embedded in the odds). */
+function netPayout(v, dec, stake) {
+  const f = v.fees;
+  if (!f) return stake * dec;
+  if (f.kind === 'trade') {
+    const p = 1 / dec;
+    return stake / (p + f.coeff * p * (1 - p));
+  }
+  if (f.kind === 'commission') {
+    const g = stake * dec;
+    return g - (g - stake) * f.rate;
+  }
+  return stake * dec;
+}
+
 /* ================= RENDER ================= */
 function render() {
   const teams = liveTeams();
@@ -443,13 +468,13 @@ function render() {
   // everyone else is listed in the footnote line below the table.
   const visible = VENUES.filter(v => teams.some(t => state.quotes[v.id]?.odds?.[t.team]));
 
-  // Best payout per team (among visible venues only)
+  // Best NET payout per team (among visible venues only)
   const best = {};
   for (const t of teams) {
     let max = 0;
     for (const v of visible) {
       const dec = state.quotes[v.id]?.odds?.[t.team];
-      if (dec && dec > max) max = dec;
+      if (dec) max = Math.max(max, netPayout(v, dec, state.stake));
     }
     best[t.team] = max;
   }
@@ -464,8 +489,11 @@ function render() {
 
   // Row order: hero pinned, then by payout on sort team (default: favorite)
   const sortTeam = state.sortTeam || teams[0].team;
-  const rows = visible.filter(v => !v.hero).sort((a, b) =>
-    (state.quotes[b.id]?.odds?.[sortTeam] || 0) - (state.quotes[a.id]?.odds?.[sortTeam] || 0));
+  const netFor = (v) => {
+    const dec = state.quotes[v.id]?.odds?.[sortTeam];
+    return dec ? netPayout(v, dec, state.stake) : 0;
+  };
+  const rows = visible.filter(v => !v.hero).sort((a, b) => netFor(b) - netFor(a));
   const ordered = [...visible.filter(v => v.hero), ...rows];
 
   let html = '';
@@ -476,29 +504,25 @@ function render() {
     const cells = teams.map(t => {
       const dec = q?.odds?.[t.team];
       if (!dec) return '<td><div class="track empty"><span class="nodata">—</span></div></td>';
-      const payout = state.stake * dec;
+      const payout = netPayout(v, dec, state.stake);
       const profit = payout - state.stake;
-      const isBest = Math.abs(dec - best[t.team]) < 1e-9;
-      const width = (dec / best[t.team]) * 100;
-      const label = `${esc(v.name)} pays ${fmtMoney(payout)} on ${esc(t.team)} (profit +${fmtMoney(profit)})${isBest ? ' — best price' : ''}`;
+      const isBest = Math.abs(payout - best[t.team]) < 1e-6;
+      const width = (payout / best[t.team]) * 100;
+      const feeNote = v.fees ? `, after ${v.fees.label}` : ', no fees';
+      const label = `${esc(v.name)} pays ${fmtMoney(payout)} on ${esc(t.team)} (profit +${fmtMoney(profit)}${feeNote})${isBest ? ' — best net payout' : ''}`;
       return `<td><div class="track"><div class="bar${isBest?' best':''}" style="width:${width.toFixed(2)}%" ` +
         `role="img" aria-label="${label}" title="${label}">` +
         `<span class="sub">+${fmtMoney(profit)}</span>${fmtMoney(payout)}</div></div></td>`;
     }).join('');
-    const venueCell = v.hero
-      ? `<a class="lockup-link" href="${CONFIG.tradeUrl}" target="_blank" rel="noopener" aria-label="Outcome">` +
-        `<img class="lockup" src="${OUTCOME_LOCKUP}" alt="Outcome"></a>` +
-        `<span class="${metaCls}" style="display:block">${meta}</span>`
-      : `<img src="${LOGOS[v.id] || `https://www.google.com/s2/favicons?domain=${v.domain}&sz=64`}" alt="" ` +
-        `onerror="this.outerHTML='<span class=&quot;mono&quot; style=&quot;background:#7b5fc0&quot;>${esc(v.name[0])}</span>'">` +
-        `<span><a href="${v.url}" target="_blank" rel="noopener">${esc(v.name)}</a>` +
-        `<span class="${metaCls}">${meta}</span></span>`;
-    html += `<tr class="${v.hero?'hero':''}"><th scope="row"><div class="venue${v.hero?' venue-hero':''}">${venueCell}</div></th>${cells}</tr>`;
+    html += `<tr class="${v.hero?'hero':''}"><th scope="row"><div class="venue">` +
+      `<img src="${LOGOS[v.id] || `https://www.google.com/s2/favicons?domain=${v.domain}&sz=64`}" alt="" ` +
+      `onerror="this.outerHTML='<span class=&quot;mono&quot; style=&quot;background:#7b5fc0&quot;>${esc(v.name[0])}</span>'">` +
+      `<span><a href="${v.url}" target="_blank" rel="noopener">${esc(v.name)}</a>` +
+      `<span class="${metaCls}">${meta}</span></span></div></th>${cells}</tr>`;
     if (v.hero && CONFIG.rewards.text) {
       html += `<tr class="rewards-row"><td colspan="${teams.length + 1}"><div class="rewards-line">` +
         `<span class="chip">${esc(CONFIG.rewards.text)}</span>` +
         `<span class="chip-note">${esc(CONFIG.rewards.note)}</span>` +
-        `<a class="cta" href="${CONFIG.tradeUrl}" target="_blank" rel="noopener">Trade on Outcome <span aria-hidden="true">→</span></a>` +
         `</div></td></tr>`;
     }
   }
@@ -553,6 +577,7 @@ document.getElementById('boardHead').addEventListener('click', (e) => {
 });
 
 document.getElementById('footerLockup').src = OUTCOME_LOCKUP;
+document.getElementById('tradeCta').href = CONFIG.tradeUrl;
 refreshExchanges(); refreshSportsbooks();
 setInterval(refreshExchanges, CONFIG.refreshExchangesMs);
 setInterval(refreshSportsbooks, CONFIG.refreshSportsbooksMs);
