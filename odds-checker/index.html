@@ -178,9 +178,7 @@
     padding:14px clamp(16px,4vw,56px) 12px;
   }
   .oc-banner__trophy{
-    position:absolute;right:0;top:-8px;height:110px;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 35%);
-    mask-image:linear-gradient(90deg,transparent 0%,black 35%);
+    flex:none;height:56px;margin:-4px 0 -8px;
     pointer-events:none;
   }
   .oc-banner__headline{
@@ -189,13 +187,8 @@
   }
   .oc-banner__sub{font-size:14px;font-weight:500;color:rgba(62,71,8,.8);line-height:1.2}
   .oc-banner__sub strong{font-weight:700;color:#3E4708}
-  .oc-banner__stats{
-    display:inline-flex;align-items:center;gap:10px;margin-left:auto;margin-right:96px;
-    background:#4A4E10;color:#DFF700;border-radius:8px;padding:7px 14px;
-    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:13px;
-    letter-spacing:.03em;text-transform:uppercase;line-height:1;white-space:nowrap;
-  }
-  .oc-banner__star{font-size:10px;opacity:.7}
+  .oc-banner__right{display:inline-flex;align-items:center;gap:10px;margin-left:auto}
+  .oc-banner__mark{height:.92em;width:auto;vertical-align:-.08em;margin:0 .05em}
   .oc-banner__arrow{
     display:inline-flex;align-items:center;justify-content:center;flex:none;
     width:24px;height:24px;border-radius:100px;background:#3E4708;color:#DFF700;font-size:14px;line-height:1;
@@ -223,8 +216,8 @@
     .head-side{align-items:flex-start;text-align:left}
     .oc-banner__headline{font-size:18px}
     .oc-banner__sub{font-size:13px}
-    .oc-banner__stats{margin-left:0;margin-right:0;font-size:12px;padding:6px 11px}
-    .oc-banner__trophy{display:none}
+    .oc-banner__trophy{height:48px;margin:-3px 0 -6px}
+    .oc-banner__right{margin-left:0}
     .avatar{width:26px;height:26px}
     .colhead{gap:7px}
     .bar{font-size:14px;padding:0 10px;gap:6px}
@@ -239,15 +232,12 @@
 <body>
 <a class="oc-banner" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">
   <div class="oc-banner__in">
-    <span class="oc-banner__headline">Trade the World Cup Final on Outcome</span>
-    <span class="oc-banner__sub">Earn your share of <strong>$2,500</strong> in rewards</span>
-    <span class="oc-banner__arrow" aria-hidden="true">&rarr;</span>
-    <span class="oc-banner__stats">
-      <span>$61k already paid out</span>
-      <span class="oc-banner__star" aria-hidden="true">&#10022;</span>
-      <span>1k participants</span>
-    </span>
     <img class="oc-banner__trophy" id="trophyImg" src="" alt="">
+    <span class="oc-banner__headline">Trade the World Cup Final on <img class="oc-banner__mark" src="data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 351 433%22 fill=%22%233E4708%22%3E%3Cpath d=%22M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z%22/%3E%3Cpath d=%22M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z%22/%3E%3C/svg%3E" alt=""> Outcome</span>
+    <span class="oc-banner__right">
+      <span class="oc-banner__sub">Earn your share of <strong>$2,500</strong> in rewards</span>
+      <span class="oc-banner__arrow" aria-hidden="true">&rarr;</span>
+    </span>
   </div>
 </a>
 
