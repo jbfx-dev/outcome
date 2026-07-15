@@ -108,6 +108,19 @@
   }
   .board thead th:first-child{cursor:default}
   .board thead th .flag{font-size:17px;margin-right:6px}
+  .colhead{display:flex;align-items:center;gap:10px;min-width:0}
+  .colhead-text{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .avatar{
+    width:44px;height:44px;flex:none;border-radius:50%;
+    object-fit:cover;object-position:50% 12%;   /* frames head + shoulders */
+    box-shadow:0 1px 3px rgba(23,18,31,.28);
+    background:rgba(255,255,255,.25);
+  }
+  @media (max-width:1000px){
+    .avatar{width:34px;height:34px}
+    .board thead th{font-size:11.5px;letter-spacing:.06em}
+    .board thead th .flag{font-size:15px;margin-right:4px}
+  }
   .board thead th .prob{display:block;font-size:11px;font-weight:700;color:var(--ink-muted);letter-spacing:.02em;text-transform:none}
   .board thead th[aria-sort]{color:var(--ink)}
   .board tbody td, .board tbody th{
@@ -184,6 +197,8 @@
   @media (max-width:760px){
     header{grid-template-columns:1fr}
     .head-side{align-items:flex-start;text-align:left}
+    .avatar{width:26px;height:26px}
+    .colhead{gap:7px}
     .bar{font-size:14px;padding:0 10px;gap:6px}
     .bar .sub{display:none}
     .venue a{font-size:15px}
@@ -480,10 +495,15 @@ function render() {
   }
 
   const colW = (72 / teams.length).toFixed(2) + '%';
-  head.innerHTML = '<tr><th scope="col">Venue</th>' + teams.map(t =>
-    `<th scope="col" style="width:${colW}" data-team="${esc(t.team)}" ${state.sortTeam===t.team?'aria-sort="descending"':''} title="Sort by ${esc(t.team)} payout">` +
-    `<span class="flag" aria-hidden="true">${TEAM_FLAGS[t.team]||'⚽'}</span>${esc(t.team)}` +
-    `<span class="prob">${(t.prob*100).toFixed(1)}% implied</span></th>`).join('') + '</tr>';
+  head.innerHTML = '<tr><th scope="col">Venue</th>' + teams.map(t => {
+    const slug = t.team.toLowerCase().replace(/[^a-z]+/g, '-');
+    return `<th scope="col" style="width:${colW}" data-team="${esc(t.team)}" ${state.sortTeam===t.team?'aria-sort="descending"':''} title="Sort by ${esc(t.team)} payout">` +
+      `<div class="colhead">` +
+      `<img class="avatar" src="players/${slug}.jpg" alt="" loading="lazy" onerror="this.style.display='none'">` +
+      `<span class="colhead-text"><span class="flag" aria-hidden="true">${TEAM_FLAGS[t.team]||'⚽'}</span>${esc(t.team)}` +
+      `<span class="prob">${(t.prob*100).toFixed(1)}% implied</span></span>` +
+      `</div></th>`;
+  }).join('') + '</tr>';
 
   const hidden = VENUES.filter(v => !visible.includes(v));
 
