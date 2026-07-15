@@ -499,7 +499,8 @@ function render() {
     const slug = t.team.toLowerCase().replace(/[^a-z]+/g, '-');
     return `<th scope="col" style="width:${colW}" data-team="${esc(t.team)}" ${state.sortTeam===t.team?'aria-sort="descending"':''} title="Sort by ${esc(t.team)} payout">` +
       `<div class="colhead">` +
-      `<img class="avatar" src="players/${slug}.jpg" alt="" loading="lazy" onerror="this.style.display='none'">` +
+      `<img class="avatar" src="players/${slug}.png" alt="" loading="lazy" ` +
+      `onerror="if(!this.dataset.alt){this.dataset.alt=1;this.src='players/${slug}.jpg'}else{this.style.display='none'}">` +
       `<span class="colhead-text"><span class="flag" aria-hidden="true">${TEAM_FLAGS[t.team]||'⚽'}</span>${esc(t.team)}` +
       `<span class="prob">${(t.prob*100).toFixed(1)}% implied</span></span>` +
       `</div></th>`;
