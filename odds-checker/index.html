@@ -513,15 +513,19 @@ function render() {
   // everyone else is listed in the footnote line below the table.
   const visible = VENUES.filter(v => teams.some(t => state.quotes[v.id]?.odds?.[t.team]));
 
-  // Best NET payout per team (among visible venues only)
-  const best = {};
+  // Best NET payout per team, and the single venue that owns the highlight.
+  // Ties go to the earliest venue in VENUES order (Outcome is first), so
+  // Outcome/Hyperliquid mirroring the same book highlights Outcome only.
+  const best = {}, bestVenue = {};
   for (const t of teams) {
-    let max = 0;
+    let max = 0, who = null;
     for (const v of visible) {
       const dec = state.quotes[v.id]?.odds?.[t.team];
-      if (dec) max = Math.max(max, netPayout(v, dec, state.stake));
+      if (!dec) continue;
+      const net = netPayout(v, dec, state.stake);
+      if (net > max + 1e-6) { max = net; who = v.id; }
     }
-    best[t.team] = max;
+    best[t.team] = max; bestVenue[t.team] = who;
   }
 
   const colW = (72 / teams.length).toFixed(2) + '%';
@@ -557,7 +561,7 @@ function render() {
       if (!dec) return '<td><div class="track empty"><span class="nodata">—</span></div></td>';
       const payout = netPayout(v, dec, state.stake);
       const profit = payout - state.stake;
-      const isBest = Math.abs(payout - best[t.team]) < 1e-6;
+      const isBest = v.id === bestVenue[t.team];
       const width = (payout / best[t.team]) * 100;
       const feeNote = v.fees ? `, after ${v.fees.label}` : ', no fees';
       const label = `${esc(v.name)} pays ${fmtMoney(payout)} on ${esc(t.team)} (profit +${fmtMoney(profit)}${feeNote})${isBest ? ' — best net payout' : ''}`;
