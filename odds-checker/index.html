@@ -160,22 +160,51 @@
   tr.hero td:last-child{border-radius:0 14px 14px 0}
   tr.hero .venue a{font-size:19px}
   tr.hero .track{background:rgba(255,255,255,.34)}
-  .rewards-row td{padding:0 8px 16px 60px;border-bottom:1px solid var(--rule)}
-  .rewards-row .chip{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--dark);color:#efe3ff;font-weight:800;font-size:14px;
-    padding:9px 16px;border-radius:10px;letter-spacing:.02em;
+  .rewards-row td{padding:0 8px 12px 60px;border-bottom:1px solid var(--rule)}
+  .rewards-remark{font-size:13px;font-weight:600;color:var(--ink-muted)}
+  .rewards-remark strong{color:var(--ink);font-weight:800}
+  /* World Cup promo button (Outcome design) */
+  .oc-wc-btn{
+    display:block;position:relative;width:620px;max-width:100%;margin-top:26px;
+    border-radius:16px;background:#DFF700;overflow:hidden;cursor:pointer;
+    text-decoration:none;-webkit-tap-highlight-color:transparent;
+    border:1px solid rgba(62,71,8,.35);box-shadow:0 4px 0 0 #4A4E10;
+    transform:translateY(0);
+    transition:filter 150ms cubic-bezier(.2,.8,.2,1),transform 150ms cubic-bezier(.2,.8,.2,1),box-shadow 150ms cubic-bezier(.2,.8,.2,1);
+    font-family:Inter,sans-serif;
   }
-  .rewards-row .chip-note{font-size:13px;font-weight:600;color:var(--ink-muted)}
-  .rewards-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .cta{
-    display:inline-flex;align-items:center;gap:8px;margin-top:22px;
-    background:#E1FF01;color:#17121f;text-decoration:none;
-    font-weight:800;font-size:14px;letter-spacing:.02em;
-    padding:10px 18px;border-radius:999px;transition:transform .15s ease;
-    box-shadow:0 1px 3px rgba(23,18,31,.25);
+  .oc-wc-btn:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 6px 0 0 #4A4E10}
+  .oc-wc-btn:active{filter:brightness(.97);transform:translateY(3px);box-shadow:0 1px 0 0 #4A4E10}
+  .oc-wc-btn__trophy{
+    position:absolute;right:6px;top:-6px;height:158px;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 30%);
+    mask-image:linear-gradient(90deg,transparent 0%,black 30%);
+    pointer-events:none;
   }
-  .cta:hover{transform:translateY(-1px)}
+  .oc-wc-btn__perf{
+    position:absolute;top:14px;left:24px;right:130px;height:6px;
+    background-image:radial-gradient(circle,rgba(62,71,8,.85) 2.4px,transparent 2.6px);
+    background-size:13px 6px;background-repeat:repeat-x;
+  }
+  .oc-wc-btn__body{position:relative;padding:34px 150px 16px 24px;display:flex;flex-direction:column;gap:6px}
+  .oc-wc-btn__headline{
+    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:34px;
+    line-height:.95;text-transform:uppercase;color:#3E4708;letter-spacing:.01em;
+  }
+  .oc-wc-btn__sub{display:flex;align-items:center;gap:10px}
+  .oc-wc-btn__sub-text{font-size:16px;font-weight:500;color:rgba(62,71,8,.75);line-height:1.2}
+  .oc-wc-btn__sub-text strong{font-weight:700;color:#3E4708}
+  .oc-wc-btn__arrow{
+    display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:100px;background:#3E4708;color:#DFF700;font-size:15px;line-height:1;
+  }
+  .oc-wc-btn__stats{
+    position:relative;margin-top:10px;background:#4A4E10;padding:10px 24px;
+    display:flex;align-items:center;gap:12px;
+    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:16px;
+    letter-spacing:.03em;text-transform:uppercase;color:#DFF700;line-height:1;
+  }
+  .oc-wc-btn__star{font-size:12px;opacity:.7}
   .lockup{height:34px;width:auto;display:block}
   .lockup-sm{height:34px}
 
@@ -195,8 +224,13 @@
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
   @media (max-width:760px){
-    header{grid-template-columns:1fr}
+    header{grid-template-columns:minmax(0,1fr)}
     .head-side{align-items:flex-start;text-align:left}
+    .oc-wc-btn__headline{font-size:26px}
+    .oc-wc-btn__body{padding:30px 110px 14px 18px}
+    .oc-wc-btn__trophy{height:120px;right:2px}
+    .oc-wc-btn__perf{right:100px;left:18px}
+    .oc-wc-btn__stats{padding:9px 18px;font-size:13.5px}
     .avatar{width:26px;height:26px}
     .colhead{gap:7px}
     .bar{font-size:14px;padding:0 10px;gap:6px}
@@ -205,6 +239,7 @@
     .board-scroll{overflow-x:auto;margin:0 -16px;padding:0 16px}
     .board{min-width:640px}
     .rewards-row td{padding-left:8px}
+    .rewards-remark{font-size:12px}
   }
 </style>
 </head>
@@ -213,7 +248,22 @@
   <header>
     <div class="head-main">
       <h1>Winnings on a $100 prediction</h1>
-      <a class="cta" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">Trade on Outcome <span aria-hidden="true">→</span></a>
+      <a class="oc-wc-btn" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">
+        <img class="oc-wc-btn__trophy" id="trophyImg" src="" alt="">
+        <div class="oc-wc-btn__perf"></div>
+        <div class="oc-wc-btn__body">
+          <div class="oc-wc-btn__headline">Trade the World Cup Final on Outcome</div>
+          <div class="oc-wc-btn__sub">
+            <span class="oc-wc-btn__sub-text">Earn your share of <strong>$2,500</strong> in rewards</span>
+            <span class="oc-wc-btn__arrow" aria-hidden="true">&rarr;</span>
+          </div>
+        </div>
+        <div class="oc-wc-btn__stats">
+          <span>$61k already paid out</span>
+          <span class="oc-wc-btn__star" aria-hidden="true">&#10022;</span>
+          <span>1k participants</span>
+        </div>
+      </a>
     </div>
     <div class="head-side">
       <span class="live-badge"><span class="live-dot" aria-hidden="true"></span> Live odds</span>
@@ -273,9 +323,9 @@ const CONFIG = {
   polymarketSlug: 'world-cup-winner',
   kalshiEvent: 'KXMENWORLDCUP-26',
   sxLeague: '10048',
-  // Rewards chip on the Outcome row. Set text to null to hide.
+  // Rewards remark under the Outcome row. Set amount to null to hide.
   rewards: {
-    text: '✦ + $2,500 IN REWARDS',
+    amount: '$2,500',
     note: 'paid to traders on this market. Win or lose.',
   },
   // "Trade on Outcome" CTA destination. Swap for a Dub short link when created.
@@ -543,11 +593,10 @@ function render() {
       `onerror="this.outerHTML='<span class=&quot;mono&quot; style=&quot;background:#7b5fc0&quot;>${esc(v.name[0])}</span>'">` +
       `<span><a href="${v.url}" target="_blank" rel="noopener">${esc(v.name)}</a>` +
       `<span class="${metaCls}">${meta}</span></span></div></th>${cells}</tr>`;
-    if (v.hero && CONFIG.rewards.text) {
-      html += `<tr class="rewards-row"><td colspan="${teams.length + 1}"><div class="rewards-line">` +
-        `<span class="chip">${esc(CONFIG.rewards.text)}</span>` +
-        `<span class="chip-note">${esc(CONFIG.rewards.note)}</span>` +
-        `</div></td></tr>`;
+    if (v.hero && CONFIG.rewards.amount) {
+      html += `<tr class="rewards-row"><td colspan="${teams.length + 1}">` +
+        `<span class="rewards-remark">✦ + <strong>${esc(CONFIG.rewards.amount)} in rewards</strong> ${esc(CONFIG.rewards.note)}</span>` +
+        `</td></tr>`;
     }
   }
   body.innerHTML = html;
@@ -602,6 +651,10 @@ document.getElementById('boardHead').addEventListener('click', (e) => {
 
 document.getElementById('footerLockup').src = OUTCOME_LOCKUP;
 document.getElementById('tradeCta').href = CONFIG.tradeUrl;
+document.getElementById('trophyImg').src = ASSET_BASE + '/assets/trophy-crop.png';
+const fontCss = document.createElement('style');
+fontCss.textContent = `@font-face{font-family:"PP Neue Corp";src:url("${ASSET_BASE}/fonts/PPNeueCorp-NarrowUltrabold.woff2") format("woff2");font-weight:800;font-display:swap;}`;
+document.head.appendChild(fontCss);
 refreshExchanges(); refreshSportsbooks();
 setInterval(refreshExchanges, CONFIG.refreshExchangesMs);
 setInterval(refreshSportsbooks, CONFIG.refreshSportsbooksMs);
