@@ -148,7 +148,6 @@
     font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;
     transition:width .6s ease;
   }
-  .bar .sub{font-weight:600;font-size:12px;opacity:.8}
   .bar.best{background:var(--dark);color:var(--dark-text)}
   .bar.best::after{content:"✦";font-size:13px}
   .track.empty{display:flex;align-items:center;justify-content:center}
@@ -163,48 +162,44 @@
   .rewards-row td{padding:0 8px 12px 60px;border-bottom:1px solid var(--rule)}
   .rewards-remark{font-size:13px;font-weight:600;color:var(--ink-muted)}
   .rewards-remark strong{color:var(--ink);font-weight:800}
-  /* World Cup promo button (Outcome design) */
-  .oc-wc-btn{
-    display:block;position:relative;width:620px;max-width:100%;margin-top:26px;
-    border-radius:16px;background:#DFF700;overflow:hidden;cursor:pointer;
-    text-decoration:none;-webkit-tap-highlight-color:transparent;
-    border:1px solid rgba(62,71,8,.35);box-shadow:0 4px 0 0 #4A4E10;
-    transform:translateY(0);
-    transition:filter 150ms cubic-bezier(.2,.8,.2,1),transform 150ms cubic-bezier(.2,.8,.2,1),box-shadow 150ms cubic-bezier(.2,.8,.2,1);
+  /* World Cup promo banner (Outcome design, slimmed from the ticket button) */
+  .oc-banner{
+    display:block;position:relative;overflow:hidden;cursor:pointer;text-decoration:none;
+    background:#DFF700;border-bottom:4px solid #4A4E10;
+    margin:clamp(-56px,-4vw,-16px) clamp(-56px,-4vw,-16px) 28px;
+    -webkit-tap-highlight-color:transparent;
+    transition:filter 150ms cubic-bezier(.2,.8,.2,1);
     font-family:Inter,sans-serif;
   }
-  .oc-wc-btn:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 6px 0 0 #4A4E10}
-  .oc-wc-btn:active{filter:brightness(.97);transform:translateY(3px);box-shadow:0 1px 0 0 #4A4E10}
-  .oc-wc-btn__trophy{
-    position:absolute;right:6px;top:-6px;height:158px;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 30%);
-    mask-image:linear-gradient(90deg,transparent 0%,black 30%);
+  .oc-banner:hover{filter:brightness(1.05)}
+  .oc-banner__in{
+    max-width:1160px;margin:0 auto;position:relative;
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px 18px;
+    padding:14px clamp(16px,4vw,56px) 12px;
+  }
+  .oc-banner__trophy{
+    position:absolute;right:0;top:-8px;height:110px;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 35%);
+    mask-image:linear-gradient(90deg,transparent 0%,black 35%);
     pointer-events:none;
   }
-  .oc-wc-btn__perf{
-    position:absolute;top:14px;left:24px;right:130px;height:6px;
-    background-image:radial-gradient(circle,rgba(62,71,8,.85) 2.4px,transparent 2.6px);
-    background-size:13px 6px;background-repeat:repeat-x;
+  .oc-banner__headline{
+    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:22px;
+    line-height:1;text-transform:uppercase;color:#3E4708;letter-spacing:.01em;
   }
-  .oc-wc-btn__body{position:relative;padding:34px 150px 16px 24px;display:flex;flex-direction:column;gap:6px}
-  .oc-wc-btn__headline{
-    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:34px;
-    line-height:.95;text-transform:uppercase;color:#3E4708;letter-spacing:.01em;
+  .oc-banner__sub{font-size:14px;font-weight:500;color:rgba(62,71,8,.8);line-height:1.2}
+  .oc-banner__sub strong{font-weight:700;color:#3E4708}
+  .oc-banner__stats{
+    display:inline-flex;align-items:center;gap:10px;margin-left:auto;margin-right:96px;
+    background:#4A4E10;color:#DFF700;border-radius:8px;padding:7px 14px;
+    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:13px;
+    letter-spacing:.03em;text-transform:uppercase;line-height:1;white-space:nowrap;
   }
-  .oc-wc-btn__sub{display:flex;align-items:center;gap:10px}
-  .oc-wc-btn__sub-text{font-size:16px;font-weight:500;color:rgba(62,71,8,.75);line-height:1.2}
-  .oc-wc-btn__sub-text strong{font-weight:700;color:#3E4708}
-  .oc-wc-btn__arrow{
-    display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
-    border-radius:100px;background:#3E4708;color:#DFF700;font-size:15px;line-height:1;
+  .oc-banner__star{font-size:10px;opacity:.7}
+  .oc-banner__arrow{
+    display:inline-flex;align-items:center;justify-content:center;flex:none;
+    width:24px;height:24px;border-radius:100px;background:#3E4708;color:#DFF700;font-size:14px;line-height:1;
   }
-  .oc-wc-btn__stats{
-    position:relative;margin-top:10px;background:#4A4E10;padding:10px 24px;
-    display:flex;align-items:center;gap:12px;
-    font-family:"PP Neue Corp",Inter,sans-serif;font-weight:800;font-size:16px;
-    letter-spacing:.03em;text-transform:uppercase;color:#DFF700;line-height:1;
-  }
-  .oc-wc-btn__star{font-size:12px;opacity:.7}
   .lockup{height:34px;width:auto;display:block}
   .lockup-sm{height:34px}
 
@@ -226,15 +221,13 @@
   @media (max-width:760px){
     header{grid-template-columns:minmax(0,1fr)}
     .head-side{align-items:flex-start;text-align:left}
-    .oc-wc-btn__headline{font-size:26px}
-    .oc-wc-btn__body{padding:30px 110px 14px 18px}
-    .oc-wc-btn__trophy{height:120px;right:2px}
-    .oc-wc-btn__perf{right:100px;left:18px}
-    .oc-wc-btn__stats{padding:9px 18px;font-size:13.5px}
+    .oc-banner__headline{font-size:18px}
+    .oc-banner__sub{font-size:13px}
+    .oc-banner__stats{margin-left:0;margin-right:0;font-size:12px;padding:6px 11px}
+    .oc-banner__trophy{display:none}
     .avatar{width:26px;height:26px}
     .colhead{gap:7px}
     .bar{font-size:14px;padding:0 10px;gap:6px}
-    .bar .sub{display:none}
     .venue a{font-size:15px}
     .board-scroll{overflow-x:auto;margin:0 -16px;padding:0 16px}
     .board{min-width:640px}
@@ -244,26 +237,24 @@
 </style>
 </head>
 <body>
+<a class="oc-banner" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">
+  <div class="oc-banner__in">
+    <span class="oc-banner__headline">Trade the World Cup Final on Outcome</span>
+    <span class="oc-banner__sub">Earn your share of <strong>$2,500</strong> in rewards</span>
+    <span class="oc-banner__arrow" aria-hidden="true">&rarr;</span>
+    <span class="oc-banner__stats">
+      <span>$61k already paid out</span>
+      <span class="oc-banner__star" aria-hidden="true">&#10022;</span>
+      <span>1k participants</span>
+    </span>
+    <img class="oc-banner__trophy" id="trophyImg" src="" alt="">
+  </div>
+</a>
+
 <div class="wrap">
   <header>
     <div class="head-main">
       <h1>Winnings on a $100 prediction</h1>
-      <a class="oc-wc-btn" id="tradeCta" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener">
-        <img class="oc-wc-btn__trophy" id="trophyImg" src="" alt="">
-        <div class="oc-wc-btn__perf"></div>
-        <div class="oc-wc-btn__body">
-          <div class="oc-wc-btn__headline">Trade the World Cup Final on Outcome</div>
-          <div class="oc-wc-btn__sub">
-            <span class="oc-wc-btn__sub-text">Earn your share of <strong>$2,500</strong> in rewards</span>
-            <span class="oc-wc-btn__arrow" aria-hidden="true">&rarr;</span>
-          </div>
-        </div>
-        <div class="oc-wc-btn__stats">
-          <span>$61k already paid out</span>
-          <span class="oc-wc-btn__star" aria-hidden="true">&#10022;</span>
-          <span>1k participants</span>
-        </div>
-      </a>
     </div>
     <div class="head-side">
       <span class="live-badge"><span class="live-dot" aria-hidden="true"></span> Live odds</span>
@@ -295,13 +286,9 @@
     <div>
       <p class="tagline">Best odds. No fees. Same payouts as Hyperliquid, plus rewards.</p>
       <p class="fineprint" id="fineprint">
-        Payout = stake × decimal odds; profit = payout − stake. Prediction-market prices use the current
-        ask (cost to buy Yes). Sportsbook odds via The Odds API; exchange prices fetched directly from each
-        venue's public API. Payouts are net of platform fees: Kalshi's trading fee (0.07·P·(1−P) per contract),
-        Polymarket's 3% sports taker fee, Betfair's 5% base commission on winnings. Outcome and Hyperliquid
-        (HIP-4 fees currently zero), SX Bet singles, and sportsbooks charge no explicit fees — book margin is
-        embedded in the odds. Odds move constantly — a ✦ marks today's best net payout per team. Availability
-        and pricing vary by region. 21+ where applicable.
+        Payouts show total return on stake, net of platform fees where they exist (Kalshi, Polymarket,
+        Betfair commission). ✦ marks the best net payout per team. Odds move constantly; availability and
+        pricing vary by region. 21+ where applicable.
       </p>
     </div>
     <a class="brand" href="https://go.outcome.xyz/odds" target="_blank" rel="noopener"><img class="lockup lockup-sm" src="" alt="Outcome" id="footerLockup"></a>
@@ -586,7 +573,7 @@ function render() {
       const label = `${esc(v.name)} pays ${fmtMoney(payout)} on ${esc(t.team)} (profit +${fmtMoney(profit)}${feeNote})${isBest ? ' — best net payout' : ''}`;
       return `<td><div class="track"><div class="bar${isBest?' best':''}" style="width:${width.toFixed(2)}%" ` +
         `role="img" aria-label="${label}" title="${label}">` +
-        `<span class="sub">+${fmtMoney(profit)}</span>${fmtMoney(payout)}</div></div></td>`;
+        `${fmtMoney(payout)}</div></div></td>`;
     }).join('');
     html += `<tr class="${v.hero?'hero':''}"><th scope="row"><div class="venue">` +
       `<img src="${LOGOS[v.id] || `https://www.google.com/s2/favicons?domain=${v.domain}&sz=64`}" alt="" ` +
