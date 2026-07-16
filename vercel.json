@@ -1,0 +1,11 @@
+{
+  "redirects": [
+    { "source": "/", "destination": "/world-cup", "permanent": false },
+    { "source": "/index.html", "destination": "/world-cup", "permanent": true },
+    { "source": "/overall.html", "destination": "/world-cup", "permanent": true },
+    { "source": "/week-1.html", "destination": "/world-cup/1", "permanent": true },
+    { "source": "/week-2.html", "destination": "/world-cup/2", "permanent": true },
+    { "source": "/week-3.html", "destination": "/world-cup/3", "permanent": true },
+    { "source": "/week-4.html", "destination": "/world-cup/4", "permanent": true }
+  ]
+}
