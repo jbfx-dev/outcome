@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outcome.xyz - World Cup 2026 Campaign Dashboard - Overall</title>
+<title>Outcome.xyz - World Cup 2026 Campaign Wrap-Up</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,21 +50,16 @@ body {
   color: rgba(255,255,255,0.5);
 }
 .nav-right { display: flex; align-items: center; gap: 12px; }
-.live-badge {
+.complete-badge {
   height: 30px; padding: 0 14px; border-radius: 8px;
-  border: 1px solid rgba(255,92,92,0.4);
+  border: 1px solid rgba(69,232,92,0.4);
   display: flex; align-items: center; gap: 8px;
   font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
-  color: rgb(255,92,92); text-transform: uppercase;
+  color: #45E85C; text-transform: uppercase;
 }
-.live-dot {
+.complete-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: radial-gradient(circle, rgb(255,92,92) 0%, rgba(255,92,92,0.4) 100%);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
+  background: #45E85C;
 }
 .date-badge {
   height: 38px; padding: 0 16px; border-radius: 10px;
@@ -126,7 +121,7 @@ body {
 
 /* ---------- KPI CARDS ---------- */
 .kpi-grid {
-  display: grid; grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 14px; margin-bottom: 14px;
 }
 .kpi-card {
@@ -178,57 +173,6 @@ body {
   color: rgba(255,255,255,0.35); text-transform: uppercase;
 }
 
-/* ---------- VOLUME SECTION ---------- */
-.volume-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 32px;
-}
-.volume-col-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 16px;
-}
-.volume-big {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
-  font-size: 52px; font-weight: 600; line-height: 1; margin-bottom: 4px;
-}
-.volume-of {
-  font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 20px;
-}
-.volume-bar-track {
-  width: 100%; height: 6px; border-radius: 3px;
-  background: rgba(255,255,255,0.08); margin-bottom: 12px; overflow: hidden;
-}
-.volume-bar-fill { height: 100%; border-radius: 3px; }
-.volume-legend {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.45); text-transform: uppercase;
-}
-.volume-delta {
-  font-size: 10px; font-weight: 500; margin-top: 8px;
-}
-.volume-delta.up { color: #45E85C; }
-
-/* Volume bar chart */
-.vol-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; }
-.vol-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%;
-  justify-content: flex-end;
-}
-.vol-bar-label {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.5);
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
-.vol-bar-stack {
-  width: 100%; border-radius: 4px 4px 0 0; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: flex-end;
-}
-.vol-bar-total { background: #45E85C; }
-.vol-bar-wc { background: #C4E84A; }
-.vol-bar-day {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.4);
-  text-transform: uppercase; margin-top: 6px;
-}
-
 /* ---------- IMPRESSIONS / SHARE BARS ---------- */
 .imp-chart { margin-top: 8px; }
 .imp-row {
@@ -251,14 +195,6 @@ body {
   font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
   color: rgba(255,255,255,0.6); padding-left: 12px;
 }
-.imp-axis {
-  display: flex; justify-content: space-between;
-  margin-top: 8px; padding-left: 200px; padding-right: 90px;
-}
-.imp-axis span {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.25);
-  text-transform: uppercase;
-}
 .imp-callouts {
   display: flex; gap: 32px; margin-top: 20px; padding-top: 16px;
   border-top: 1px solid rgba(255,255,255,0.05);
@@ -269,13 +205,7 @@ body {
 }
 .imp-callout strong { color: #F5F8FF; font-weight: 600; }
 
-/* ---------- DAILY + SUMMARY SIDE BY SIDE ---------- */
-.side-grid {
-  display: grid; grid-template-columns: 1fr 0.82fr;
-  gap: 14px; margin-bottom: 14px;
-}
-
-/* Daily totals chart */
+/* ---------- METRIC SWITCHER ---------- */
 .metric-switcher { display: flex; gap: 6px; }
 .metric-btn {
   padding: 6px 14px; border-radius: 8px;
@@ -292,33 +222,111 @@ body {
 .metric-btn:hover:not(.active) {
   border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
 }
-.daily-subtitle {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 20px;
+
+/* ---------- CHART ---------- */
+.chart-container { position: relative; height: 280px; margin-top: 16px; }
+.chart-svg { width: 100%; height: 100%; }
+.chart-bar {
+  transition: opacity 0.15s ease;
+  cursor: pointer;
 }
-.daily-chart { display: flex; align-items: flex-end; gap: 10px; height: 200px; padding-top: 20px; }
-.daily-bar-wrap {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  height: 100%; justify-content: flex-end;
+.chart-bar:hover { opacity: 0.85; }
+.chart-label {
+  font-size: 10px; font-weight: 500; fill: rgba(255,255,255,0.5);
+  text-anchor: middle;
 }
-.daily-bar-val {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
-  margin-bottom: 4px;
+.chart-value {
+  font-size: 10px; font-weight: 600; fill: rgba(255,255,255,0.7);
+  text-anchor: middle;
 }
-.daily-bar {
-  width: 100%; border-radius: 4px 4px 0 0;
-  background: #45E85C; transition: height 0.3s ease;
+.chart-axis-label {
+  font-size: 9px; font-weight: 500; fill: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em; text-transform: uppercase;
 }
-.daily-bar-date {
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6);
-  margin-top: 8px;
-}
-.daily-bar-day {
-  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
+.chart-grid-line {
+  stroke: rgba(255,255,255,0.05);
+  stroke-width: 1;
 }
 
-/* ---------- CONVERSIONS TABLE ---------- */
+/* ---------- CHANNEL TABLE ---------- */
+.breakdown-table { width: 100%; border-collapse: collapse; }
+.breakdown-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 0 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.breakdown-table th:first-child { text-align: left; }
+.breakdown-table td {
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  text-align: right;
+}
+.breakdown-table td:first-child { text-align: left; }
+.breakdown-date-main { color: #F5F8FF; font-weight: 600; }
+.breakdown-date-day {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; margin-left: 6px;
+}
+.breakdown-table td.green { color: #45E85C; }
+.breakdown-table td.orange { color: #F58220; }
+.breakdown-table tr.summary-row td {
+  border-bottom: none; font-weight: 600; color: #F5F8FF;
+  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
+}
+.breakdown-table tr.summary-row td:first-child { color: #45E85C; }
+.breakdown-footer {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
+  margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
+  text-transform: uppercase; text-align: center;
+}
+
+/* ---------- HIGHLIGHT CARDS ---------- */
+.highlight-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.highlight-card {
+  padding: 20px 20px 20px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+  position: relative;
+  overflow: hidden;
+}
+.highlight-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+.highlight-card .hl-emoji {
+  font-size: 20px; margin-bottom: 12px;
+}
+.highlight-card .hl-stat {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 22px; font-weight: 500; line-height: 1;
+  color: #F5F8FF; margin-bottom: 6px;
+}
+.highlight-card .hl-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  margin-bottom: 6px;
+}
+.highlight-card .hl-desc {
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+/* ---------- RETENTION HEATMAP ---------- */
+.retention-cell {
+  padding: 6px 10px !important;
+  border-radius: 6px;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+/* ---------- CONV TABLE ---------- */
 .conv-table { width: 100%; border-collapse: collapse; }
 .conv-table th {
   font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
@@ -355,55 +363,19 @@ body {
   margin-top: 16px; letter-spacing: 0.04em;
 }
 
-/* ---------- DAILY BREAKDOWN TABLE ---------- */
-.breakdown-card { padding: 24px 24px 8px; }
-.breakdown-subtitle {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.35); text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.breakdown-table { width: 100%; border-collapse: collapse; }
-.breakdown-table th {
-  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4); text-transform: uppercase;
-  text-align: right; padding: 0 0 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.breakdown-table th:first-child { text-align: left; }
-.breakdown-table td {
-  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
-  text-align: right;
-}
-.breakdown-table td:first-child { text-align: left; }
-.breakdown-date-main { color: #F5F8FF; font-weight: 600; }
-.breakdown-date-day {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
-  text-transform: uppercase; margin-left: 6px;
-}
-.breakdown-table td.green { color: #45E85C; }
-.breakdown-table td.orange { color: #F58220; }
-.breakdown-table tr.summary-row td {
-  border-bottom: none; font-weight: 600; color: #F5F8FF;
-  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
-}
-.breakdown-table tr.summary-row td:first-child { color: #45E85C; }
-.breakdown-footer {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
-  margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
-  text-transform: uppercase; text-align: center;
+/* ---------- TOP CONTENT TABLE ---------- */
+.top-content-rank {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5);
+  margin-right: 10px; flex-shrink: 0;
 }
 
-/* ---------- RETENTION CELL ---------- */
-.retention-cell {
-  padding: 6px 10px !important;
-  border-radius: 6px;
-  text-align: center !important;
-  font-weight: 600 !important;
-  font-size: 11px !important;
-}
+/* ---------- BUDGET TABLE ---------- */
+.budget-over { color: #FF5C9E !important; }
 
-/* ---------- KEY INSIGHTS ---------- */
+/* ---------- INSIGHT GRID ---------- */
 .insight-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -438,17 +410,16 @@ body {
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 1200px) {
-  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  .volume-grid { grid-template-columns: 1fr; }
-  .side-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .highlight-grid { grid-template-columns: repeat(2, 1fr); }
   .insight-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .highlight-grid { grid-template-columns: 1fr; }
   .nav { padding: 0 20px; }
   .content { padding: 24px 20px 48px; }
   .title-h1 { font-size: 40px; }
-  .volume-big { font-size: 36px; }
 }
 </style>
 </head>
@@ -472,11 +443,11 @@ body {
     <span class="nav-subtitle">CAMPAIGN TRACKER</span>
   </div>
   <div class="nav-right">
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      LIVE
+    <div class="complete-badge">
+      <div class="complete-dot"></div>
+      CAMPAIGN COMPLETE
     </div>
-    <div class="date-badge">JUN 10 &ndash; JUL 7, 2026</div>
+    <div class="date-badge">JUN 10 &ndash; JUL 20, 2026</div>
   </div>
 </nav>
 
@@ -489,516 +460,557 @@ body {
     <a href="/world-cup/2">Week 2</a>
     <a href="/world-cup/3">Week 3</a>
     <a href="/world-cup/4">Week 4</a>
+    <a href="/world-cup/5">Week 5</a>
   </div>
 
   <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
-      <div class="title-sub">CAMPAIGN OVERVIEW &middot; 4 WEEKS</div>
+      <div class="title-sub">CAMPAIGN WRAP-UP</div>
       <h1 class="title-h1">
         World Cup 2026<br>
         <span class="green">Campaign</span>
       </h1>
     </div>
     <div class="title-badges">
-      <div class="badge">28 Days</div>
-      <div class="badge orange">$18.5M WC Volume</div>
+      <div class="badge">41 Days</div>
+      <div class="badge orange">$143K Total Spend</div>
     </div>
   </div>
 
-  <!-- MAIN CALLOUT -->
-  <div class="card" style="margin-bottom:14px">
-    <div style="display:flex;align-items:flex-start;gap:16px">
-      <span style="font-size:24px">&#9889;</span>
-      <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);line-height:1.6;letter-spacing:0.02em">
-        <span style="color:#45E85C;font-weight:600">Conversion quality:</span> signup-to-trader conversion climbed from <span style="color:#45E85C;font-weight:600">24%</span> in mid-June to <span style="color:#45E85C;font-weight:600">53%</span> in early July, with full-funnel attribution tracking now capturing conversions previously lost at sign-in. <span style="color:#45E85C;font-weight:600">$18.5M</span> total WC volume across 4 weeks, peaked at <span style="color:#FF5C9E;font-weight:600">40%</span> of all Hyperliquid WC volume
-      </div>
+  <!-- ========== SECTION 1: CAMPAIGN TOTAL KPIs ========== -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#45E85C"></div>
+      <div class="kpi-label" style="color:#45E85C">Total Volume</div>
+      <div class="kpi-value">$29.4M</div>
+      <div class="kpi-sub">ALL OUTCOME VOLUME</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#C4E84A"></div>
+      <div class="kpi-label" style="color:#C4E84A">WC Volume</div>
+      <div class="kpi-value">$26.7M</div>
+      <div class="kpi-sub">WORLD CUP MARKETS</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#FF5C9E"></div>
+      <div class="kpi-label" style="color:#FF5C9E">HL WC Market Share</div>
+      <div class="kpi-value">17.9%</div>
+      <div class="kpi-sub">AVG SHARE OF HL WC</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background:#3B82F6"></div>
+      <div class="kpi-label" style="color:#3B82F6">Total Impressions</div>
+      <div class="kpi-value">15.8M</div>
+      <div class="kpi-sub">ALL CHANNELS</div>
     </div>
   </div>
-
-  <!-- KPI CARDS -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#1FCFA0"></div>
-      <div class="kpi-label" style="color:#1FCFA0">Total Visitors</div>
-      <div class="kpi-value">70,571</div>
-      <div class="kpi-sub">CAMPAIGN TOTAL</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-bar" style="background:#45E85C"></div>
-      <div class="kpi-label" style="color:#45E85C">Total Signups</div>
-      <div class="kpi-value">5,530</div>
+      <div class="kpi-label" style="color:#1FCFA0">Total Signups</div>
+      <div class="kpi-value">7,927</div>
       <div class="kpi-sub">CAMPAIGN TOTAL</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#F58220"></div>
       <div class="kpi-label" style="color:#F58220">Total Depositors</div>
-      <div class="kpi-value">697</div>
-      <div class="kpi-sub">12.6% OF SIGNUPS</div>
+      <div class="kpi-value">1,051</div>
+      <div class="kpi-sub">13.3% OF SIGNUPS</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-bar" style="background:#3B82F6"></div>
-      <div class="kpi-label" style="color:#3B82F6">Active Traders</div>
-      <div class="kpi-value">4,404</div>
-      <div class="kpi-sub">79.6% OF SIGNUPS</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-bar" style="background:#C4E84A"></div>
-      <div class="kpi-label" style="color:#C4E84A">Total WC Volume</div>
-      <div class="kpi-value">$18.5M</div>
-      <div class="kpi-sub">PEAK $8.6M IN W3</div>
+      <div class="kpi-bar" style="background:#6F2EE4"></div>
+      <div class="kpi-label" style="color:#9B7CFF">Total Active Traders</div>
+      <div class="kpi-value">~4,800</div>
+      <div class="kpi-sub">DAILY UNIQUE SUM</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#FF5C9E"></div>
-      <div class="kpi-label" style="color:#FF5C9E">Peak Market Share</div>
-      <div class="kpi-value">40%</div>
-      <div class="kpi-sub">OF HL WC ON JUN 26</div>
+      <div class="kpi-label" style="color:#FF5C9E">DAU Peak</div>
+      <div class="kpi-value">6,260</div>
+      <div class="kpi-sub">JUL 19 &middot; WC FINAL</div>
     </div>
   </div>
 
-  <!-- WC VOLUME GROWTH BY WEEK -->
+  <!-- ========== SECTION 2: WEEK-OVER-WEEK TRENDS ========== -->
+  <div class="card" id="trendsCard">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div> WEEK-OVER-WEEK TRENDS</div>
+      <div class="metric-switcher">
+        <button class="metric-btn active" data-metric="volume">Volume</button>
+        <button class="metric-btn" data-metric="signups">Signups</button>
+        <button class="metric-btn" data-metric="depositors">Depositors</button>
+        <button class="metric-btn" data-metric="traders">Traders</button>
+      </div>
+    </div>
+    <div id="trendsSubtitle" style="font-size:10px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:8px">Volume &middot; W1 &ndash; W6</div>
+    <div class="chart-container" id="trendsChartArea"></div>
+  </div>
+
+  <!-- ========== SECTION 3: CHANNEL PERFORMANCE SUMMARY ========== -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#45E85C"></div> WC VOLUME GROWTH BY WEEK</div>
-      <div class="card-meta">OUTCOME WORLD CUP MARKET VOLUME</div>
+      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CHANNEL PERFORMANCE SUMMARY</div>
+      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 20</div>
     </div>
-    <div class="volume-grid">
-      <div>
-        <div class="volume-col-label">Total WC Volume</div>
-        <div class="volume-big" style="color:#45E85C">$18.5M</div>
-        <div class="volume-of">ACROSS 4 WEEKS</div>
-        <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:16.4%; background:#45E85C"></div>
-        </div>
-        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome $18.5M &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC $112.7M</div>
-        <div class="volume-delta up">16.4% of HL WC volume</div>
-      </div>
-      <div>
-        <div class="volume-col-label">Peak HL WC Share</div>
-        <div class="volume-big" style="color:#FF5C9E">40%</div>
-        <div class="volume-of">ON JUN 26</div>
-        <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:40%; background:#FF5C9E"></div>
-        </div>
-        <div class="volume-legend"><span style="color:#FF5C9E">&#9679;</span> Peak daily share &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> 16.4% avg</div>
-        <div class="volume-delta up">2.4x above campaign average</div>
-      </div>
-      <div>
-        <div class="volume-col-label">Weekly WC Volume</div>
-        <div class="vol-chart">
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$0.8M</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-wc" style="height:15px"></div>
-            </div>
-            <div class="vol-bar-day">W1</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$4.6M</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-wc" style="height:75px"></div>
-            </div>
-            <div class="vol-bar-day">W2</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$8.6M</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-wc" style="height:140px"></div>
-            </div>
-            <div class="vol-bar-day">W3</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$4.5M</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-wc" style="height:73px"></div>
-            </div>
-            <div class="vol-bar-day">W4</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:16px;margin-top:12px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:10px;height:10px;border-radius:2px;background:#C4E84A"></div>
-            <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">World Cup Volume</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MARKET SHARE BY WEEK -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#C4E84A"></div> MARKET SHARE BY WEEK</div>
-      <div class="card-meta">OUTCOME VS HL WC &middot; WEEKLY AVG</div>
-    </div>
-    <div class="imp-chart">
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Week 1</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:9%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">3.5%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Week 2 (Peak)</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:62%;background:#C4E84A;opacity:0.9"></div>
-        </div>
-        <div class="imp-value">24.6%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Week 3</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:50%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">20.1%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Week 4</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:40%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">16.0%</div>
-      </div>
-      <div class="imp-axis">
-        <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span>
-      </div>
-    </div>
-    <div class="imp-callouts">
-      <div class="imp-callout"><strong>40%</strong> peak daily share on Jun 26</div>
-      <div class="imp-callout"><strong>16.4%</strong> average share across campaign</div>
-      <div class="imp-callout"><strong>4 weeks</strong> of sustained 16%+ weekly share</div>
-    </div>
-  </div>
-
-  <!-- WEEKLY TOTALS + CAMPAIGN SUMMARY -->
-  <div class="side-grid">
-    <div class="card" id="weeklyCard">
-      <div class="card-header">
-        <div class="card-title"><div class="dot" style="background:#45E85C"></div> WEEKLY TOTALS</div>
-        <div class="metric-switcher">
-          <button class="metric-btn active" data-metric="visits">Visits</button>
-          <button class="metric-btn" data-metric="signups">Signups</button>
-          <button class="metric-btn" data-metric="traders">Traders</button>
-        </div>
-      </div>
-      <div class="daily-subtitle" id="weeklySubtitle">Visits &middot; W1 &ndash; W4</div>
-      <div class="daily-chart" id="weeklyChartArea"></div>
-      <div id="weeklyLegend"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><div class="dot" style="background:#F58220"></div> CAMPAIGN SUMMARY</div>
-      </div>
-      <table class="conv-table">
-        <thead>
-          <tr><th>Metric</th><th>Total</th><th>Avg/Week</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>70,571</td><td>17,643</td></tr>
-          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>5,530</td><td>1,383</td></tr>
-          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>697</td><td>174</td></tr>
-          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>4,404</td><td>1,101</td></tr>
-          <tr><td><div class="dot" style="background:#C4E84A"></div>WC Volume</td><td>$18.5M</td><td>$4.6M</td></tr>
-          <tr><td><div class="dot" style="background:#FF5C9E"></div>Peak HL Share</td><td>40%</td><td>16.4%</td></tr>
-          <tr class="total"><td>Vol / Trader</td><td>$4,204</td><td></td></tr>
-        </tbody>
-      </table>
-      <div class="conv-footnote">Campaign totals Jun 10 - Jul 7. Volume vs Hyperliquid WC markets.</div>
-    </div>
-  </div>
-
-  <!-- CONVERSIONS BY SOURCE -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
-      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 7</div>
-    </div>
-    <table class="conv-table" id="convTable">
+    <table class="conv-table" id="channelTable">
       <thead>
         <tr>
           <th>Channel</th>
+          <th class="sortable" data-sort="posts">Posts <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-sort="views">Views <span class="sort-arrow">&#9660;</span></th>
           <th class="sortable active" data-sort="visitors">Visitors <span class="sort-arrow">&#9660;</span></th>
           <th class="sortable" data-sort="signups">Signups <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-sort="depositors">Depositors <span class="sort-arrow">&#9660;</span></th>
           <th class="sortable" data-sort="traders">Traders <span class="sort-arrow">&#9660;</span></th>
         </tr>
       </thead>
-      <tbody id="convBody"></tbody>
+      <tbody id="channelBody"></tbody>
     </table>
-    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jul 7.</div>
-    <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
+    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Post-sign-in events largely unattributed due to losing tracking parameters.</div>
   </div>
 
-  <!-- WEEKLY BREAKDOWN -->
-  <div class="card breakdown-card">
+  <!-- ========== SECTION 4: CAMPAIGN HIGHLIGHTS ========== -->
+  <div class="card" style="padding-bottom:14px">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#F58220"></div> WEEKLY BREAKDOWN</div>
+      <div class="card-title"><div class="dot" style="background:#C4E84A"></div> CAMPAIGN HIGHLIGHTS</div>
+      <div class="card-meta">KEY MOMENTS &middot; 41 DAYS</div>
     </div>
-    <div class="breakdown-subtitle">ACQUISITION FUNNEL &middot; 4 WEEKS</div>
-    <table class="breakdown-table">
-      <thead>
-        <tr>
-          <th>Week</th><th>Visitors</th><th>Mktg Clicks</th><th>Signups</th><th>Depositors</th><th>Traders</th><th>WC Vol.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><span class="breakdown-date-main">Week 1</span><span class="breakdown-date-day">(Jun 10-16)</span></td><td>18,079</td><td style="color:#3B82F6">10,672</td><td class="green">1,660</td><td>169</td><td>1,137</td><td class="orange">$810K</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 2</span><span class="breakdown-date-day">(Jun 17-23)</span></td><td>9,665</td><td style="color:#3B82F6">8,036</td><td class="green">1,922</td><td>209</td><td>1,192</td><td class="orange">$4.6M</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 3</span><span class="breakdown-date-day">(Jun 24-30)</span></td><td>17,798</td><td style="color:#3B82F6">7,326</td><td class="green">1,013</td><td>168</td><td>1,112</td><td class="orange">$8.6M</td></tr>
-        <tr><td><span class="breakdown-date-main">Week 4</span><span class="breakdown-date-day">(Jul 1-7)</span></td><td>25,029</td><td style="color:#3B82F6">11,087</td><td class="green">935</td><td>151</td><td>1,111</td><td class="orange">$4.5M</td></tr>
-        <tr class="summary-row">
-          <td>CAMPAIGN</td><td>70,571</td><td style="color:#3B82F6">37,121</td><td class="green">5,530</td><td>697</td><td>4,404</td><td class="orange">$18.5M</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="highlight-grid">
+      <div class="highlight-card" style="border-left:4px solid #45E85C">
+        <div class="hl-emoji">&#127942;</div>
+        <div class="hl-stat" style="color:#45E85C">1,976+</div>
+        <div class="hl-title">Genesis Depositor Badge</div>
+        <div class="hl-desc">Claims, 34.7% deposit-to-trade conversion</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #3B82F6">
+        <div class="hl-emoji">&#128240;</div>
+        <div class="hl-stat" style="color:#3B82F6">33K+</div>
+        <div class="hl-title">HIP-4 Article</div>
+        <div class="hl-desc">Impressions across 2 posts</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #C4E84A">
+        <div class="hl-emoji">&#127951;</div>
+        <div class="hl-stat" style="color:#C4E84A">6,260</div>
+        <div class="hl-title">World Cup Final Day</div>
+        <div class="hl-desc">DAU peak, highest single day</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #F58220">
+        <div class="hl-emoji">&#127919;</div>
+        <div class="hl-stat" style="color:#F58220">5,347</div>
+        <div class="hl-title">Badge Launch Day</div>
+        <div class="hl-desc">DAU, 511 depositors in one day</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #FF5C9E">
+        <div class="hl-emoji">&#128241;</div>
+        <div class="hl-stat" style="color:#FF5C9E">1.07M+</div>
+        <div class="hl-title">Total X Impressions</div>
+        <div class="hl-desc">Organic impressions across 101 posts</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #9B7CFF">
+        <div class="hl-emoji">&#127760;</div>
+        <div class="hl-stat" style="color:#9B7CFF">3 New</div>
+        <div class="hl-title">Channels Discovered</div>
+        <div class="hl-desc">ChatGPT, Instagram, Layer3 organic</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #1FCFA0">
+        <div class="hl-emoji">&#129309;</div>
+        <div class="hl-stat" style="color:#1FCFA0">39</div>
+        <div class="hl-title">CoConnect Communities</div>
+        <div class="hl-desc">Communities activated, 113 signups</div>
+      </div>
+      <div class="highlight-card" style="border-left:4px solid #C4E84A">
+        <div class="hl-emoji">&#128200;</div>
+        <div class="hl-stat" style="color:#C4E84A">49.3%</div>
+        <div class="hl-title">Peak Market Share</div>
+        <div class="hl-desc">On Jul 17, 5.6x above W1</div>
+      </div>
+    </div>
   </div>
 
-  <!-- RETENTION COHORT ANALYSIS -->
+  <!-- ========== SECTION 5: RETENTION ANALYSIS ========== -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div> RETENTION COHORT ANALYSIS</div>
-      <div class="card-meta">TRADER COHORT WEEKLY RETENTION</div>
+      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div> RETENTION ANALYSIS</div>
+      <div class="card-meta">DEPOSIT &rarr; TRADE &middot; WEEKLY COHORTS</div>
     </div>
-    <table class="breakdown-table">
+    <table class="breakdown-table" id="retentionTable">
       <thead>
         <tr>
-          <th>Cohort</th><th>Size</th><th>7-Day</th><th>14-Day</th><th>30-Day</th><th>Status</th>
+          <th>Cohort</th>
+          <th>Size</th>
+          <th>Week 0</th>
+          <th>Week 1</th>
+          <th>Week 2</th>
+          <th>Week 3</th>
+          <th>Week 4</th>
+          <th>Week 5</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><span class="breakdown-date-main">May 25</span><span class="breakdown-date-day">(Pre-campaign)</span></td>
-          <td>1,702</td>
-          <td><span class="retention-cell" style="background:rgba(69,232,92,0.15);color:#45E85C">69.9%</span></td>
-          <td><span class="retention-cell" style="background:rgba(69,232,92,0.15);color:#45E85C">64.4%</span></td>
-          <td><span class="retention-cell" style="background:rgba(196,232,74,0.12);color:#C4E84A">45.1%</span></td>
-          <td style="color:rgba(255,255,255,0.5)">Baseline</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jun 1</span></td>
-          <td>1,756</td>
-          <td><span class="retention-cell" style="background:rgba(69,232,92,0.15);color:#45E85C">72.6%</span></td>
-          <td><span class="retention-cell" style="background:rgba(69,232,92,0.15);color:#45E85C">63.7%</span></td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:#45E85C">Strong</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jun 8</span><span class="breakdown-date-day">(Campaign launch)</span></td>
-          <td>1,714</td>
-          <td><span class="retention-cell" style="background:rgba(196,232,74,0.12);color:#C4E84A">55.5%</span></td>
-          <td><span class="retention-cell" style="background:rgba(196,232,74,0.12);color:#C4E84A">45.7%</span></td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:#F58220">Declining</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jun 15</span></td>
-          <td>1,676</td>
-          <td><span class="retention-cell" style="background:rgba(245,130,32,0.12);color:#F58220">37.9%</span></td>
-          <td><span class="retention-cell" style="background:rgba(255,92,158,0.12);color:#FF5C9E">21.6%</span></td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:#FF5C9E">Weak</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jun 22</span></td>
-          <td>1,065</td>
-          <td><span class="retention-cell" style="background:rgba(255,92,158,0.12);color:#FF5C9E">28.4%</span></td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:#FF5C9E">Weak</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jun 29</span></td>
-          <td>1,423</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">pending</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:rgba(255,255,255,0.5)">Pending</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Jul 6</span><span class="breakdown-date-day">(Largest)</span></td>
-          <td>2,229</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">too new</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:rgba(255,255,255,0.3);font-style:italic">-</td>
-          <td style="color:#3B82F6">Watch</td>
-        </tr>
-      </tbody>
+      <tbody id="retentionBody"></tbody>
     </table>
     <div class="imp-callouts">
-      <div class="imp-callout"><strong>69.9%</strong> baseline 7-day retention (pre-campaign)</div>
-      <div class="imp-callout"><strong>28.4%</strong> latest measurable 7-day retention</div>
-      <div class="imp-callout"><strong>2,229</strong> traders in Jul 6 cohort (largest, untested)</div>
+      <div class="imp-callout"><strong>100%</strong> Week 0 baseline (same-week activation + trade)</div>
+      <div class="imp-callout"><strong>46.5%</strong> best Week 1 retention (Jun 7 cohort)</div>
+      <div class="imp-callout"><strong>667</strong> largest cohort (Jul 5, badge launch week)</div>
     </div>
   </div>
 
-  <!-- KEY INSIGHTS -->
+  <!-- ========== SECTION 6: BUDGET SUMMARY ========== -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#F58220"></div> KEY INSIGHTS</div>
-      <div class="card-meta">CAMPAIGN ANALYSIS &middot; 4 WEEKS</div>
+      <div class="card-title"><div class="dot" style="background:#F58220"></div> BUDGET SUMMARY</div>
+      <div class="card-meta">CAMPAIGN SPEND &middot; $143,359 TOTAL</div>
     </div>
-    <div class="insight-grid">
-      <div class="insight-item">
-        <div class="insight-number" style="color:#45E85C">53%</div>
-        <div class="insight-title" style="color:rgba(255,255,255,0.7)">PEAK CONVERSION RATE</div>
-        <div class="insight-desc">Signup-to-trader conversion in early July. Likely reflects full-funnel attribution tracking now capturing conversions lost at sign-in.</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-number" style="color:#3B82F6">$4,096</div>
-        <div class="insight-title" style="color:rgba(255,255,255,0.7)">VOLUME PER TRADER</div>
-        <div class="insight-desc">Week 4 volume per active trader, down from $8,331 in Week 3. Total HL WC volume also fell 34%, suggesting market-wide cooling.</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-number" style="color:#F58220">28.4%</div>
-        <div class="insight-title" style="color:rgba(255,255,255,0.7)">RETENTION DECLINE</div>
-        <div class="insight-desc">Latest 7-day trader retention (Jun 22 cohort), down from 70% pre-campaign. Campaign-acquired users trade but do not form habits.</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-number" style="color:#FF5C9E">2,229</div>
-        <div class="insight-title" style="color:rgba(255,255,255,0.7)">LARGEST COHORT</div>
-        <div class="insight-desc">Jul 6 cohort week produced the most new traders of the campaign with no new initiatives. Retention data pending.</div>
-      </div>
+    <table class="breakdown-table" id="budgetTable">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Budget</th>
+          <th>Spent</th>
+          <th>Remaining</th>
+          <th>% Used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="breakdown-date-main">Vision UGC</span></td>
+          <td>$17,500</td><td>$17,500</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">Telegram WC Sponsor</span></td>
+          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">Telegram Ads</span></td>
+          <td>$5,000</td><td>$5,865</td><td class="budget-over">-$865</td><td class="budget-over">117%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">Deposit Bonuses</span></td>
+          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">X Organic</span></td>
+          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">CoConnect</span></td>
+          <td>$20,000</td><td>$20,000</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">GTA Video</span></td>
+          <td>$650</td><td>$650</td><td>$0</td><td>100%</td>
+        </tr>
+        <tr>
+          <td><span class="breakdown-date-main">Rewards</span></td>
+          <td>$60,000</td><td>$69,344</td><td class="budget-over">-$9,344</td><td class="budget-over">116%</td>
+        </tr>
+        <tr class="summary-row">
+          <td>TOTAL</td>
+          <td>$133,150</td><td>$143,359</td><td class="budget-over">-$10,209</td><td class="budget-over">108%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="conv-footnote">Over-budget items shown in pink. Rewards overage driven by Genesis Badge campaign success.</div>
+  </div>
+
+  <!-- ========== SECTION 7: TOP PERFORMING CONTENT ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#FF5C9E"></div> TOP PERFORMING CONTENT</div>
+      <div class="card-meta">X POSTS BY IMPRESSIONS</div>
     </div>
+    <table class="breakdown-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Content</th>
+          <th>Date</th>
+          <th>Views</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="top-content-rank">1</span></td>
+          <td><span class="breakdown-date-main">Genesis Depositor Badge launch</span></td>
+          <td>Jul 9</td>
+          <td style="color:#45E85C;font-weight:600">291,209</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">2</span></td>
+          <td><span class="breakdown-date-main">WC trade-to-earn announcement</span></td>
+          <td>Jun 10</td>
+          <td style="color:#45E85C;font-weight:600">198,431</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">3</span></td>
+          <td><span class="breakdown-date-main">Hype 1d video</span></td>
+          <td>Jun 12</td>
+          <td>94,349</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">4</span></td>
+          <td><span class="breakdown-date-main">QRT giveaway NBA finals</span></td>
+          <td>Jun 13</td>
+          <td>80,089</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">5</span></td>
+          <td><span class="breakdown-date-main">1-tap trading Telegram</span></td>
+          <td>Jul 6</td>
+          <td>49,600</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">6</span></td>
+          <td><span class="breakdown-date-main">Who's gonna make it to final</span></td>
+          <td>Jul 13</td>
+          <td>45,320</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">7</span></td>
+          <td><span class="breakdown-date-main">Fiat onramp launch</span></td>
+          <td>Jun 18</td>
+          <td>45,223</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">8</span></td>
+          <td><span class="breakdown-date-main">WC Final pre-game</span></td>
+          <td>Jul 19</td>
+          <td>41,496</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">9</span></td>
+          <td><span class="breakdown-date-main">Coindesk/Cointelegraph 25M</span></td>
+          <td>Jul 2</td>
+          <td>39,011</td>
+        </tr>
+        <tr>
+          <td><span class="top-content-rank">10</span></td>
+          <td><span class="breakdown-date-main">HIP-4 permissionless deployment</span></td>
+          <td>Jul 20</td>
+          <td>25,975</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- FOOTER -->
-  <div class="breakdown-footer">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; CONVERSIONS VIA POSTHOG &middot; VOLUME VS HYPERLIQUID HIP-4</div>
+  <div class="breakdown-footer">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN TRACKER &middot; DATA VIA POSTHOG + X API &middot; VOLUME VS HYPERLIQUID HIP-4</div>
 
 </div>
 
 <script>
-// ===================== SORTABLE CONVERSIONS TABLE =====================
+// ===================== WEEK-OVER-WEEK TRENDS CHART =====================
+(function() {
+  var WEEKS = [
+    { week: 'W1', label: 'Jun 10-16', volume: 1400000, signups: 1660, depositors: 169, traders: 1137 },
+    { week: 'W2', label: 'Jun 17-23', volume: 5300000, signups: 1922, depositors: 209, traders: 1192 },
+    { week: 'W3', label: 'Jun 24-30', volume: 9300000, signups: 1013, depositors: 168, traders: 1112 },
+    { week: 'W4', label: 'Jul 1-7',   volume: 4700000, signups: 900,  depositors: 153, traders: 1084 },
+    { week: 'W5', label: 'Jul 8-14',  volume: 5500000, signups: 1932, depositors: 1025, traders: 1233 },
+    { week: 'W6', label: 'Jul 15-20', volume: 3900000, signups: 1673, depositors: 400,  traders: 950 }
+  ];
+
+  var metricColors = {
+    volume: '#45E85C',
+    signups: '#1FCFA0',
+    depositors: '#F58220',
+    traders: '#3B82F6'
+  };
+
+  var metricLabels = {
+    volume: 'Volume',
+    signups: 'Signups',
+    depositors: 'Depositors',
+    traders: 'Traders'
+  };
+
+  function fmtVal(n, metric) {
+    if (metric === 'volume') {
+      if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+      if (n >= 1000) return '$' + (n / 1000).toFixed(0) + 'K';
+      return '$' + n;
+    }
+    return n.toLocaleString('en-US');
+  }
+
+  function renderTrendsChart(metric) {
+    var container = document.getElementById('trendsChartArea');
+    var vals = WEEKS.map(function(w) { return w[metric]; });
+    var maxVal = Math.max.apply(null, vals);
+    var color = metricColors[metric];
+
+    var svgWidth = container.clientWidth || 900;
+    var svgHeight = 280;
+    var padLeft = 60;
+    var padRight = 30;
+    var padTop = 30;
+    var padBottom = 60;
+    var chartW = svgWidth - padLeft - padRight;
+    var chartH = svgHeight - padTop - padBottom;
+    var barCount = WEEKS.length;
+    var groupWidth = chartW / barCount;
+    var barWidth = Math.min(groupWidth * 0.5, 60);
+    var gap = (groupWidth - barWidth) / 2;
+
+    // Grid lines
+    var gridLines = '';
+    var gridCount = 5;
+    for (var g = 0; g <= gridCount; g++) {
+      var gy = padTop + (chartH / gridCount) * g;
+      var gVal = maxVal - (maxVal / gridCount) * g;
+      gridLines += '<line x1="' + padLeft + '" y1="' + gy + '" x2="' + (svgWidth - padRight) + '" y2="' + gy + '" class="chart-grid-line"/>';
+      gridLines += '<text x="' + (padLeft - 10) + '" y="' + (gy + 4) + '" class="chart-axis-label" text-anchor="end">' + fmtVal(Math.round(gVal), metric) + '</text>';
+    }
+
+    var bars = '';
+    for (var i = 0; i < barCount; i++) {
+      var val = vals[i];
+      var barH = maxVal > 0 ? (val / maxVal) * chartH : 0;
+      var x = padLeft + i * groupWidth + gap;
+      var y = padTop + chartH - barH;
+
+      bars += '<rect class="chart-bar" x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + barH + '" rx="4" fill="' + color + '" opacity="0.85"/>';
+      bars += '<text x="' + (x + barWidth / 2) + '" y="' + (y - 8) + '" class="chart-value">' + fmtVal(val, metric) + '</text>';
+      bars += '<text x="' + (x + barWidth / 2) + '" y="' + (padTop + chartH + 20) + '" class="chart-label" style="font-weight:600">' + WEEKS[i].week + '</text>';
+      bars += '<text x="' + (x + barWidth / 2) + '" y="' + (padTop + chartH + 36) + '" class="chart-label" style="font-size:8px">' + WEEKS[i].label + '</text>';
+    }
+
+    container.innerHTML = '<svg class="chart-svg" viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" xmlns="http://www.w3.org/2000/svg">' +
+      gridLines + bars +
+      '</svg>';
+  }
+
+  renderTrendsChart('volume');
+
+  document.querySelectorAll('#trendsCard .metric-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#trendsCard .metric-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      var mk = this.dataset.metric;
+      document.getElementById('trendsSubtitle').textContent = metricLabels[mk] + ' · W1 – W6';
+      renderTrendsChart(mk);
+    });
+  });
+
+  // Redraw on resize
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      var activeBtn = document.querySelector('#trendsCard .metric-btn.active');
+      if (activeBtn) renderTrendsChart(activeBtn.dataset.metric);
+    }, 150);
+  });
+})();
+
+// ===================== CHANNEL PERFORMANCE TABLE =====================
 (function() {
   var channels = [
-    { name: 'Telegram WC Sponsor', color: '#45E85C', visitors: 30115, signups: 612, traders: 2 },
-    { name: 'X Organic', color: '#3B82F6', visitors: 1616, signups: 123, traders: 93 },
-    { name: 'Telegram Ads', color: '#1FCFA0', visitors: 189, signups: 25, traders: 0 },
-    { name: 'X Giveaways', color: '#FF5C9E', visitors: 0, signups: 0, traders: 0 },
-    { name: 'Telegram Organic', color: '#F58220', visitors: 750, signups: 18, traders: 1 },
-    { name: 'Discord Organic', color: '#9B7CFF', visitors: 133, signups: 9, traders: 17 },
-    { name: 'CoConnect (Alphabot)', color: '#F58220', visitors: 708, signups: 110, traders: 10 },
-    { name: 'Substack', color: '#FF5C9E', visitors: 196, signups: 14, traders: 74 },
-    { name: 'HL S2 Analyzer', color: '#3B82F6', visitors: 18, signups: 0, traders: 1 },
-    { name: 'Shortmob', color: '#1FCFA0', visitors: 498, signups: 15, traders: 0 },
-    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', visitors: 34976, signups: 4601, traders: 4206 }
+    { name: 'Telegram WC Sponsor', color: '#45E85C', posts: 718, views: 13900000, visitors: 30115, signups: 612, depositors: 0, traders: 2 },
+    { name: 'X Organic', color: '#3B82F6', posts: 101, views: 1070000, visitors: 1616, signups: 123, depositors: 20, traders: 93 },
+    { name: 'Telegram Ads', color: '#1FCFA0', posts: 113, views: 597000, visitors: 189, signups: 25, depositors: 0, traders: 0 },
+    { name: 'X Giveaways', color: '#FF5C9E', posts: 1, views: 80000, visitors: 0, signups: 0, depositors: 0, traders: 0 },
+    { name: 'Telegram Organic', color: '#C4E84A', posts: 6, views: 134000, visitors: 750, signups: 18, depositors: 0, traders: 1 },
+    { name: 'Discord Organic', color: '#9B7CFF', posts: 1, views: -1, visitors: 133, signups: 9, depositors: 1, traders: 17 },
+    { name: 'CoConnect (Alphabot)', color: '#F58220', posts: 39, views: 12000, visitors: 737, signups: 113, depositors: 0, traders: 10 },
+    { name: 'Substack', color: '#FF5C9E', posts: -1, views: -1, visitors: 196, signups: 14, depositors: 4, traders: 74 },
+    { name: 'Shortmob', color: '#1FCFA0', posts: 1, views: -1, visitors: 498, signups: 15, depositors: 0, traders: 0 },
+    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', posts: -1, views: -1, visitors: 34976, signups: 4601, depositors: 679, traders: 4206 }
   ];
-  var totals = { visitors: 69199, signups: 5527, traders: 4404 };
+  var totals = { posts: 980, views: 15800000, visitors: 69210, signups: 5530, depositors: 704, traders: 4403 };
 
-  function fmt(n) { return n.toLocaleString('en-US'); }
+  function fmtN(n) {
+    if (n < 0) return '—';
+    return n.toLocaleString('en-US');
+  }
+  function fmtViews(n) {
+    if (n < 0) return '—';
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+    return n.toLocaleString('en-US');
+  }
 
-  function renderConvTable(sortKey) {
-    var sorted = channels.slice().sort(function(a, b) { return b[sortKey] - a[sortKey]; });
+  function renderChannelTable(sortKey) {
+    var sorted = channels.slice().sort(function(a, b) {
+      var va = a[sortKey] < 0 ? -Infinity : a[sortKey];
+      var vb = b[sortKey] < 0 ? -Infinity : b[sortKey];
+      return vb - va;
+    });
     var html = '';
     sorted.forEach(function(ch) {
       html += '<tr>' +
         '<td><div class="dot" style="background:' + ch.color + '"></div>' + ch.name + '</td>' +
-        '<td>' + fmt(ch.visitors) + '</td>' +
-        '<td>' + fmt(ch.signups) + '</td>' +
-        '<td>' + fmt(ch.traders) + '</td>' +
+        '<td>' + fmtN(ch.posts) + '</td>' +
+        '<td>' + fmtViews(ch.views) + '</td>' +
+        '<td>' + fmtN(ch.visitors) + '</td>' +
+        '<td>' + fmtN(ch.signups) + '</td>' +
+        '<td>' + fmtN(ch.depositors) + '</td>' +
+        '<td>' + fmtN(ch.traders) + '</td>' +
         '</tr>';
     });
     html += '<tr class="total">' +
       '<td>Total</td>' +
-      '<td>' + fmt(totals.visitors) + '</td>' +
-      '<td>' + fmt(totals.signups) + '</td>' +
-      '<td>' + fmt(totals.traders) + '</td>' +
+      '<td>' + fmtN(totals.posts) + '</td>' +
+      '<td>' + fmtViews(totals.views) + '</td>' +
+      '<td>' + fmtN(totals.visitors) + '</td>' +
+      '<td>' + fmtN(totals.signups) + '</td>' +
+      '<td>' + fmtN(totals.depositors) + '</td>' +
+      '<td>' + fmtN(totals.traders) + '</td>' +
       '</tr>';
-    document.getElementById('convBody').innerHTML = html;
+    document.getElementById('channelBody').innerHTML = html;
   }
 
-  renderConvTable('visitors');
+  renderChannelTable('visitors');
 
-  document.querySelectorAll('#convTable th.sortable').forEach(function(th) {
+  document.querySelectorAll('#channelTable th.sortable').forEach(function(th) {
     th.addEventListener('click', function() {
-      document.querySelectorAll('#convTable th.sortable').forEach(function(h) { h.classList.remove('active'); });
+      document.querySelectorAll('#channelTable th.sortable').forEach(function(h) { h.classList.remove('active'); });
       this.classList.add('active');
-      renderConvTable(this.dataset.sort);
+      renderChannelTable(this.dataset.sort);
     });
   });
 })();
 
-// ===================== WEEKLY TOTALS =====================
+// ===================== RETENTION HEATMAP =====================
 (function() {
-  const WEEKLY = [
-    { week: "W1", label: "Jun 10-16", visits: 18079, clicks: 10672, signups: 1660, traders: 1137 },
-    { week: "W2", label: "Jun 17-23", visits: 9665, clicks: 8036, signups: 1922, traders: 1192 },
-    { week: "W3", label: "Jun 24-30", visits: 17798, clicks: 7326, signups: 1013, traders: 1112 },
-    { week: "W4", label: "Jul 1-7", visits: 25029, clicks: 11087, signups: 935, traders: 1111 }
+  var cohorts = [
+    { label: 'Jun 7',  size: 86,  weeks: [100, 46.5, 44.2, 33.7, 40.7, 30.2] },
+    { label: 'Jun 14', size: 88,  weeks: [100, 40.9, 30.7, 19.3, 23.9, 5.7] },
+    { label: 'Jun 21', size: 77,  weeks: [100, 42.9, 40.3, 28.6, 16.9, null] },
+    { label: 'Jun 28', size: 61,  weeks: [100, 34.4, 41.0, 13.1, null, null] },
+    { label: 'Jul 5',  size: 667, weeks: [100, 15.9, 7.5, null, null, null] },
+    { label: 'Jul 12', size: 272, weeks: [100, 8.1, null, null, null, null] }
   ];
 
-  const metrics = [
-    { key: 'visits', label: 'Visits' },
-    { key: 'signups', label: 'Signups' },
-    { key: 'traders', label: 'Traders' }
-  ];
-
-  function formatNumber(n) { return n.toLocaleString('en-US'); }
-
-  function renderWeeklyChart(metricKey) {
-    var barsHtml = '';
-    var vals = WEEKLY.map(function(d) { return d[metricKey]; });
-    var maxVal = Math.max.apply(null, vals);
-    if (metricKey === 'visits') {
-      WEEKLY.forEach(function(d, i) {
-        var totalH = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-        var clickRatio = d.clicks / d.visits;
-        var clickH = Math.round(totalH * clickRatio);
-        var organicH = totalH - clickH;
-        barsHtml += '<div class="daily-bar-wrap">' +
-          '<div class="daily-bar-val">' + formatNumber(vals[i]) + '</div>' +
-          '<div style="display:flex;flex-direction:column;width:100%;height:' + totalH + 'px">' +
-            '<div style="flex:0 0 ' + organicH + 'px;background:rgba(255,255,255,0.08);border-radius:4px 4px 0 0"></div>' +
-            '<div style="flex:0 0 ' + clickH + 'px;background:#3B82F6;border-radius:' + (organicH === 0 ? '4px 4px' : '0 0') + ' 0 0"></div>' +
-          '</div>' +
-          '<div class="daily-bar-date">' + d.week + '</div>' +
-          '<div class="daily-bar-day">' + d.label + '</div>' +
-          '</div>';
-      });
-    } else {
-      WEEKLY.forEach(function(d, i) {
-        var h = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-        barsHtml += '<div class="daily-bar-wrap">' +
-          '<div class="daily-bar-val">' + formatNumber(vals[i]) + '</div>' +
-          '<div class="daily-bar" style="height:' + h + 'px"></div>' +
-          '<div class="daily-bar-date">' + d.week + '</div>' +
-          '<div class="daily-bar-day">' + d.label + '</div>' +
-          '</div>';
-      });
-    }
-    return barsHtml;
+  function getRetentionColor(pct) {
+    if (pct === null) return { bg: 'transparent', fg: 'rgba(255,255,255,0.2)' };
+    if (pct >= 100) return { bg: 'rgba(69,232,92,0.2)', fg: '#45E85C' };
+    if (pct >= 40) return { bg: 'rgba(69,232,92,0.15)', fg: '#45E85C' };
+    if (pct >= 30) return { bg: 'rgba(196,232,74,0.12)', fg: '#C4E84A' };
+    if (pct >= 20) return { bg: 'rgba(245,130,32,0.10)', fg: '#F58220' };
+    if (pct >= 10) return { bg: 'rgba(255,92,158,0.08)', fg: '#FF5C9E' };
+    return { bg: 'rgba(255,92,158,0.06)', fg: '#FF5C9E' };
   }
 
-  function getLegend(metricKey) {
-    if (metricKey === 'visits') {
-      return '<div style="display:flex;gap:16px;margin-top:12px">' +
-        '<div style="display:flex;align-items:center;gap:6px">' +
-          '<div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>' +
-          '<span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Marketing Clicks</span>' +
-        '</div>' +
-        '<div style="display:flex;align-items:center;gap:6px">' +
-          '<div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15)"></div>' +
-          '<span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em">Organic / Direct</span>' +
-        '</div>' +
-      '</div>';
+  var html = '';
+  cohorts.forEach(function(c) {
+    html += '<tr>';
+    html += '<td><span class="breakdown-date-main">' + c.label + '</span></td>';
+    html += '<td style="font-weight:600;color:#F5F8FF">' + c.size.toLocaleString('en-US') + '</td>';
+    for (var w = 0; w < 6; w++) {
+      var val = c.weeks[w];
+      if (val === null) {
+        html += '<td style="color:rgba(255,255,255,0.2);font-style:italic;text-align:center">—</td>';
+      } else {
+        var clr = getRetentionColor(val);
+        html += '<td><span class="retention-cell" style="background:' + clr.bg + ';color:' + clr.fg + '">' + val.toFixed(1) + '%</span></td>';
+      }
     }
-    return '';
-  }
-
-  document.getElementById('weeklyChartArea').innerHTML = renderWeeklyChart('visits');
-  document.getElementById('weeklyLegend').innerHTML = getLegend('visits');
-
-  document.querySelectorAll('#weeklyCard .metric-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('#weeklyCard .metric-btn').forEach(function(b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      var mk = this.dataset.metric;
-      var label = metrics.find(function(m) { return m.key === mk; }).label;
-      document.getElementById('weeklySubtitle').textContent = label + ' · W1 – W4';
-      document.getElementById('weeklyChartArea').innerHTML = renderWeeklyChart(mk);
-      document.getElementById('weeklyLegend').innerHTML = getLegend(mk);
-    });
+    html += '</tr>';
   });
+
+  document.getElementById('retentionBody').innerHTML = html;
 })();
 </script>
 
