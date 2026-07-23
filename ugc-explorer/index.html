@@ -277,80 +277,43 @@ body {
 /* ---------- VIDEO FEED ---------- */
 .feed-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
 }
 .video-card {
-  position: relative;
-  aspect-ratio: 9 / 16;
   border-radius: 14px;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease;
-  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: #000;
 }
-.video-card:hover { transform: scale(1.02); filter: brightness(1.1); }
-.video-card-bg {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+.video-card iframe {
+  width: 100%; aspect-ratio: 9 / 16; border: none; display: block; background: #000;
 }
-.video-card-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 30%, transparent 50%, rgba(0,0,0,0.85) 100%);
-  pointer-events: none;
-}
-.video-card-play {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 56px; height: 56px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid rgba(255,255,255,0.25);
-  transition: background 0.2s, transform 0.2s;
-  pointer-events: none;
-}
-.video-card:hover .video-card-play { background: rgba(255,255,255,0.25); transform: translate(-50%, -50%) scale(1.1); }
-.video-card-play svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
-.video-card-top {
-  position: absolute; top: 0; left: 0; right: 0;
+.video-card-info {
   padding: 12px 14px;
-  display: flex; justify-content: space-between; align-items: flex-start;
-  z-index: 2;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: center;
 }
-.video-platform-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 4px 8px; border-radius: 6px;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  color: #fff;
+.video-card-left { display: flex; flex-direction: column; gap: 3px; }
+.video-creator { font-size: 13px; font-weight: 700; color: #F5F8FF; }
+.video-caption {
+  font-size: 10px; color: rgba(255,255,255,0.45);
+  max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.video-platform-badge svg { width: 11px; height: 11px; }
+.video-platform-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.video-platform-tag svg { width: 10px; height: 10px; }
+.video-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .video-views {
   font-family: 'PP Neue Corp', 'Inter', sans-serif;
-  font-size: 13px; font-weight: 500; color: #fff;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  padding: 4px 10px; border-radius: 6px;
-}
-.video-card-bottom {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 16px 14px;
-  z-index: 2;
-}
-.video-creator {
-  font-size: 14px; font-weight: 700; color: #fff;
-  margin-bottom: 4px;
-}
-.video-caption {
-  font-size: 11px; color: rgba(255,255,255,0.7);
-  line-height: 1.4;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 6px;
+  font-size: 15px; font-weight: 500; color: #45E85C;
 }
 .video-eng {
-  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.35);
   letter-spacing: 0.04em; text-transform: uppercase;
 }
 .feed-empty {
@@ -358,6 +321,14 @@ body {
   font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
   grid-column: 1 / -1;
 }
+.load-more-wrap { text-align: center; margin-top: 20px; }
+.load-more-btn {
+  padding: 12px 32px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+  color: #F5F8FF; font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; font-family: inherit;
+}
+.load-more-btn:hover { background: rgba(69,232,92,0.1); border-color: rgba(69,232,92,0.3); color: #45E85C; }
 
 /* ---------- CORRELATION CHART ---------- */
 .corr-chart-container { position: relative; }
@@ -388,80 +359,10 @@ body {
   .filter-group { justify-content: flex-start; }
 }
 
-/* ---------- VIDEO MODAL ---------- */
-.video-modal-backdrop {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-  display: none; align-items: center; justify-content: center;
-  padding: 24px;
-}
-.video-modal-backdrop.open { display: flex; }
-.video-modal {
-  position: relative; width: 100%; max-width: 420px;
-  background: #111; border-radius: 16px; overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-}
-.video-modal-close {
-  position: absolute; top: 12px; right: 12px; z-index: 5;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #fff; font-size: 18px; line-height: 1;
-}
-.video-modal-close:hover { background: rgba(255,255,255,0.15); }
-.video-modal-embed {
-  width: 100%; aspect-ratio: 9 / 16; background: #000;
-  display: flex; align-items: center; justify-content: center;
-}
-.video-modal-embed iframe {
-  width: 100%; height: 100%; border: none;
-}
-.video-modal-embed .embed-loading {
-  color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 500;
-  letter-spacing: 0.1em; text-transform: uppercase;
-}
-.video-modal-info {
-  padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.08);
-}
-.video-modal-meta {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 8px;
-}
-.video-modal-creator { font-size: 14px; font-weight: 700; color: #fff; }
-.video-modal-stats {
-  font-family: 'PP Neue Corp', sans-serif; font-size: 14px; color: #45E85C;
-}
-.video-modal-caption {
-  font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5;
-}
-.video-modal-open {
-  display: inline-block; margin-top: 10px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
-  text-decoration: none;
-}
-.video-modal-open:hover { color: #45E85C; }
+
 </style>
 </head>
 <body>
-
-<!-- VIDEO MODAL -->
-<div class="video-modal-backdrop" id="videoModal" onclick="if(event.target===this)closePlayer()">
-  <div class="video-modal">
-    <div class="video-modal-close" onclick="closePlayer()">&times;</div>
-    <div class="video-modal-embed" id="modalEmbed"><span class="embed-loading">Loading...</span></div>
-    <div class="video-modal-info">
-      <div class="video-modal-meta">
-        <span class="video-modal-creator" id="modalCreator"></span>
-        <span class="video-modal-stats" id="modalStats"></span>
-      </div>
-      <div class="video-modal-caption" id="modalCaption"></div>
-      <a class="video-modal-open" id="modalLink" href="#" target="_blank" rel="noopener">Open on platform &rarr;</a>
-    </div>
-  </div>
-</div>
 
 <!-- NAV -->
 <nav class="nav">
@@ -640,6 +541,9 @@ body {
     <div class="result-count" id="gallery-results"></div>
 
     <div class="feed-grid" id="feed-grid"></div>
+    <div class="load-more-wrap" id="load-more-wrap">
+      <button class="load-more-btn" onclick="loadMore()">Load More</button>
+    </div>
   </div>
 
   <!-- ============================================================ -->
@@ -1291,68 +1195,30 @@ function renderTimeline() {
 let feedFilter = 'all';
 let feedSort = 'views-desc';
 
-const PLATFORM_BG_GRAD = {
-  Instagram: 'linear-gradient(135deg, #833AB4 0%, #C13584 40%, #E1306C 60%, #F77737 100%)',
-  TikTok: 'linear-gradient(135deg, #010101 0%, #25F4EE 50%, #FE2C55 100%)',
-  YouTube: 'linear-gradient(135deg, #282828 0%, #FF0000 100%)',
-  Facebook: 'linear-gradient(135deg, #1877F2 0%, #4267B2 100%)'
-};
-
-// ============================================================
-// VIDEO MODAL PLAYER
-// ============================================================
-
 function getEmbedUrl(platform, url) {
   if (platform === 'TikTok') {
     const m = url.match(/video\/(\d+)/);
-    return m ? `https://www.tiktok.com/embed/v2/${m[1]}` : null;
+    return m ? 'https://www.tiktok.com/embed/v2/' + m[1] : null;
   }
   if (platform === 'Instagram') {
-    // /reel/CODE/ or /p/CODE/ → embed
     const m = url.match(/\/(reel|p)\/([^/]+)/);
-    return m ? `https://www.instagram.com/${m[1]}/${m[2]}/embed/` : null;
+    return m ? 'https://www.instagram.com/' + m[1] + '/' + m[2] + '/embed/' : null;
   }
   if (platform === 'YouTube') {
-    const m = url.match(/(?:shorts\/|watch\?v=|youtu\.be\/)([^&?/]+)/);
-    return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1` : null;
+    const m = url.match(/(?:shorts\/|watch\?v=|youtu\.be\/)([^&?\/]+)/);
+    return m ? 'https://www.youtube.com/embed/' + m[1] : null;
   }
   if (platform === 'Facebook') {
-    return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true`;
+    return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false';
   }
   return null;
 }
 
-function openPlayer(platform, url, creator, views, eng, caption) {
-  const embedUrl = getEmbedUrl(platform, url);
-  const embed = document.getElementById('modalEmbed');
-  if (embedUrl) {
-    embed.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  } else {
-    embed.innerHTML = `<span class="embed-loading">Preview not available</span>`;
-  }
-  document.getElementById('modalCreator').textContent = '@' + creator;
-  document.getElementById('modalStats').textContent = fmt(views) + ' views';
-  document.getElementById('modalCaption').textContent = caption || '';
-  document.getElementById('modalLink').href = url;
-  document.getElementById('videoModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+let feedPage = 0;
+const FEED_PAGE_SIZE = 12;
 
-function closePlayer() {
-  document.getElementById('videoModal').classList.remove('open');
-  document.getElementById('modalEmbed').innerHTML = '<span class="embed-loading">Loading...</span>';
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayer(); });
-
-function renderFeed() {
-  const grid = document.getElementById('feed-grid');
-  const results = document.getElementById('gallery-results');
-  const countEl = document.getElementById('gallery-count');
-
+function getFilteredSorted() {
   let filtered = feedFilter === 'all' ? [...posts] : posts.filter(p => p.platform === feedFilter);
-
   const [key, dir] = feedSort.split('-');
   filtered.sort((a, b) => {
     let va, vb;
@@ -1363,38 +1229,65 @@ function renderFeed() {
     if (key === 'date') return dir === 'desc' ? (va < vb ? 1 : -1) : (va > vb ? 1 : -1);
     return dir === 'desc' ? vb - va : va - vb;
   });
+  return filtered;
+}
 
-  results.textContent = `SHOWING ${filtered.length} OF ${posts.length} POSTS`;
-  countEl.textContent = `${filtered.length} POSTS · SORTED BY ${key.toUpperCase()}`;
+function renderCard(p) {
+  const embedUrl = getEmbedUrl(p.platform, p.url);
+  const engRate = p.views > 0 ? ((p.eng / p.views) * 100).toFixed(1) : '0.0';
+  const caption = p.caption ? p.caption.replace(/</g, '&lt;') : '';
+  const iframeHtml = embedUrl
+    ? '<iframe src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>'
+    : '<div style="aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:11px;text-transform:uppercase;letter-spacing:0.1em">Preview unavailable</div>';
+  return '<div class="video-card">' +
+    iframeHtml +
+    '<div class="video-card-info">' +
+      '<div class="video-card-left">' +
+        '<div class="video-creator">@' + p.creator + '</div>' +
+        '<div class="video-caption">' + caption + '</div>' +
+        '<div class="video-platform-tag">' + PLATFORM_ICONS[p.platform] + ' ' + p.platform + '</div>' +
+      '</div>' +
+      '<div class="video-card-right">' +
+        '<div class="video-views">' + fmt(p.views) + '</div>' +
+        '<div class="video-eng">' + fmt(p.eng) + ' eng · ' + engRate + '%</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderFeed() {
+  feedPage = 0;
+  const grid = document.getElementById('feed-grid');
+  const results = document.getElementById('gallery-results');
+  const countEl = document.getElementById('gallery-count');
+  const filtered = getFilteredSorted();
+
+  results.textContent = 'SHOWING ' + Math.min(FEED_PAGE_SIZE, filtered.length) + ' OF ' + filtered.length + ' POSTS';
+  countEl.textContent = filtered.length + ' POSTS';
 
   if (filtered.length === 0) {
     grid.innerHTML = '<div class="feed-empty">No posts match this filter</div>';
+    document.getElementById('load-more-wrap').style.display = 'none';
     return;
   }
 
-  grid.innerHTML = filtered.map(p => {
-    const engRate = p.views > 0 ? ((p.eng / p.views) * 100).toFixed(1) : '0.0';
-    const caption = p.caption ? (p.caption.length > 80 ? p.caption.slice(0, 77) + '...' : p.caption).replace(/</g, '&lt;') : '';
-    return `
-    <div class="video-card" onclick="openPlayer('${p.platform}','${p.url}','${p.creator}',${p.views},${p.eng},'${caption.replace(/'/g,"\\'")}')">
-      <div class="video-card-bg" style="background:${PLATFORM_BG_GRAD[p.platform]}"></div>
-      <div class="video-card-overlay"></div>
-      <div class="video-card-play">
-        <svg viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19"/></svg>
-      </div>
-      <div class="video-card-top">
-        <div class="video-platform-badge" style="color:${PLATFORM_COLOR[p.platform]}">
-          ${PLATFORM_ICONS[p.platform]} ${p.platform}
-        </div>
-        <div class="video-views">${fmt(p.views)}</div>
-      </div>
-      <div class="video-card-bottom">
-        <div class="video-creator">@${p.creator}</div>
-        <div class="video-caption">${caption}</div>
-        <div class="video-eng">${fmt(p.eng)} engagement · ${engRate}% rate</div>
-      </div>
-    </div>`;
-  }).join('');
+  const batch = filtered.slice(0, FEED_PAGE_SIZE);
+  grid.innerHTML = batch.map(renderCard).join('');
+  feedPage = 1;
+  document.getElementById('load-more-wrap').style.display = filtered.length > FEED_PAGE_SIZE ? '' : 'none';
+}
+
+function loadMore() {
+  const grid = document.getElementById('feed-grid');
+  const results = document.getElementById('gallery-results');
+  const filtered = getFilteredSorted();
+  const start = feedPage * FEED_PAGE_SIZE;
+  const batch = filtered.slice(start, start + FEED_PAGE_SIZE);
+  grid.insertAdjacentHTML('beforeend', batch.map(renderCard).join(''));
+  feedPage++;
+  const shown = Math.min(feedPage * FEED_PAGE_SIZE, filtered.length);
+  results.textContent = 'SHOWING ' + shown + ' OF ' + filtered.length + ' POSTS';
+  document.getElementById('load-more-wrap').style.display = shown >= filtered.length ? 'none' : '';
 }
 
 function filterFeed(platform, btn) {
