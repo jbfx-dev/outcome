@@ -164,29 +164,6 @@ body {
 .paid-table .good { color: #45E85C; }
 .paid-table .warn { color: #F58220; }
 .paid-table .bad { color: #FF5C9E; }
-.paid-table .verdict-row td {
-  border-top: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 2px solid rgba(255,255,255,0.08);
-  padding: 12px 8px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-}
-.verdict-pill {
-  display: inline-block; padding: 4px 12px; border-radius: 6px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.verdict-pill.winner {
-  background: rgba(69,232,92,0.12); color: #45E85C;
-  border: 1px solid rgba(69,232,92,0.25);
-}
-.verdict-pill.mixed {
-  background: rgba(245,130,32,0.12); color: #F58220;
-  border: 1px solid rgba(245,130,32,0.25);
-}
-.verdict-pill.poor {
-  background: rgba(255,92,158,0.12); color: #FF5C9E;
-  border: 1px solid rgba(255,92,158,0.25);
-}
 
 /* ---------- BREAKDOWN TABLE ---------- */
 .breakdown-table { width: 100%; border-collapse: collapse; }
@@ -479,12 +456,6 @@ body {
           <td class="good">$16.92</td>
           <td class="warn">$2,500</td>
         </tr>
-        <tr class="verdict-row">
-          <td colspan="9" style="text-align:left;">
-            <span class="verdict-pill winner">BEST VALUE</span>
-            &nbsp;&nbsp;Massive click volume at $0.25 CPC. Best signup rate of all paid channels. However, zero depositors — these are top-of-funnel clicks, not traders. Still, the cheapest awareness play by far.
-          </td>
-        </tr>
 
         <!-- Vision UGC -->
         <tr>
@@ -497,12 +468,6 @@ body {
           <td class="bad">$460.53</td>
           <td class="bad">N/A</td>
           <td class="bad">N/A</td>
-        </tr>
-        <tr class="verdict-row">
-          <td colspan="9" style="text-align:left;">
-            <span class="verdict-pill poor">DID NOT WORK</span>
-            &nbsp;&nbsp;$17.5K spent for 38 tracked clicks and zero conversions. Either the UTM tracking broke, traffic was bot/low-intent, or the content didn't land. Worst ROI of all channels.
-          </td>
         </tr>
 
         <!-- Telegram Ads -->
@@ -517,49 +482,21 @@ body {
           <td class="bad">$244.38</td>
           <td class="bad">N/A</td>
         </tr>
-        <tr class="verdict-row">
-          <td colspan="9" style="text-align:left;">
-            <span class="verdict-pill mixed">MIXED</span>
-            &nbsp;&nbsp;Reasonable CPC but very low signup conversion (1.2%). Zero depositors or traders from this channel. The ad placements drove clicks but not quality intent. Over-budget by $865.
-          </td>
-        </tr>
 
         <!-- CoConnect -->
         <tr>
           <td><div class="channel-name"><span class="dot" style="background:#45E85C;"></span>CoConnect (Alphabot)</div></td>
           <td>$20,000</td>
           <td>2,464</td>
-          <td>122</td>
+          <td class="green">667</td>
           <td class="green">667</td>
           <td>10</td>
           <td class="warn">$8.12</td>
-          <td class="warn">$163.93</td>
+          <td>$29.99</td>
           <td class="bad">$2,000</td>
-        </tr>
-        <tr class="verdict-row">
-          <td colspan="9" style="text-align:left;">
-            <span class="verdict-pill mixed">MIXED — VOLUME PLAY</span>
-            &nbsp;&nbsp;265 community collabs (~1.06M est. impressions), driving 2,464 clicks, 122 signups, and 667 depositors (tracked separately outside UTMs). Per-signup cost is high ($164) but CoConnect was the top depositor source and only channel producing active traders (10). CPC at $8.12. No meaningful traffic correlation (r&nbsp;=&nbsp;0.07).
-          </td>
         </tr>
       </tbody>
     </table>
-    </div>
-
-    <!-- Summary callouts -->
-    <div style="display:flex; gap:32px; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06); flex-wrap:wrap;">
-      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
-        <strong style="color:#45E85C;">Best CPC:</strong> TG Channel Sponsor — $0.25
-      </div>
-      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
-        <strong style="color:#45E85C;">Best Cost/Signup:</strong> TG Channel Sponsor — $16.92
-      </div>
-      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
-        <strong style="color:#FF5C9E;">Worst ROI:</strong> Vision UGC — $460/click, 0 signups
-      </div>
-      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
-        <strong style="color:#3B82F6;">Top Converter:</strong> CoConnect — 667 depositors, 10 active traders
-      </div>
     </div>
   </div>
 

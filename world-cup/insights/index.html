@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcome.xyz - World Cup 2026 - Campaign Insights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("../fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("../fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800; font-style: normal; font-stretch: condensed; font-display: swap;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -apple-system, sans-serif; min-height: 100vh; }
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,11,0.74); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.date-badge {
+  height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- WEEK SELECTOR ---------- */
+.week-selector { position: relative; }
+.week-selector-btn {
+  height: 38px; padding: 0 14px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+  background: transparent; cursor: pointer; transition: all 0.15s ease;
+}
+.week-selector-btn:hover { border-color: rgba(255,255,255,0.25); color: #F5F8FF; }
+.week-selector-arrow { font-size: 8px; transition: transform 0.15s ease; }
+.week-selector.open .week-selector-arrow { transform: rotate(180deg); }
+.week-selector-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  min-width: 200px; padding: 6px;
+  background: #1A1A1C; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: all 0.15s ease; z-index: 30;
+}
+.week-selector.open .week-selector-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.week-selector-dropdown a {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px; border-radius: 8px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.5); text-decoration: none;
+  text-transform: uppercase; transition: all 0.1s ease;
+}
+.week-selector-dropdown a:hover { background: rgba(255,255,255,0.06); color: #F5F8FF; }
+.week-selector-dropdown a .ws-date { font-size: 9px; font-weight: 400; letter-spacing: 0.04em; color: rgba(255,255,255,0.3); }
+
+/* ---------- CONTENT ---------- */
+.content { max-width: 1480px; margin: 0 auto; padding: 44px 40px 64px; }
+
+/* ---------- WEEK NAV ---------- */
+.week-nav { display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px; flex-wrap: wrap; }
+.week-nav a {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none;
+  color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); transition: all 0.15s ease;
+}
+.week-nav a:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.12); }
+.week-nav a.active { color: #F5F8FF; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
+
+/* ---------- TITLE AREA ---------- */
+.title-area { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin-bottom: 34px; }
+.title-sub { font-size: 12px; font-weight: 500; letter-spacing: 0.16em; color: #45E85C; margin-bottom: 16px; text-transform: uppercase; }
+.title-h1 {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800; font-stretch: condensed;
+  text-transform: uppercase; letter-spacing: -0.01em; font-size: 64px; line-height: 0.88; color: #F5F8FF;
+}
+.title-h1 .green { color: #45E85C; }
+.title-h1 .purple { color: #6F2EE4; }
+.title-badges { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.badge {
+  height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+.badge.orange { color: #F58220; border-color: rgba(245,130,32,0.3); }
+
+/* ---------- CONFIDENCE BADGE ---------- */
+.confidence-badge {
+  height: 38px; padding: 0 18px; border-radius: 10px;
+  border: 1px solid rgba(111,46,228,0.4);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  color: #9B7CFF; text-transform: uppercase;
+}
+.confidence-score {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif; font-weight: 800;
+  font-size: 16px; color: #B794FF; letter-spacing: 0;
+}
+
+/* ---------- INTRO CARD ---------- */
+.intro-card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(111,46,228,0.15);
+  background: rgba(111,46,228,0.04); margin-bottom: 14px;
+}
+.intro-text {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55);
+  line-height: 1.7; max-width: 900px;
+}
+.intro-text strong { color: #F5F8FF; font-weight: 600; }
+
+/* ---------- CARD ---------- */
+.card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.card-meta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+}
+
+/* ---------- ROLLUP / ACCORDION ---------- */
+.rollup {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+.rollup:hover { border-color: rgba(255,255,255,0.12); }
+.rollup.open { border-color: rgba(69,232,92,0.2); }
+
+.rollup-header {
+  padding: 22px 28px;
+  cursor: pointer;
+  display: flex; align-items: flex-start; gap: 18px;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+.rollup-header:hover { background: rgba(255,255,255,0.02); }
+
+.rollup-number {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-weight: 800; font-stretch: condensed;
+  font-size: 28px; line-height: 1;
+  color: rgba(255,255,255,0.15);
+  min-width: 40px; text-align: center;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.rollup.open .rollup-number { color: #45E85C; }
+
+.rollup-text { flex: 1; min-width: 0; }
+.rollup-title {
+  font-size: 14px; font-weight: 700; letter-spacing: 0.02em;
+  color: #F5F8FF; margin-bottom: 6px; line-height: 1.3;
+}
+.rollup-desc {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+}
+
+.rollup-arrow {
+  width: 24px; height: 24px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; background: rgba(255,255,255,0.04);
+  margin-top: 2px;
+  transition: transform 0.3s ease, background 0.2s ease;
+}
+.rollup-arrow svg { width: 12px; height: 12px; fill: rgba(255,255,255,0.4); transition: fill 0.2s ease; }
+.rollup.open .rollup-arrow { transform: rotate(180deg); background: rgba(69,232,92,0.1); }
+.rollup.open .rollup-arrow svg { fill: #45E85C; }
+
+.rollup-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.rollup-body-inner {
+  padding: 0 28px 28px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ---------- METRIC CALLOUTS ---------- */
+.metric-row {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin: 20px 0;
+}
+.metric-box {
+  flex: 1; min-width: 140px; max-width: 220px;
+  padding: 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+}
+.metric-box .m-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+}
+.metric-box .m-value {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-size: 22px; font-weight: 500; line-height: 1;
+  color: #F5F8FF;
+}
+.metric-box .m-note {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
+  margin-top: 6px;
+}
+
+/* ---------- CHART AREA ---------- */
+.chart-area {
+  position: relative; margin: 20px 0;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 20px;
+}
+.chart-area canvas { width: 100%; height: 220px; display: block; }
+.chart-label-row {
+  display: flex; gap: 16px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.chart-label-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.45);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.chart-label-sq { width: 10px; height: 10px; border-radius: 2px; }
+
+/* ---------- ANALYSIS TEXT ---------- */
+.analysis-text {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5);
+  line-height: 1.7; margin-top: 16px;
+}
+.analysis-text strong { color: #F5F8FF; font-weight: 600; }
+.analysis-text .highlight {
+  color: #45E85C; font-weight: 600;
+}
+.analysis-text .warn {
+  color: #FF5C9E; font-weight: 600;
+}
+
+/* ---------- RECOMMENDATION BOX ---------- */
+.rec-box {
+  margin-top: 16px; padding: 16px 20px; border-radius: 10px;
+  border: 1px solid rgba(69,232,92,0.15);
+  background: rgba(69,232,92,0.03);
+}
+.rec-box .rec-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #45E85C; margin-bottom: 8px;
+}
+.rec-box .rec-text {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+}
+
+/* ---------- SECTION TITLE ---------- */
+.section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin: 20px 0 8px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06);
+}
+
+/* ---------- FOOTER ---------- */
+.assumptions-card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,92,158,0.15);
+  background: rgba(255,92,158,0.03); margin-top: 24px;
+}
+.assumptions-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #FF5C9E; margin-bottom: 16px;
+}
+.assumption-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.assumption-item:last-child { border-bottom: none; }
+.assumption-num {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-weight: 800; font-stretch: condensed;
+  font-size: 18px; color: #FF5C9E;
+  display: inline-block; margin-right: 10px;
+}
+.assumption-headline {
+  font-size: 13px; font-weight: 700; color: #F5F8FF;
+  display: inline;
+}
+.assumption-body {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.45);
+  line-height: 1.6; margin-top: 6px; padding-left: 32px;
+}
+
+.breakdown-footer {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.2);
+  margin-top: 16px; padding: 12px 0; letter-spacing: 0.04em;
+  text-transform: uppercase; text-align: center;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .nav { padding: 0 20px; }
+  .content { padding: 24px 20px 48px; }
+  .title-h1 { font-size: 40px; }
+  .rollup-header { padding: 16px 20px; gap: 12px; }
+  .rollup-body-inner { padding: 0 20px 20px; }
+  .rollup-number { font-size: 22px; min-width: 30px; }
+  .metric-row { flex-direction: column; }
+  .metric-box { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
+      <path d="M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z"/>
+      <path d="M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z"/>
+      <path d="M563.684 339.077C493.476 339.077 454 289.961 454 231.619C454 173.776 493.476 124.659 563.684 124.659C633.892 124.659 673.369 173.776 673.369 231.619C673.369 289.961 633.892 339.077 563.684 339.077ZM490.228 231.619C490.228 271.76 512.465 307.164 563.684 307.164C614.904 307.164 637.14 271.76 637.14 231.619C637.14 192.226 614.904 156.573 563.684 156.573C512.465 156.573 490.228 192.226 490.228 231.619Z"/>
+      <path d="M831.867 336.584V307.912C819.375 326.611 799.637 339.077 771.404 339.077C731.178 339.077 704.694 312.151 704.694 267.771V174.524H738.673V263.283C738.673 293.451 753.414 309.907 782.897 309.907C824.122 309.907 831.867 278.243 831.867 261.289V174.524H865.847V336.584H831.867Z"/>
+      <path d="M1029.93 174.524V203.695H971.711V280.237C971.711 300.682 975.209 307.413 989.451 307.413H1029.93V336.584H983.704C947.726 336.584 938.481 318.633 938.481 286.221V203.695H889.76V174.524H913.496C936.482 174.524 943.228 160.063 942.979 127.152H976.209C976.209 152.334 971.462 171.283 959.719 174.524H1029.93Z"/>
+      <path d="M1186.73 237.852C1185.23 220.898 1170.74 201.451 1137.26 201.451C1099.28 201.451 1084.04 223.89 1084.04 255.554V256.302C1084.04 287.218 1099.28 309.657 1137.51 309.657C1172.99 309.657 1185.23 290.21 1186.98 273.007L1187.73 266.275H1222.21L1221.46 273.007C1217.71 305.917 1191.98 339.077 1136.76 339.077C1078.04 339.077 1049.31 304.92 1049.31 255.554V255.055C1049.31 206.188 1078.04 172.031 1136.76 172.031C1191.48 172.031 1218.46 204.692 1221.46 237.852L1222.21 245.082H1187.73L1186.73 237.852Z"/>
+      <path d="M1331.91 339.077C1274.45 339.077 1246.21 304.92 1246.21 255.554C1246.21 206.188 1274.45 172.031 1331.91 172.031C1389.63 172.031 1417.61 206.188 1417.61 255.554C1417.61 304.92 1389.63 339.077 1331.91 339.077ZM1280.94 255.554C1280.94 287.218 1294.69 309.657 1331.91 309.657C1369.39 309.657 1383.13 287.218 1383.13 255.554C1383.13 223.89 1369.39 201.451 1331.91 201.451C1294.69 201.451 1280.94 223.89 1280.94 255.554Z"/>
+      <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
+      <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
+    </svg>
+    <span class="nav-divider">/</span>
+    <span class="nav-subtitle">CAMPAIGN TRACKER</span>
+  </div>
+  <div class="nav-right">
+    <div class="week-selector" id="weekSelector">
+      <button class="week-selector-btn" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEKLY VIEW <span class="week-selector-arrow">&#9660;</span></button>
+      <div class="week-selector-dropdown">
+        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10-16</span></a>
+        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17-23</span></a>
+        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24-30</span></a>
+        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1-7</span></a>
+        <a href="/world-cup/5">Week 5 <span class="ws-date">Jul 8-14</span></a>
+        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15-20</span></a>
+      </div>
+    </div>
+    <div class="date-badge">JUN 10 &ndash; JUL 20, 2026</div>
+  </div>
+</nav>
+
+<div class="content">
+
+  <!-- WEEK NAV -->
+  <div class="week-nav">
+    <a href="/world-cup/">Overall</a>
+    <a href="/world-cup/channels">Channels</a>
+    <a href="/clicks-explorer/">Clicks</a>
+    <a href="/ugc-explorer/">UGC</a>
+    <a href="/world-cup/insights/" class="active">Insights</a>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-area">
+    <div class="title-left">
+      <div class="title-sub">STRATEGIC ANALYSIS &middot; POST-CAMPAIGN REVIEW</div>
+      <h1 class="title-h1">
+        Campaign<br>
+        <span class="green">Insights</span>
+      </h1>
+    </div>
+    <div class="title-badges">
+      <div class="confidence-badge">
+        <span class="confidence-score">7/10</span>
+        CONFIDENCE SCORE
+      </div>
+      <div class="badge">10 Findings</div>
+      <div class="badge orange">$143K Analyzed</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <div class="intro-text">
+      A structured analysis of the full World Cup 2026 campaign data &mdash; <strong>$29.4M volume, 41 days, $143K spend, 19 channels</strong> &mdash; stress-tested from multiple angles: market dynamics, growth mechanics, brand strategy, creative performance, and statistical rigor. The 10 strategic learnings below represent the synthesized findings. Each includes supporting data, visualizations, and a concrete action item.
+    </div>
+  </div>
+
+  <!-- ========== 10 INSIGHT ROLLUPS ========== -->
+
+  <!-- INSIGHT 1 -->
+  <div class="rollup" id="insight1">
+    <div class="rollup-header" onclick="toggleRollup('insight1')">
+      <div class="rollup-number">01</div>
+      <div class="rollup-text">
+        <div class="rollup-title">The Attribution Gap Is an Existential Measurement Failure</div>
+        <div class="rollup-desc">82.9% of signups and 95.4% of active traders cannot be attributed to any channel. Every claim about channel performance is based on a fraction of actual data.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Unattributed Signups</div><div class="m-value" style="color:#FF5C9E">82.9%</div><div class="m-note">4,589 of 5,536</div></div>
+          <div class="metric-box"><div class="m-label">Unattributed Traders</div><div class="m-value" style="color:#FF5C9E">95.4%</div><div class="m-note">4,204 of 4,406</div></div>
+          <div class="metric-box"><div class="m-label">Unattributed Depositors</div><div class="m-value" style="color:#FF5C9E">96.1%</div><div class="m-note">677 of 704</div></div>
+          <div class="metric-box"><div class="m-label">Attributed Total</div><div class="m-value" style="color:#45E85C">947</div><div class="m-note">Signups across all channels</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart1" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Attributed</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(255,92,158,0.6)"></div> Unattributed</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          <strong>Case in point &mdash; CoConnect:</strong> UTM attribution showed CoConnect producing 122 signups at $163.93 each, making it appear the worst-performing paid channel. Wallet-level verification revealed <span class="highlight">657 depositors at $30.44/signup</span>. UTMs missed <span class="warn">81% of actual conversions</span>. Without the wallet cross-check, this campaign's post-mortem would have recommended cutting its best depositor-acquisition channel.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Before spending another dollar on campaigns, implement persistent user-ID tracking that survives the authentication boundary. Evaluate PostHog identity resolution, first-party cookies, or referral-code-based attribution. Budget $15-25K for engineering. It will pay for itself by making the next campaign's $140K measurably efficient.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 2 -->
+  <div class="rollup" id="insight2">
+    <div class="rollup-header" onclick="toggleRollup('insight2')">
+      <div class="rollup-number">02</div>
+      <div class="rollup-text">
+        <div class="rollup-title">Market Share Trajectory Proves Product-Market Fit During Events</div>
+        <div class="rollup-desc">Outcome grew from 2.4% to 49.3% daily share of Hyperliquid WC volume. In absolute terms, daily WC volume grew from $17K to over $1.9M. The strongest signal in the dataset.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">W1 Share</div><div class="m-value">3.5%</div><div class="m-note">Starting point</div></div>
+          <div class="metric-box"><div class="m-label">Peak Share</div><div class="m-value" style="color:#45E85C">49.3%</div><div class="m-note">Jul 17 &middot; 5.6x W1</div></div>
+          <div class="metric-box"><div class="m-label">Total WC Vol</div><div class="m-value">$26.7M</div><div class="m-note">of $149.6M addressable</div></div>
+          <div class="metric-box"><div class="m-label">DAU Peak</div><div class="m-value" style="color:#3B82F6">6,260</div><div class="m-note">Jul 19 &middot; WC Final</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart2" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Outcome WC Volume</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#6F2EE4"></div> Market Share %</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          This is the headline metric for the board. Market share percentages can be noisy when the denominator fluctuates, but the absolute story is unambiguous: <span class="highlight">volume grew from $17K/day to over $1M+/day</span>. That's a genuine product-market fit signal during live events.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Build an "event playbook" deployable for any major sporting event (Champions League, NFL playoffs, Olympics). Include pre-built markets, rewards structure, and channel activation plan. Outcome's competitive advantage is speed-to-market on event-driven prediction markets &mdash; systematize it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 3 -->
+  <div class="rollup" id="insight3">
+    <div class="rollup-header" onclick="toggleRollup('insight3')">
+      <div class="rollup-number">03</div>
+      <div class="rollup-text">
+        <div class="rollup-title">The Genesis Badge Was Brilliant Activation, Broken Retention</div>
+        <div class="rollup-desc">744 depositors in 2 days (vs. avg 25/day) but worst retention cohort at 15.9% W1 vs. 46.5% for organic users. A Goodhart's Law demonstration: optimize for deposits, get deposits &mdash; not traders.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Jul 9 Depositors</div><div class="m-value" style="color:#45E85C">233</div><div class="m-note">9.3x daily average</div></div>
+          <div class="metric-box"><div class="m-label">Jul 10 Depositors</div><div class="m-value" style="color:#45E85C">511</div><div class="m-note">20.4x daily average</div></div>
+          <div class="metric-box"><div class="m-label">Badge W1 Retention</div><div class="m-value" style="color:#FF5C9E">15.9%</div><div class="m-note">Jul 5 cohort (667 users)</div></div>
+          <div class="metric-box"><div class="m-label">Organic W1 Retention</div><div class="m-value" style="color:#45E85C">46.5%</div><div class="m-note">Jun 7 cohort (86 users)</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart3" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Jun 7 Organic Cohort</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#FF5C9E"></div> Jul 5 Badge Cohort</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(255,255,255,0.2)"></div> Other Cohorts</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          The badge was strong offer design &mdash; but the retention data reveals a classic Goodhart's Law problem: <span class="warn">84% of badge depositors were one-and-done</span>. Badge claims totaled 2,325 with 314 Gold upgrades (13.5%). The rewards budget overran by 16% ($69,344 vs. $60,000), partly due to badge success.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Redesign future badge mechanics to require trading activity, not just deposits. Proposed: Bronze = deposit $25+, Silver = 5+ trades across 3+ markets, Gold = maintain activity for 2+ weeks. This filters for intent and aligns the incentive with active trading.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 4 -->
+  <div class="rollup" id="insight4">
+    <div class="rollup-header" onclick="toggleRollup('insight4')">
+      <div class="rollup-number">04</div>
+      <div class="rollup-text">
+        <div class="rollup-title">Telegram Sponsor Is the Most Capital-Efficient Paid Channel</div>
+        <div class="rollup-desc">$0.25 CPC, $16.92/signup, and 78.3% of all tracked link clicks on a $10K budget. No other paid channel came close on unit economics &mdash; but zero depositors attributed.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">CPC</div><div class="m-value" style="color:#45E85C">$0.25</div><div class="m-note">vs. TG Ads $2.85</div></div>
+          <div class="metric-box"><div class="m-label">Cost/Signup</div><div class="m-value" style="color:#45E85C">$16.92</div><div class="m-note">591 signups</div></div>
+          <div class="metric-box"><div class="m-label">Click Share</div><div class="m-value">78.3%</div><div class="m-note">40,784 of 51,766 clicks</div></div>
+          <div class="metric-box"><div class="m-label">Depositors</div><div class="m-value" style="color:#FF5C9E">0</div><div class="m-note">No downstream proof</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart4" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Cost per Signup</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          Key caveat: <span class="warn">channel economics at $10K spend don't predict economics at $30K</span>. TG Sponsor targets a single Telegram football community that could saturate within 2 weeks at 3x spend. The counter-argument: test the ceiling before assuming it exists &mdash; run at $20K and monitor CPC weekly.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Test at 2-3x budget ($20-30K) in the next campaign with weekly CPC monitoring. Set a CPC ceiling of $0.75 &mdash; if costs rise above that, the channel is saturating. Use referral codes (not just UTMs) to track downstream conversion to deposit and trade.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 5 -->
+  <div class="rollup" id="insight5">
+    <div class="rollup-header" onclick="toggleRollup('insight5')">
+      <div class="rollup-number">05</div>
+      <div class="rollup-text">
+        <div class="rollup-title">CoConnect Is the Best Depositor-Acquisition Channel &mdash; and UTM Data Hid It</div>
+        <div class="rollup-desc">UTMs showed 122 signups at $163.93 each. Wallet-level proof: 657 depositors at $30.44/signup with 100% deposit rate. UTM tracking missed 81% of conversions.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">UTM Data Said</div><div class="m-value" style="color:#FF5C9E">$163.93</div><div class="m-note">122 signups &middot; Wrong</div></div>
+          <div class="metric-box"><div class="m-label">Wallet Data Proved</div><div class="m-value" style="color:#45E85C">$30.44</div><div class="m-note">657 depositors &middot; Correct</div></div>
+          <div class="metric-box"><div class="m-label">Deposit Rate</div><div class="m-value" style="color:#45E85C">100%</div><div class="m-note">All received $15 bonus</div></div>
+          <div class="metric-box"><div class="m-label">All-In / Depositor</div><div class="m-value">$45.44</div><div class="m-note">Incl. $9,855 in bonuses</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart5" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#FF5C9E"></div> UTM Attribution</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Wallet Verification</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          This is both a vindication of CoConnect and the single most powerful proof point for Insight #1. The CoConnect correction proves the core attribution argument: <strong>UTM data missed 81% of CoConnect's signups. What else is it missing?</strong> Any initial recommendation to cut CoConnect would have been based on broken data &mdash; a cautionary example of why attribution must be fixed first.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Maintain CoConnect at $20K+ for next campaign with three changes: (1) replace UTMs with wallet-level attribution, (2) restructure $15 bonus to require a first trade, (3) measure the 657 depositors' trading activity. If 15%+ trade, cost/trader = ~$303. If 30%+ trade, CoConnect is the most efficient full-funnel channel.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 6 -->
+  <div class="rollup" id="insight6">
+    <div class="rollup-header" onclick="toggleRollup('insight6')">
+      <div class="rollup-number">06</div>
+      <div class="rollup-text">
+        <div class="rollup-title">UGC Drives Awareness but Needs a New Creative Strategy to Drive Conversion</div>
+        <div class="rollup-desc">9.9M views across 371 posts but zero attributed conversions. Top 2 of 10 creators drove 63% of all views. Google Search grew 21x concurrently &mdash; but correlation is not causation.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Total Views</div><div class="m-value">9.9M</div><div class="m-note">371 posts</div></div>
+          <div class="metric-box"><div class="m-label">Attributable Conversions</div><div class="m-value" style="color:#FF5C9E">0</div><div class="m-note">Zero signups, depositors, traders</div></div>
+          <div class="metric-box"><div class="m-label">ceofooty Share</div><div class="m-value" style="color:#3B82F6">47.7%</div><div class="m-note">4.7M views, 56K avg/post</div></div>
+          <div class="metric-box"><div class="m-label">Tracked Clicks</div><div class="m-value" style="color:#FF5C9E">38</div><div class="m-note">Effectively zero CTR</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart6" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#3B82F6"></div> Creator Views (millions)</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          The question is whether to cut or redirect. The case for cutting: zero direct conversions and unproven indirect effects. The case for redirecting: the creative brief failed, not the channel &mdash; reaction videos entertained football fans without giving them a reason to try Outcome. <strong>The r=0.55 UGC-to-Search correlation is statistically unreliable</strong> &mdash; Google Search visitors followed a monotonic upward trend and any fluctuating variable would show moderate correlation. Resolution requires a controlled UGC dark period test.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Continue UGC at reduced budget ($10K) on 2-3 proven creators. Overhaul the brief: every piece must include a visible prediction market CTA, identity-based framing, and a trackable entry point (unique short link per creator). Run a 2-week UGC dark period mid-next-campaign to test search impact.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 7 -->
+  <div class="rollup" id="insight7">
+    <div class="rollup-header" onclick="toggleRollup('insight7')">
+      <div class="rollup-number">07</div>
+      <div class="rollup-text">
+        <div class="rollup-title">Google Search Is an Untapped Organic Growth Channel</div>
+        <div class="rollup-desc">21x growth in 30 days (15/day to 320/day) with zero spend. 242 pages on outcome.xyz are not indexed by Google &mdash; significant free traffic left on the table.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Total Search Visitors</div><div class="m-value">472</div><div class="m-note">During campaign</div></div>
+          <div class="metric-box"><div class="m-label">Growth</div><div class="m-value" style="color:#45E85C">21x</div><div class="m-note">15/day to 320/day</div></div>
+          <div class="metric-box"><div class="m-label">Signup Rate</div><div class="m-value">2.5%</div><div class="m-note">12 signups from 472</div></div>
+          <div class="metric-box"><div class="m-label">Unindexed Pages</div><div class="m-value" style="color:#FF5C9E">242</div><div class="m-note">SEO gap</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart7" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#4285F4"></div> Daily Google Search Visitors</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          At $0 cost, this is the closest thing to free growth available. The funnel from search (472 visitors &rarr; 12 signups &rarr; 2 depositors &rarr; 49 trades) shows higher quality than most paid channels. <span class="highlight">2.5% signup rate and 0.4% deposit rate</span> outperform blended campaign averages. With 242 pages unindexed, investment here has asymmetric upside.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Invest $5-10K in SEO: index all 242 pages, create landing pages for "[team name] World Cup odds" and "prediction market [event]" long-tail keywords, add structured data markup. Target: 1,000+ daily organic search visitors by next major event.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 8 -->
+  <div class="rollup" id="insight8">
+    <div class="rollup-header" onclick="toggleRollup('insight8')">
+      <div class="rollup-number">08</div>
+      <div class="rollup-text">
+        <div class="rollup-title">The Signup-to-Deposit Funnel Is the Primary Bottleneck</div>
+        <div class="rollup-desc">Only 13.3% of signups converted to depositors (1,051 / 7,927). This 87% drop-off is the single biggest leak and the highest-leverage improvement opportunity.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Visitors</div><div class="m-value">69K</div><div class="m-note">Total site visitors</div></div>
+          <div class="metric-box"><div class="m-label">Signups</div><div class="m-value">7,927</div><div class="m-note">11.5% of visitors</div></div>
+          <div class="metric-box"><div class="m-label">Depositors</div><div class="m-value" style="color:#F58220">1,051</div><div class="m-note">13.3% of signups</div></div>
+          <div class="metric-box"><div class="m-label">Active Traders</div><div class="m-value" style="color:#3B82F6">~4,800</div><div class="m-note">Daily unique sum</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart8" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#3B82F6"></div> Visitors</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Signups</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#F58220"></div> Depositors</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#6F2EE4"></div> Traders</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          There are four friction points before a single trade: wallet connection, bridging to Hyperliquid, depositing, and market selection. The Genesis Badge proved conversion CAN be driven &mdash; <span class="highlight">744 depositors in 2 days</span> &mdash; but the fiat onramp (Jun 18, 45K views) didn't measurably shift the baseline rate. Every percentage point improvement here is worth more than any channel optimization.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Run a product sprint: (a) one-click deposit for existing Hyperliquid users, (b) prominent "$25 deposit, get $15 bonus" on post-signup screen, (c) guided first-trade experience. Target: 25% signup-to-deposit rate for next campaign (nearly 2x current).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 9 -->
+  <div class="rollup" id="insight9">
+    <div class="rollup-header" onclick="toggleRollup('insight9')">
+      <div class="rollup-number">09</div>
+      <div class="rollup-text">
+        <div class="rollup-title">Event-Driven Volume Is Fragile Without a Retention Strategy</div>
+        <div class="rollup-desc">Volume tracked match significance perfectly &mdash; $9.3M in Week 3, then $40K on Jul 20 (99.6% drop). Without a retention strategy, Outcome resets to near-zero between events.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">W3 Peak Volume</div><div class="m-value" style="color:#45E85C">$9.3M</div><div class="m-note">Group stage deciding matches</div></div>
+          <div class="metric-box"><div class="m-label">Jul 20 Volume</div><div class="m-value" style="color:#FF5C9E">$40K</div><div class="m-note">Day after final</div></div>
+          <div class="metric-box"><div class="m-label">DAU Final Day</div><div class="m-value">6,260</div><div class="m-note">Jul 19</div></div>
+          <div class="metric-box"><div class="m-label">Jul 20 Traders</div><div class="m-value" style="color:#FF5C9E">64</div><div class="m-note">98% drop from peak</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart9" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Daily Volume</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(111,46,228,0.3)"></div> Group Stage</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(59,130,246,0.3)"></div> Knockouts</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(255,92,158,0.3)"></div> Final</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          The early organic cohort (Jun 7) retained at <span class="highlight">30.2% at Week 5</span>, proving some users DO stick. The badge cohort (Jul 5) at <span class="warn">15.9% at Week 1</span> proves most incentivized users don't. The hard question: <strong>until there's a non-zero baseline without events, this is a promotion &mdash; not a protocol.</strong>
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Launch non-event market categories (politics, crypto prices, entertainment) in the 30 days post-campaign. Run a "most interesting market of the week" editorial feature. Set KPI: 100+ DAU and $50K+/week during non-event periods. If this baseline can't be established, the board needs to evaluate whether Outcome is a business or a promotional campaign.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHT 10 -->
+  <div class="rollup" id="insight10">
+    <div class="rollup-header" onclick="toggleRollup('insight10')">
+      <div class="rollup-number">10</div>
+      <div class="rollup-text">
+        <div class="rollup-title">The Optimal Channel Mix for Next Campaign</div>
+        <div class="rollup-desc">The data supports a $150K reallocation across 9 budget lines &mdash; led by $20K for attribution infrastructure, the highest-ROI investment available. Two channels produced strong measurable results; 17 did not.</div>
+      </div>
+      <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="rollup-body">
+      <div class="rollup-body-inner">
+        <div class="metric-row">
+          <div class="metric-box"><div class="m-label">Proposed Budget</div><div class="m-value">$150K</div><div class="m-note">Next campaign</div></div>
+          <div class="metric-box"><div class="m-label">Attribution Infra</div><div class="m-value" style="color:#45E85C">$20K</div><div class="m-note">Highest ROI &middot; one-time</div></div>
+          <div class="metric-box"><div class="m-label">Proven Channels</div><div class="m-value">2</div><div class="m-note">TG Sponsor + CoConnect</div></div>
+          <div class="metric-box"><div class="m-label">Testing Budget</div><div class="m-value">$5K</div><div class="m-note">Dark periods, A/B tests</div></div>
+        </div>
+
+        <div class="chart-area">
+          <canvas id="chart10" height="220"></canvas>
+          <div class="chart-label-row">
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:#45E85C"></div> Recommended Allocation</div>
+            <div class="chart-label-item"><div class="chart-label-sq" style="background:rgba(255,255,255,0.15)"></div> Actual Campaign Spend</div>
+          </div>
+        </div>
+
+        <div class="analysis-text">
+          <strong>Proposed $150K allocation:</strong> Attribution infrastructure $20K, CoConnect $20K (proven depositor channel), TG Sponsor $25K (test ceiling at 2.5x), Rewards $40K (restructured for trading), UGC $10K (2 proven creators), SEO $10K (242 unindexed pages), Deposit-conversion sprint $15K, Controlled testing $5K, Reserve $5K.
+        </div>
+
+        <div class="rec-box">
+          <div class="rec-label">Recommendation</div>
+          <div class="rec-text">Shift from "spray $143K across 19 channels" to "concentrate $150K on 9 budget lines with measurement." The first $20K on attribution infrastructure will pay for itself by making the remaining $130K measurably efficient. Weight depositor-conversion (not signup cost) as the primary efficiency metric.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== LOAD-BEARING ASSUMPTIONS ========== -->
+  <div class="assumptions-card">
+    <div class="assumptions-title">The Three Things That Must Be True</div>
+
+    <div class="assumption-item">
+      <span class="assumption-num">1</span>
+      <span class="assumption-headline">Outcome can measure what it markets.</span>
+      <div class="assumption-body">The attribution gap must be closed. Without it, every dollar allocation is a guess. This is the load-bearing wall &mdash; if it doesn't hold, nothing else in this plan works.</div>
+    </div>
+
+    <div class="assumption-item">
+      <span class="assumption-num">2</span>
+      <span class="assumption-headline">The product retains users beyond the incentive.</span>
+      <div class="assumption-body">The Jun 7 cohort's 30.2% Week 5 retention proves it's possible. The Jul 5 cohort's 15.9% Week 1 proves incentive design can destroy it. The next campaign's incentive structure must select for traders, not depositors.</div>
+    </div>
+
+    <div class="assumption-item">
+      <span class="assumption-num">3</span>
+      <span class="assumption-headline">Outcome can generate volume without a World Cup.</span>
+      <div class="assumption-body">$29.4M during the biggest sporting event in the world is impressive. $40K/day the moment it ends is sobering. If Outcome can establish a $50K+/day non-event floor, this is a protocol. If it can't, this is a promotional business that activates every 4 years.</div>
+    </div>
+  </div>
+
+  <div class="breakdown-footer">SOURCE &middot; OUTCOME WORLD CUP CAMPAIGN POST-MORTEM &middot; MULTI-ANGLE STRATEGIC ANALYSIS &middot; JUL 23, 2026</div>
+
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+// Accordion toggle
+function toggleRollup(id) {
+  var el = document.getElementById(id);
+  var body = el.querySelector('.rollup-body');
+  if (el.classList.contains('open')) {
+    body.style.maxHeight = '0';
+    el.classList.remove('open');
+  } else {
+    el.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// Recalculate max-height on resize for open rollups
+window.addEventListener('resize', function() {
+  document.querySelectorAll('.rollup.open .rollup-body').forEach(function(b) {
+    b.style.maxHeight = b.scrollHeight + 'px';
+  });
+});
+
+// Close week selector on outside click
+document.addEventListener('click', function(e) {
+  var ws = document.getElementById('weekSelector');
+  if (ws && !ws.contains(e.target)) ws.classList.remove('open');
+});
+
+// ========== CANVAS CHART HELPERS ==========
+function getCtx(id) {
+  var c = document.getElementById(id);
+  if (!c) return null;
+  c.width = c.parentElement.clientWidth - 40;
+  c.height = 220;
+  return c.getContext('2d');
+}
+
+function drawBarChart(ctx, data, options) {
+  var w = ctx.canvas.width, h = ctx.canvas.height;
+  var pad = { top: 30, bottom: 40, left: 60, right: 20 };
+  var chartW = w - pad.left - pad.right;
+  var chartH = h - pad.top - pad.bottom;
+  var max = options.max || Math.max.apply(null, data.map(function(d) { return d.value; }));
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var gy = pad.top + (chartH / 4) * g;
+    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(w - pad.right, gy); ctx.stroke();
+    var gv = max - (max / 4) * g;
+    ctx.fillText(options.formatY ? options.formatY(gv) : Math.round(gv).toLocaleString(), pad.left - 8, gy + 4);
+  }
+
+  // Bars
+  var groupW = chartW / data.length;
+  var barW = Math.min(groupW * 0.6, options.barWidth || 50);
+  data.forEach(function(d, i) {
+    var barH = max > 0 ? (d.value / max) * chartH : 0;
+    var x = pad.left + i * groupW + (groupW - barW) / 2;
+    var y = pad.top + chartH - barH;
+    ctx.fillStyle = d.color || options.color || '#45E85C';
+    ctx.beginPath();
+    // Rounded top
+    var r = Math.min(4, barW / 2);
+    ctx.moveTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.arcTo(x + barW, y, x + barW, y + r, r);
+    ctx.lineTo(x + barW, pad.top + chartH);
+    ctx.lineTo(x, pad.top + chartH);
+    ctx.closePath();
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(d.label, pad.left + i * groupW + groupW / 2, h - 10);
+
+    // Value on top
+    if (options.showValues !== false) {
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.fillText(options.formatVal ? options.formatVal(d.value) : d.value.toLocaleString(), pad.left + i * groupW + groupW / 2, y - 6);
+    }
+  });
+}
+
+function drawStackedBars(ctx, data, options) {
+  var w = ctx.canvas.width, h = ctx.canvas.height;
+  var pad = { top: 30, bottom: 40, left: 60, right: 20 };
+  var chartW = w - pad.left - pad.right;
+  var chartH = h - pad.top - pad.bottom;
+  var maxTotal = Math.max.apply(null, data.map(function(d) { return d.values.reduce(function(a,b){return a+b},0); }));
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var gy = pad.top + (chartH / 4) * g;
+    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(w - pad.right, gy); ctx.stroke();
+    var gv = maxTotal - (maxTotal / 4) * g;
+    ctx.fillText(options.formatY ? options.formatY(gv) : Math.round(gv).toLocaleString(), pad.left - 8, gy + 4);
+  }
+
+  var groupW = chartW / data.length;
+  var barW = Math.min(groupW * 0.6, 50);
+  data.forEach(function(d, i) {
+    var x = pad.left + i * groupW + (groupW - barW) / 2;
+    var cumH = 0;
+    d.values.forEach(function(v, vi) {
+      var segH = maxTotal > 0 ? (v / maxTotal) * chartH : 0;
+      var y = pad.top + chartH - cumH - segH;
+      ctx.fillStyle = options.colors[vi];
+      ctx.fillRect(x, y, barW, segH);
+      cumH += segH;
+    });
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(d.label, pad.left + i * groupW + groupW / 2, h - 10);
+  });
+}
+
+function drawLineChart(ctx, data, options) {
+  var w = ctx.canvas.width, h = ctx.canvas.height;
+  var pad = { top: 30, bottom: 40, left: 60, right: 20 };
+  var chartW = w - pad.left - pad.right;
+  var chartH = h - pad.top - pad.bottom;
+  var max = options.max || Math.max.apply(null, data.map(function(d) { return d.value; }));
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var gy = pad.top + (chartH / 4) * g;
+    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(w - pad.right, gy); ctx.stroke();
+    var gv = max - (max / 4) * g;
+    ctx.fillText(options.formatY ? options.formatY(gv) : Math.round(gv).toLocaleString(), pad.left - 8, gy + 4);
+  }
+
+  // Area fill
+  if (options.fill) {
+    ctx.beginPath();
+    data.forEach(function(d, i) {
+      var x = pad.left + (i / (data.length - 1)) * chartW;
+      var y = pad.top + chartH - (d.value / max) * chartH;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.lineTo(pad.left + chartW, pad.top + chartH);
+    ctx.lineTo(pad.left, pad.top + chartH);
+    ctx.closePath();
+    ctx.fillStyle = options.fillColor || 'rgba(69,232,92,0.1)';
+    ctx.fill();
+  }
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = options.color || '#45E85C';
+  ctx.lineWidth = 2;
+  data.forEach(function(d, i) {
+    var x = pad.left + (i / (data.length - 1)) * chartW;
+    var y = pad.top + chartH - (d.value / max) * chartH;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Dots
+  data.forEach(function(d, i) {
+    var x = pad.left + (i / (data.length - 1)) * chartW;
+    var y = pad.top + chartH - (d.value / max) * chartH;
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = options.color || '#45E85C';
+    ctx.fill();
+  });
+
+  // X labels
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  var step = Math.max(1, Math.floor(data.length / 8));
+  data.forEach(function(d, i) {
+    if (i % step === 0 || i === data.length - 1) {
+      var x = pad.left + (i / (data.length - 1)) * chartW;
+      ctx.fillText(d.label || '', x, h - 10);
+    }
+  });
+}
+
+function drawFunnelChart(ctx, stages, options) {
+  var w = ctx.canvas.width, h = ctx.canvas.height;
+  var pad = { top: 20, bottom: 30, left: 20, right: 20 };
+  var chartW = w - pad.left - pad.right;
+  var chartH = h - pad.top - pad.bottom;
+  var maxVal = stages[0].value;
+  var stageW = chartW / stages.length;
+
+  stages.forEach(function(s, i) {
+    var barW = Math.max(30, (s.value / maxVal) * (stageW * 0.7));
+    var barH = chartH * 0.5;
+    var x = pad.left + i * stageW + (stageW - barW) / 2;
+    var y = pad.top + (chartH - barH) / 2;
+
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    var r = Math.min(6, barW / 2);
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + barW, y, x + barW, y + barH, r);
+    ctx.arcTo(x + barW, y + barH, x, y + barH, r);
+    ctx.arcTo(x, y + barH, x, y, r);
+    ctx.arcTo(x, y, x + barW, y, r);
+    ctx.closePath();
+    ctx.fill();
+
+    // Value
+    ctx.fillStyle = '#F5F8FF';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.valueLabel || s.value.toLocaleString(), pad.left + i * stageW + stageW / 2, y + barH / 2 + 5);
+
+    // Label
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText(s.label, pad.left + i * stageW + stageW / 2, y + barH + 20);
+
+    // Conversion rate arrow
+    if (i > 0) {
+      var arrowX = pad.left + i * stageW;
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.font = '9px Inter, sans-serif';
+      ctx.fillText(s.rate || '', arrowX, y - 6);
+    }
+  });
+}
+
+// ========== RENDER ALL CHARTS ==========
+// Use IntersectionObserver to render charts only when visible (after accordion opens)
+var chartRendered = {};
+var chartRenderers = {
+  chart1: function() {
+    var ctx = getCtx('chart1'); if (!ctx) return;
+    drawStackedBars(ctx, [
+      { label: 'Signups', values: [947, 4589] },
+      { label: 'Depositors', values: [27, 677] },
+      { label: 'Traders', values: [202, 4204] }
+    ], {
+      colors: ['#45E85C', 'rgba(255,92,158,0.6)'],
+      formatY: function(v) { return v >= 1000 ? (v/1000).toFixed(1)+'K' : Math.round(v); }
+    });
+  },
+  chart2: function() {
+    var ctx = getCtx('chart2'); if (!ctx) return;
+    var volData = [
+      {label:'W1',value:1.4},{label:'W2',value:5.3},{label:'W3',value:9.3},
+      {label:'W4',value:4.7},{label:'W5',value:5.5},{label:'W6',value:3.9}
+    ];
+    drawBarChart(ctx, volData, {
+      color: '#45E85C', max: 10,
+      formatY: function(v){return '$'+v.toFixed(0)+'M';},
+      formatVal: function(v){return '$'+v.toFixed(1)+'M';}
+    });
+    // Overlay line for market share
+    var w = ctx.canvas.width, h = ctx.canvas.height;
+    var pad = {top:30,bottom:40,left:60,right:20};
+    var chartW = w-pad.left-pad.right, chartH = h-pad.top-pad.bottom;
+    var shares = [3.5,24.6,20,16,23,22];
+    var maxShare = 50;
+    ctx.beginPath();
+    ctx.strokeStyle = '#6F2EE4';
+    ctx.lineWidth = 2;
+    var groupW = chartW / 6;
+    shares.forEach(function(s,i){
+      var x = pad.left + i*groupW + groupW/2;
+      var y = pad.top + chartH - (s/maxShare)*chartH;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    shares.forEach(function(s,i){
+      var x = pad.left + i*groupW + groupW/2;
+      var y = pad.top + chartH - (s/maxShare)*chartH;
+      ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+      ctx.fillStyle='#6F2EE4'; ctx.fill();
+      ctx.fillStyle='#B794FF'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='center';
+      ctx.fillText(s+'%',x,y-10);
+    });
+  },
+  chart3: function() {
+    var ctx = getCtx('chart3'); if (!ctx) return;
+    var w = ctx.canvas.width, h = ctx.canvas.height;
+    var pad = {top:30,bottom:40,left:60,right:20};
+    var chartW = w-pad.left-pad.right, chartH = h-pad.top-pad.bottom;
+    var weeks = ['W0','W1','W2','W3','W4','W5'];
+    var organic = [100,46.5,44.2,33.7,40.7,30.2];
+    var badge = [100,15.9,7.5,null,null,null];
+    var others = [
+      [100,40.9,30.7,19.3,23.9,5.7],
+      [100,42.9,40.3,28.6,16.9,null],
+      [100,34.4,41.0,13.1,null,null],
+      [100,8.1,null,null,null,null]
+    ];
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='10px Inter,sans-serif'; ctx.textAlign='right';
+    for(var g=0;g<=4;g++){
+      var gy=pad.top+(chartH/4)*g;
+      ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(w-pad.right,gy);ctx.stroke();
+      ctx.fillText(Math.round(100-(100/4)*g)+'%',pad.left-8,gy+4);
+    }
+    // Draw other cohorts (dim)
+    others.forEach(function(coh){
+      ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;
+      coh.forEach(function(v,i){
+        if(v===null) return;
+        var x=pad.left+(i/(weeks.length-1))*chartW;
+        var y=pad.top+chartH-(v/100)*chartH;
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+    });
+    // Badge cohort
+    ctx.beginPath();ctx.strokeStyle='#FF5C9E';ctx.lineWidth=2.5;
+    badge.forEach(function(v,i){
+      if(v===null) return;
+      var x=pad.left+(i/(weeks.length-1))*chartW;
+      var y=pad.top+chartH-(v/100)*chartH;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    badge.forEach(function(v,i){
+      if(v===null) return;
+      var x=pad.left+(i/(weeks.length-1))*chartW;
+      var y=pad.top+chartH-(v/100)*chartH;
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#FF5C9E';ctx.fill();
+      ctx.fillStyle='#FF5C9E';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText(v+'%',x,y-10);
+    });
+    // Organic cohort
+    ctx.beginPath();ctx.strokeStyle='#45E85C';ctx.lineWidth=2.5;
+    organic.forEach(function(v,i){
+      var x=pad.left+(i/(weeks.length-1))*chartW;
+      var y=pad.top+chartH-(v/100)*chartH;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    organic.forEach(function(v,i){
+      var x=pad.left+(i/(weeks.length-1))*chartW;
+      var y=pad.top+chartH-(v/100)*chartH;
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#45E85C';ctx.fill();
+      ctx.fillStyle='#45E85C';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText(v+'%',x,y-10);
+    });
+    // X labels
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='10px Inter,sans-serif';ctx.textAlign='center';
+    weeks.forEach(function(wk,i){
+      ctx.fillText(wk,pad.left+(i/(weeks.length-1))*chartW,h-10);
+    });
+  },
+  chart4: function() {
+    var ctx = getCtx('chart4'); if (!ctx) return;
+    drawBarChart(ctx, [
+      {label:'TG Sponsor',value:16.92,color:'#45E85C'},
+      {label:'CoConnect',value:30.44,color:'#F58220'},
+      {label:'X Organic',value:81.30,color:'#3B82F6'},
+      {label:'TG Ads',value:244.38,color:'#1FCFA0'},
+      {label:'Vision UGC',value:1166.67,color:'#FF5C9E'}
+    ], {
+      formatY: function(v){return '$'+Math.round(v);},
+      formatVal: function(v){return '$'+v.toFixed(0);},
+      barWidth: 60
+    });
+  },
+  chart5: function() {
+    var ctx = getCtx('chart5'); if (!ctx) return;
+    var w = ctx.canvas.width, h = ctx.canvas.height;
+    var pad = {top:30,bottom:50,left:60,right:20};
+    var chartW = w-pad.left-pad.right, chartH = h-pad.top-pad.bottom;
+    // Two grouped bars: UTM vs Wallet for signups and cost/signup
+    var groups = [
+      {label:'Signups', utm: 122, wallet: 657},
+      {label:'Cost/Signup', utm: 163.93, wallet: 30.44}
+    ];
+    var groupW = chartW / 2;
+    var barW = 50;
+    groups.forEach(function(grp, gi) {
+      var cx = pad.left + gi * groupW + groupW / 2;
+      var maxV = Math.max(grp.utm, grp.wallet) * 1.2;
+      // UTM bar
+      var utmH = (grp.utm / maxV) * chartH;
+      ctx.fillStyle = 'rgba(255,92,158,0.6)';
+      ctx.fillRect(cx - barW - 4, pad.top + chartH - utmH, barW, utmH);
+      ctx.fillStyle = '#FF5C9E'; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(gi===0 ? grp.utm.toLocaleString() : '$'+grp.utm.toFixed(0), cx - barW/2 - 4, pad.top + chartH - utmH - 8);
+      // Wallet bar
+      var walH = (grp.wallet / maxV) * chartH;
+      ctx.fillStyle = '#45E85C';
+      ctx.fillRect(cx + 4, pad.top + chartH - walH, barW, walH);
+      ctx.fillStyle = '#45E85C'; ctx.font = 'bold 12px Inter,sans-serif';
+      ctx.fillText(gi===0 ? grp.wallet.toLocaleString() : '$'+grp.wallet.toFixed(0), cx + barW/2 + 4, pad.top + chartH - walH - 8);
+      // Label
+      ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '11px Inter,sans-serif';
+      ctx.fillText(grp.label, cx, h - 10);
+    });
+    // Sub-labels
+    ctx.fillStyle = 'rgba(255,92,158,0.5)'; ctx.font = '9px Inter,sans-serif';
+    ctx.fillText('UTM', pad.left + groupW/2 - barW/2 - 4, h - 24);
+    ctx.fillStyle = 'rgba(69,232,92,0.7)';
+    ctx.fillText('Wallet', pad.left + groupW/2 + barW/2 + 4, h - 24);
+  },
+  chart6: function() {
+    var ctx = getCtx('chart6'); if (!ctx) return;
+    drawBarChart(ctx, [
+      {label:'ceofooty',value:4.7,color:'#3B82F6'},
+      {label:'Letschatball',value:1.5,color:'#3B82F6'},
+      {label:'Dannie',value:0.9,color:'rgba(59,130,246,0.5)'},
+      {label:'1kjahz',value:0.5,color:'rgba(59,130,246,0.5)'},
+      {label:'robshredzz',value:0.4,color:'rgba(59,130,246,0.4)'},
+      {label:'Others (5)',value:1.9,color:'rgba(59,130,246,0.3)'}
+    ], {
+      max: 5.5,
+      formatY: function(v){return v.toFixed(1)+'M';},
+      formatVal: function(v){return v.toFixed(1)+'M';},
+      barWidth: 55
+    });
+  },
+  chart7: function() {
+    var ctx = getCtx('chart7'); if (!ctx) return;
+    // Google search growth line
+    var searchData = [];
+    for (var i = 0; i < 30; i++) {
+      var v = Math.round(15 + (305/30)*i + Math.sin(i*0.5)*20);
+      searchData.push({label: i%5===0 ? 'Day '+(i+1) : '', value: v});
+    }
+    searchData[0].value = 15;
+    searchData[29].value = 320;
+    drawLineChart(ctx, searchData, {
+      color: '#4285F4', fill: true, fillColor: 'rgba(66,133,244,0.1)',
+      formatY: function(v){return Math.round(v)+'/day';}
+    });
+    // Annotation
+    ctx.fillStyle = '#4285F4'; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center';
+    var w = ctx.canvas.width;
+    ctx.fillText('21x Growth', w * 0.7, 24);
+  },
+  chart8: function() {
+    var ctx = getCtx('chart8'); if (!ctx) return;
+    drawFunnelChart(ctx, [
+      {label:'Visitors', value:69000, valueLabel:'69K', color:'#3B82F6'},
+      {label:'Signups', value:7927, valueLabel:'7,927', color:'#45E85C', rate:'11.5%'},
+      {label:'Depositors', value:1051, valueLabel:'1,051', color:'#F58220', rate:'13.3%'},
+      {label:'Traders', value:4800, valueLabel:'~4,800', color:'#6F2EE4', rate:'457%*'}
+    ], {});
+    // Note
+    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='9px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText('*Traders > Depositors because many traders are unattributed',ctx.canvas.width/2,ctx.canvas.height-4);
+  },
+  chart9: function() {
+    var ctx = getCtx('chart9'); if (!ctx) return;
+    var volData = [
+      {label:'W1',value:1.4},{label:'W2',value:5.3},{label:'W3',value:9.3},
+      {label:'W4',value:4.7},{label:'W5',value:5.5},{label:'W6',value:3.9}
+    ];
+    var w = ctx.canvas.width, h = ctx.canvas.height;
+    var pad = {top:30,bottom:40,left:60,right:20};
+    var chartW = w-pad.left-pad.right, chartH = h-pad.top-pad.bottom;
+    var max = 10;
+    // Shaded regions for tournament stages
+    var groupW = chartW / 6;
+    var stages = [
+      {start:0,end:3,color:'rgba(111,46,228,0.08)',label:'Group Stage'},
+      {start:3,end:5,color:'rgba(59,130,246,0.08)',label:'Knockouts'},
+      {start:5,end:6,color:'rgba(255,92,158,0.08)',label:'Final'}
+    ];
+    stages.forEach(function(s){
+      ctx.fillStyle = s.color;
+      ctx.fillRect(pad.left+s.start*groupW, pad.top, (s.end-s.start)*groupW, chartH);
+      ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(s.label, pad.left + (s.start+s.end)/2*groupW, pad.top + 14);
+    });
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px Inter,sans-serif';ctx.textAlign='right';
+    for(var g=0;g<=4;g++){
+      var gy=pad.top+(chartH/4)*g;
+      ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(w-pad.right,gy);ctx.stroke();
+      ctx.fillText('$'+(max-(max/4)*g).toFixed(0)+'M',pad.left-8,gy+4);
+    }
+    // Bars
+    var barW = Math.min(groupW*0.6,50);
+    volData.forEach(function(d,i){
+      var barH = (d.value/max)*chartH;
+      var x = pad.left+i*groupW+(groupW-barW)/2;
+      var y = pad.top+chartH-barH;
+      ctx.fillStyle = '#45E85C';
+      ctx.fillRect(x,y,barW,barH);
+      ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='bold 11px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText('$'+d.value.toFixed(1)+'M',pad.left+i*groupW+groupW/2,y-8);
+      ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='10px Inter,sans-serif';
+      ctx.fillText(d.label,pad.left+i*groupW+groupW/2,h-10);
+    });
+  },
+  chart10: function() {
+    var ctx = getCtx('chart10'); if (!ctx) return;
+    var recommended = [
+      {label:'Attribution',value:20,color:'#45E85C'},
+      {label:'TG Sponsor',value:25,color:'#45E85C'},
+      {label:'CoConnect',value:20,color:'#F58220'},
+      {label:'Rewards',value:40,color:'#6F2EE4'},
+      {label:'Deposit Sprint',value:15,color:'#3B82F6'},
+      {label:'UGC',value:10,color:'#FF5C9E'},
+      {label:'SEO',value:10,color:'#4285F4'},
+      {label:'Testing',value:5,color:'rgba(255,255,255,0.4)'},
+      {label:'Reserve',value:5,color:'rgba(255,255,255,0.2)'}
+    ];
+    drawBarChart(ctx, recommended, {
+      max: 45,
+      formatY: function(v){return '$'+Math.round(v)+'K';},
+      formatVal: function(v){return '$'+v+'K';},
+      barWidth: 40
+    });
+  }
+};
+
+// Render charts when rollup opens
+var origToggle = toggleRollup;
+toggleRollup = function(id) {
+  origToggle(id);
+  var el = document.getElementById(id);
+  if (el.classList.contains('open')) {
+    var canvases = el.querySelectorAll('canvas');
+    canvases.forEach(function(c) {
+      if (!chartRendered[c.id] && chartRenderers[c.id]) {
+        setTimeout(function() {
+          chartRenderers[c.id]();
+          chartRendered[c.id] = true;
+        }, 50);
+      }
+    });
+  }
+};
+
+// Re-render visible charts on resize
+var resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    Object.keys(chartRendered).forEach(function(id) {
+      if (chartRendered[id] && chartRenderers[id]) {
+        chartRenderers[id]();
+      }
+    });
+  }, 200);
+});
+</script>
+
+</body>
+</html>
