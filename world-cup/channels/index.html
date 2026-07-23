@@ -145,7 +145,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
 .day-detail.open { display: block; }
 .dd-title { font-family: 'PP Neue Corp', 'Inter', sans-serif; font-weight: 800; font-stretch: condensed; text-transform: uppercase; font-size: 30px; margin-bottom: 4px; }
 .dd-sub { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 18px; }
-.dd-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 22px; }
+.dd-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 22px; }
 .dd-kpi { padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); }
 .dd-kpi .l { font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
 .dd-kpi .v { font-family: 'PP Neue Corp', 'Inter', sans-serif; font-size: 22px; font-weight: 500; color: #F5F8FF; }
@@ -270,7 +270,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
       </thead>
       <tbody>
         <tr><td><span class="breakdown-date-main">Telegram WC Sponsor</span></td><td>$10,000</td><td>718</td><td>13.9M</td><td>30,115</td><td class="green">612</td><td>$16.34</td><td>0</td><td>2</td></tr>
-        <tr><td><span class="breakdown-date-main">CoConnect (Alphabot)</span> <span style="font-size:9px;font-weight:500;letter-spacing:0.06em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-left:4px">r=0.07</span></td><td>$20,000</td><td>265 collabs</td><td>1.06M</td><td>737</td><td class="green">113</td><td>$176.99</td><td>0</td><td>10</td></tr>
+        <tr><td><span class="breakdown-date-main">CoConnect (Alphabot)</span> <span style="font-size:9px;font-weight:500;letter-spacing:0.06em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-left:4px">r=0.07</span></td><td>$20,000</td><td>265 collabs</td><td>1.06M</td><td>737</td><td class="green">113</td><td>$176.99</td><td class="green">667</td><td>10</td></tr>
         <tr><td><span class="breakdown-date-main">Telegram Ads</span></td><td class="pink">$5,865</td><td>113</td><td>597K</td><td>189</td><td class="green">25</td><td>$234.60</td><td>0</td><td>0</td></tr>
         <tr><td><span class="breakdown-date-main">X Organic</span></td><td>$10,000</td><td>112</td><td>1.07M</td><td>1,616</td><td class="green">123</td><td>$81.30</td><td>20</td><td>93</td></tr>
         <tr><td><span class="breakdown-date-main">Vision UGC</span></td><td>$17,500</td><td>371</td><td>9.9M</td><td>498</td><td class="green">15</td><td>$1,166.67</td><td>0</td><td>0</td></tr>
@@ -283,7 +283,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         <tr class="summary-row"><td>TOTAL</td><td class="pink">$143,359</td><td>1,586</td><td>25.8M</td><td>69,210</td><td>5,530*</td><td>$25.92*</td><td>704</td><td>4,403</td></tr>
       </tbody>
     </table>
-    <div class="conv-footnote">*Total signups incl. 4,601 unattributed (post-sign-in events lose tracking params). Blended cost/signup uses all 5,530 signups. Cost/signup per channel uses attributed signups only &mdash; treat as upper bound. Over-budget items in pink. Google Search is organic/earned (no spend) &mdash; visitors tripled WoW (79&rarr;308/day), correlate with UGC views at r=0.55 with 2-day lag. CoConnect impressions updated to ~1.06M (265 communities &times; ~4K avg reach); 2,464 clicks tracked via Dub. CoConnect showed no meaningful correlation with site traffic (r&nbsp;=&nbsp;0.07).</div>
+    <div class="conv-footnote">*Total signups incl. 4,601 unattributed (post-sign-in events lose tracking params). Blended cost/signup uses all 5,530 signups. Cost/signup per channel uses attributed signups only &mdash; treat as upper bound. Over-budget items in pink. Google Search is organic/earned (no spend) &mdash; visitors tripled WoW (79&rarr;308/day), correlate with UGC views at r=0.55 with 2-day lag. CoConnect: ~1.06M est. impressions (265 &times; ~4K avg), 2,464 clicks (Dub), 667 depositors (tracked separately outside UTMs). No meaningful traffic correlation (r&nbsp;=&nbsp;0.07).</div>
   </div>
 
   <!-- DAILY EXPLORER -->
@@ -943,9 +943,18 @@ function selectDay(i){
   const dt = new Date(date+'T12:00:00Z');
   const nice = dt.toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
 
+  const xp = XPOSTS[date] || [];
+  const tg = TGPOSTS[date] || [];
+  const ads = TGADS[date];
+  const sponsor = sponsorFor(date);
+  const cc = CC[date] || [];
+  const ugc = UGC_DAILY[date] || [];
+  const postCount = xp.length + tg.length + (ads ? ads[0] : 0) + cc.length + ugc.length;
+
   document.getElementById('ddTitle').innerHTML = nice + (d[7]?`<span class="spike-badge">${d[7]}</span>`:'');
   document.getElementById('ddSub').textContent = 'EVERYTHING POSTED + PERFORMANCE FOR THIS DAY';
   document.getElementById('ddKpis').innerHTML = `
+    <div class="dd-kpi"><div class="l" style="color:#9B7CFF">Posts</div><div class="v">${postCount > 0 ? fmt(postCount) : '—'}</div></div>
     <div class="dd-kpi"><div class="l" style="color:#1FCFA0">Visitors</div><div class="v">${fmt(d[1])}</div></div>
     <div class="dd-kpi"><div class="l" style="color:#45E85C">Signups</div><div class="v">${fmt(d[2])}</div></div>
     <div class="dd-kpi"><div class="l" style="color:#F58220">Depositors</div><div class="v">${fmt(d[3])}</div></div>
@@ -954,11 +963,6 @@ function selectDay(i){
     <div class="dd-kpi"><div class="l" style="color:#FF5C9E">WC Share</div><div class="v">${d[6]}</div></div>`;
 
   let html = '';
-  const xp = XPOSTS[date] || [];
-  const tg = TGPOSTS[date] || [];
-  const ads = TGADS[date];
-  const sponsor = sponsorFor(date);
-  const cc = CC[date] || [];
 
   if(xp.length){
     html += `<div class="dd-section-title"><div class="dot" style="background:#3B82F6"></div> X ORGANIC — ${xp.length} POST${xp.length>1?'S':''}</div>`;
@@ -982,7 +986,6 @@ function selectDay(i){
     html += `<div class="dd-section-title"><div class="dot" style="background:#9B7CFF"></div> COCONNECT COLLABS — ${cc.length} COMMUNIT${cc.length>1?'IES':'Y'}</div>`;
     html += `<div>` + cc.map(n=>`<span class="post-chip">${n}</span>`).join('') + `</div>`;
   }
-  const ugc = UGC_DAILY[date] || [];
   if(ugc.length){
     const totalUgcViews = ugc.reduce((s,p) => s+p.views, 0);
     html += `<div class="dd-section-title"><div class="dot" style="background:#E1306C"></div> UGC CREATOR CONTENT — ${ugc.length} POST${ugc.length>1?'S':''} <span style="font-weight:400;color:rgba(255,255,255,0.4);margin-left:8px;">${fmt(totalUgcViews)} total views</span></div>`;

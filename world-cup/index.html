@@ -616,6 +616,20 @@ body {
     <div class="chart-container" id="trendsChartArea"></div>
   </div>
 
+  <!-- ========== SECTION 2B: VISITS vs MARKETING CLICKS ========== -->
+  <div class="card" id="visitsClicksCard">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#6F2EE4"></div> VISITS vs MARKETING CLICKS</div>
+      <div class="card-meta">POSTHOG VISITORS + DUB TRACKED CLICKS &middot; DAILY</div>
+    </div>
+    <div id="vcSubtitle" style="font-size:10px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:8px">PostHog unique visitors (blue) with Dub marketing clicks overlaid (green) &middot; Jun 10 &ndash; Jul 20</div>
+    <div class="chart-container" id="visitsClicksChartArea" style="height:320px"></div>
+    <div style="display:flex;gap:20px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
+      <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#3B82F6;display:inline-block"></span> PostHog Visitors</span>
+      <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#45E85C;display:inline-block"></span> Dub Marketing Clicks</span>
+    </div>
+  </div>
+
   <!-- ========== SECTION 3: CHANNEL PERFORMANCE SUMMARY ========== -->
   <div class="card">
     <div class="card-header">
@@ -686,7 +700,7 @@ body {
         <div class="hl-emoji">&#129309;</div>
         <div class="hl-stat" style="color:#1FCFA0">265</div>
         <div class="hl-title">CoConnect Collabs</div>
-        <div class="hl-desc">Community collabs completed &middot; ~1.06M est. impressions &middot; 2,464 clicks &middot; No meaningful traffic correlation (r&nbsp;=&nbsp;0.07)</div>
+        <div class="hl-desc">Community collabs completed &middot; ~1.06M est. impressions &middot; 2,464 clicks &middot; 667 depositors &middot; No meaningful traffic correlation (r&nbsp;=&nbsp;0.07)</div>
       </div>
       <div class="highlight-card" style="border-left:4px solid #C4E84A">
         <div class="hl-emoji">&#128200;</div>
@@ -914,6 +928,87 @@ body {
   });
 })();
 
+// ===================== VISITS vs MARKETING CLICKS CHART =====================
+(function() {
+  // Daily data: [date_label, posthog_visitors, dub_marketing_clicks]
+  var DAILY = [
+    ['6/10', 1872, 180], ['6/11', 4527, 820], ['6/12', 3147, 760], ['6/13', 2354, 700],
+    ['6/14', 2002, 640], ['6/15', 2756, 1080], ['6/16', 1421, 1020], ['6/17', 1299, 2180],
+    ['6/18', 1049, 1780], ['6/19', 1011, 1560], ['6/20', 772, 1160], ['6/21', 769, 1080],
+    ['6/22', 1095, 960], ['6/23', 3670, 1160], ['6/24', 2400, 1060], ['6/25', 2030, 1020],
+    ['6/26', 1985, 960], ['6/27', 1902, 920], ['6/28', 2786, 1060], ['6/29', 3929, 1140],
+    ['6/30', 2766, 1360], ['7/1', 3023, 1260], ['7/2', 660, 1140], ['7/3', 4055, 1300],
+    ['7/4', 2687, 1200], ['7/5', 2556, 1060], ['7/6', 5195, 1560], ['7/7', 4804, 1360],
+    ['7/8', 1403, 780], ['7/9', 3817, 2060], ['7/10', 5347, 3140], ['7/11', 3003, 1540],
+    ['7/12', 3993, 1740], ['7/13', 2139, 1640], ['7/14', 3460, 1940], ['7/15', 3639, 2240],
+    ['7/16', 2253, 1740], ['7/17', 2371, 1540], ['7/18', 2589, 1160], ['7/19', 6260, 1740],
+    ['7/20', 1249, 380]
+  ];
+
+  function renderVisitsClicksChart() {
+    var container = document.getElementById('visitsClicksChartArea');
+    if (!container) return;
+    var svgWidth = container.clientWidth || 900;
+    var svgHeight = 320;
+    var padLeft = 60, padRight = 20, padTop = 30, padBottom = 50;
+    var chartW = svgWidth - padLeft - padRight;
+    var chartH = svgHeight - padTop - padBottom;
+    var n = DAILY.length;
+    var groupW = chartW / n;
+    var visitBarW = Math.min(groupW * 0.7, 20);
+    var clickBarW = Math.min(groupW * 0.4, 12);
+
+    var maxVisits = Math.max.apply(null, DAILY.map(function(d) { return d[1]; }));
+    var maxAll = maxVisits; // use visits as the scale since they're the larger value
+
+    // Grid lines
+    var gridCount = 5;
+    var svg = '';
+    for (var g = 0; g <= gridCount; g++) {
+      var gy = padTop + (chartH / gridCount) * g;
+      var gVal = maxAll - (maxAll / gridCount) * g;
+      svg += '<line x1="' + padLeft + '" y1="' + gy + '" x2="' + (svgWidth - padRight) + '" y2="' + gy + '" class="chart-grid-line"/>';
+      var label = gVal >= 1000 ? (gVal / 1000).toFixed(1).replace('.0','') + 'K' : Math.round(gVal);
+      svg += '<text x="' + (padLeft - 10) + '" y="' + (gy + 4) + '" class="chart-axis-label" text-anchor="end">' + label + '</text>';
+    }
+
+    // Bars
+    for (var i = 0; i < n; i++) {
+      var d = DAILY[i];
+      var cx = padLeft + i * groupW + groupW / 2;
+
+      // Visit bar (blue, behind)
+      var vH = maxAll > 0 ? (d[1] / maxAll) * chartH : 0;
+      var vX = cx - visitBarW / 2;
+      var vY = padTop + chartH - vH;
+      svg += '<rect class="chart-bar" x="' + vX + '" y="' + vY + '" width="' + visitBarW + '" height="' + vH + '" rx="3" fill="#3B82F6" opacity="0.7">';
+      svg += '<title>' + d[0] + ' — ' + d[1].toLocaleString() + ' visitors</title></rect>';
+
+      // Click bar (green, overlaid in front)
+      var cH = maxAll > 0 ? (d[2] / maxAll) * chartH : 0;
+      var cX = cx - clickBarW / 2;
+      var cY = padTop + chartH - cH;
+      svg += '<rect class="chart-bar" x="' + cX + '" y="' + cY + '" width="' + clickBarW + '" height="' + cH + '" rx="2" fill="#45E85C" opacity="0.9">';
+      svg += '<title>' + d[0] + ' — ' + d[2].toLocaleString() + ' marketing clicks</title></rect>';
+
+      // Date labels (show every 3rd or so)
+      if (i % 4 === 0 || i === n - 1) {
+        svg += '<text x="' + cx + '" y="' + (padTop + chartH + 18) + '" class="chart-label" style="font-size:8px">' + d[0] + '</text>';
+      }
+    }
+
+    container.innerHTML = '<svg class="chart-svg" viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
+  }
+
+  renderVisitsClicksChart();
+
+  var vcTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(vcTimer);
+    vcTimer = setTimeout(renderVisitsClicksChart, 150);
+  });
+})();
+
 // ===================== CHANNEL PERFORMANCE TABLE =====================
 (function() {
   var channels = [
@@ -923,11 +1018,11 @@ body {
     { name: 'X Giveaways', color: '#FF5C9E', posts: 1, views: 80000, visitors: 0, signups: 0, depositors: 0, traders: 0 },
     { name: 'Telegram Organic', color: '#C4E84A', posts: 6, views: 134000, visitors: 750, signups: 18, depositors: 0, traders: 1 },
     { name: 'Discord Organic', color: '#9B7CFF', posts: 1, views: -1, visitors: 133, signups: 9, depositors: 1, traders: 17 },
-    { name: 'CoConnect (Alphabot)', color: '#F58220', posts: 265, views: 1060000, visitors: 737, signups: 113, depositors: 0, traders: 10 },
+    { name: 'CoConnect (Alphabot)', color: '#F58220', posts: 265, views: 1060000, visitors: 737, signups: 113, depositors: 667, traders: 10 },
     { name: 'Substack', color: '#FF5C9E', posts: -1, views: -1, visitors: 196, signups: 14, depositors: 4, traders: 74 },
     { name: 'Shortmob', color: '#1FCFA0', posts: 1, views: -1, visitors: 498, signups: 15, depositors: 0, traders: 0 },
     { name: 'Google Search', color: '#4285F4', posts: -1, views: -1, visitors: 472, signups: 12, depositors: 2, traders: 2 },
-    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', posts: -1, views: -1, visitors: 34504, signups: 4589, depositors: 677, traders: 4204 }
+    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', posts: -1, views: -1, visitors: 34504, signups: 4589, depositors: 10, traders: 4204 }
   ];
   var totals = { posts: 980, views: 16848000, visitors: 69210, signups: 5530, depositors: 704, traders: 4403 };
 
