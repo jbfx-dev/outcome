@@ -172,6 +172,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <a href="/world-cup/3">Week 3</a>
     <a href="/world-cup/4">Week 4</a>
     <a href="/world-cup/5">Week 5</a>
+    <a href="/world-cup/6">Week 6</a>
     <a href="/world-cup/channels" class="active">Channels</a>
     <a href="/clicks-explorer/">Clicks</a>
     <a href="/ugc-explorer/">UGC</a>
@@ -205,16 +206,28 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         <tr><td><span class="breakdown-date-main">CoConnect (Alphabot)</span></td><td>$20,000</td><td>265 collabs</td><td>12K</td><td>737</td><td class="green">113</td><td>$176.99</td><td>0</td><td>10</td></tr>
         <tr><td><span class="breakdown-date-main">Telegram Ads</span></td><td class="pink">$5,865</td><td>113</td><td>597K</td><td>189</td><td class="green">25</td><td>$234.60</td><td>0</td><td>0</td></tr>
         <tr><td><span class="breakdown-date-main">X Organic</span></td><td>$10,000</td><td>112</td><td>1.07M</td><td>1,616</td><td class="green">123</td><td>$81.30</td><td>20</td><td>93</td></tr>
-        <tr><td><span class="breakdown-date-main">Vision UGC / Shortmob</span></td><td>$17,500</td><td>1</td><td>&mdash;</td><td>498</td><td class="green">15</td><td>$1,166.67</td><td>0</td><td>0</td></tr>
+        <tr><td><span class="breakdown-date-main">Vision UGC</span></td><td>$17,500</td><td>371</td><td>9.9M</td><td>498</td><td class="green">15</td><td>$1,166.67</td><td>0</td><td>0</td></tr>
         <tr><td><span class="breakdown-date-main">Telegram Organic</span></td><td>$0</td><td>6</td><td>134K</td><td>750</td><td class="green">18</td><td>&mdash;</td><td>0</td><td>1</td></tr>
         <tr><td><span class="breakdown-date-main">Discord Organic</span></td><td>$0</td><td>1</td><td>&mdash;</td><td>133</td><td class="green">9</td><td>&mdash;</td><td>1</td><td>17</td></tr>
         <tr><td><span class="breakdown-date-main">Substack</span></td><td>$0</td><td>&mdash;</td><td>&mdash;</td><td>196</td><td class="green">14</td><td>&mdash;</td><td>4</td><td>74</td></tr>
         <tr><td><span class="breakdown-date-main">Deposit Bonuses</span></td><td>$10,000</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
         <tr><td><span class="breakdown-date-main">Rewards + GTA Video</span></td><td class="pink">$69,994</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
-        <tr class="summary-row"><td>TOTAL</td><td class="pink">$143,359</td><td>1,216</td><td>15.8M</td><td>69,210</td><td>5,530*</td><td>$25.92*</td><td>704</td><td>4,403</td></tr>
+        <tr class="summary-row"><td>TOTAL</td><td class="pink">$143,359</td><td>1,586</td><td>25.8M</td><td>69,210</td><td>5,530*</td><td>$25.92*</td><td>704</td><td>4,403</td></tr>
       </tbody>
     </table>
     <div class="conv-footnote">*Total signups incl. 4,601 unattributed (post-sign-in events lose tracking params). Blended cost/signup uses all 5,530 signups. Cost/signup per channel uses attributed signups only &mdash; treat as upper bound. Over-budget items in pink.</div>
+  </div>
+
+  <!-- TOP UGC CONTENT -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#E1306C"></div> TOP UGC CONTENT</div>
+      <div class="card-meta">VISION UGC &middot; 371 POSTS &middot; 9.9M VIEWS &middot; 524K ENGAGEMENT</div>
+    </div>
+    <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:20px; line-height:1.6;">
+      Creator-generated content across Instagram, TikTok, Facebook, and YouTube. 10 creators produced 371 posts with 9.9M total views. Top 3 creators (ceofooty, Letschatball, Bennyballss) drove 93% of all views.
+    </div>
+    <div class="embed-grid" id="ugcEmbeds"></div>
   </div>
 
   <!-- DAILY EXPLORER -->
@@ -475,6 +488,63 @@ function selectDay(i){
 
 // default: open the WC Final day
 selectDay(39);
+
+// ---------- UGC VIDEO EMBEDS ----------
+const UGC_POSTS = [
+  { platform: 'instagram', url: 'https://www.instagram.com/reel/DaqC2dWiEn2/', creator: 'letschatball1', views: 943553, caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+  { platform: 'tiktok', url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', creator: 'ceofooty_', views: 471500, caption: 'Im done #argentina #messi #worldcup' },
+  { platform: 'tiktok', url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', creator: 'ceofooty_', views: 312400, caption: 'Call it off now #brazil #japan #worldcup' },
+  { platform: 'instagram', url: 'https://www.instagram.com/reel/DaWCC6rTts8/', creator: 'ceofooty', views: 299722, caption: 'Make it make sense #portugal #croatia #worldcup' },
+  { platform: 'facebook', url: 'https://www.facebook.com/reel/27311240818504787/', creator: 'Letschatball', views: 215000, caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+  { platform: 'tiktok', url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', creator: 'bennyclasher', views: 131600, caption: 'Will England finally make Argentina pay? #worldcup' }
+];
+
+function renderUGCEmbeds() {
+  const container = document.getElementById('ugcEmbeds');
+  if (!container) return;
+
+  container.innerHTML = UGC_POSTS.map(p => {
+    let embedHtml = '';
+    if (p.platform === 'tiktok') {
+      const videoId = p.url.match(/video\/(\d+)/)?.[1] || '';
+      const username = p.url.match(/@([^/]+)/)?.[1] || '';
+      embedHtml = `<blockquote class="tiktok-embed" cite="${p.url}" data-video-id="${videoId}" style="max-width:100%;min-width:280px;">
+        <section><a target="_blank" href="${p.url}">@${username}</a></section>
+      </blockquote>`;
+    } else if (p.platform === 'instagram') {
+      embedHtml = `<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${p.url}" data-instgrm-version="14" style="background:#0A0A0B; border:0; border-radius:12px; max-width:100%; min-width:280px; padding:0; width:100%;">
+        <a href="${p.url}" target="_blank">View on Instagram</a>
+      </blockquote>`;
+    } else if (p.platform === 'facebook') {
+      const encodedUrl = encodeURIComponent(p.url);
+      embedHtml = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&t=0" width="100%" height="400" style="border:none;overflow:hidden;border-radius:12px;background:#000;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>`;
+    }
+
+    return `<div class="embed-cell" style="position:relative;">
+      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+        <span>@${p.creator}</span>
+        <span style="color:#45E85C;font-family:'PP Neue Corp',sans-serif;font-size:14px;">${fmt(p.views)} views</span>
+      </div>
+      ${embedHtml}
+    </div>`;
+  }).join('');
+
+  // Load embed scripts
+  if (!document.querySelector('script[src*="tiktok.com/embed"]')) {
+    const tts = document.createElement('script');
+    tts.src = 'https://www.tiktok.com/embed.js';
+    tts.async = true;
+    document.body.appendChild(tts);
+  }
+  if (!document.querySelector('script[src*="instagram.com/embed"]')) {
+    const igs = document.createElement('script');
+    igs.src = '//www.instagram.com/embed.js';
+    igs.async = true;
+    document.body.appendChild(igs);
+  }
+}
+
+renderUGCEmbeds();
 </script>
 
 </body>
