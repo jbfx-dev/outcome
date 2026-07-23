@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcome.xyz - UGC Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: condensed;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  background: #0A0A0B;
+  color: #F5F8FF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,11,0.74);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.complete-badge {
+  height: 30px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid rgba(69,232,92,0.4);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  color: #45E85C; text-transform: uppercase;
+}
+.complete-dot { width: 8px; height: 8px; border-radius: 50%; background: #45E85C; }
+.date-badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- CONTENT ---------- */
+.content { max-width: 1480px; margin: 0 auto; padding: 44px 40px 64px; }
+
+/* ---------- WEEK NAV ---------- */
+.week-nav { display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px; flex-wrap: wrap; }
+.week-nav a {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 8px 16px; border-radius: 8px;
+  cursor: pointer; text-decoration: none;
+  color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.15s ease;
+}
+.week-nav a:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.12); }
+.week-nav a.active {
+  color: #F5F8FF; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ---------- TITLE ---------- */
+.title-area {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 32px; flex-wrap: wrap; margin-bottom: 34px;
+}
+.title-sub {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.16em;
+  color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
+}
+.title-h1 {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
+  font-stretch: condensed; text-transform: uppercase;
+  letter-spacing: -0.01em; font-size: 64px; line-height: 0.88;
+  color: #F5F8FF;
+}
+.title-h1 .green { color: #45E85C; }
+.title-h1 .purple { color: #6F2EE4; }
+.title-badges { display: flex; gap: 10px; align-items: center; }
+.badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- KPI CARDS ---------- */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+.kpi-card {
+  position: relative; padding: 20px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); overflow: hidden;
+}
+.kpi-bar { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
+.kpi-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 16px;
+  color: rgba(255,255,255,0.5);
+}
+.kpi-value {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
+  line-height: 1; color: #F5F8FF;
+}
+.kpi-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 24px;
+}
+.card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.card-meta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+}
+
+/* ---------- SECTION DIVIDER ---------- */
+.section-gap { margin-top: 40px; margin-bottom: 24px; }
+.section-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+}
+
+/* ---------- LEADERBOARD TABLE ---------- */
+.leaderboard-table { width: 100%; border-collapse: collapse; min-width: 620px; }
+.leaderboard-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 10px 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.leaderboard-table th:first-child { text-align: left; padding-left: 0; cursor: default; }
+.leaderboard-table th:nth-child(2) { text-align: left; }
+.leaderboard-table th:hover { color: rgba(255,255,255,0.7); }
+.leaderboard-table th.sorted { color: #45E85C; }
+.leaderboard-table th .sort-arrow { margin-left: 4px; font-size: 8px; }
+.leaderboard-table td {
+  padding: 16px 10px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+  text-align: right; vertical-align: middle;
+}
+.leaderboard-table td:first-child { text-align: left; padding-left: 0; }
+.leaderboard-table td:nth-child(2) { text-align: left; }
+.leaderboard-table tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+.leaderboard-table tr:hover { background: rgba(255,255,255,0.03); }
+.lb-rank {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif; font-size: 17px;
+  color: #45E85C; font-weight: 500;
+}
+.lb-creator-name { font-size: 13px; font-weight: 700; color: #F5F8FF; }
+.lb-creator-handles {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.35);
+  margin-top: 3px; letter-spacing: 0.01em;
+}
+.lb-views { color: #F5F8FF; font-weight: 700; }
+
+/* ---------- PLATFORM BREAKDOWN ---------- */
+.platform-row { display: flex; align-items: center; gap: 18px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.platform-row:last-child { border-bottom: none; }
+.platform-icon-name { width: 130px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #F5F8FF; }
+.platform-icon-name svg { width: 15px; height: 15px; flex-shrink: 0; }
+.platform-track { flex: 1; height: 16px; border-radius: 8px; background: rgba(255,255,255,0.04); overflow: hidden; }
+.platform-fill { height: 100%; border-radius: 8px; transition: width 0.6s cubic-bezier(.2,.8,.2,1); }
+.platform-stats { width: 190px; flex-shrink: 0; text-align: right; }
+.platform-views { font-family: 'PP Neue Corp', 'Inter', sans-serif; font-size: 15px; color: #F5F8FF; }
+.platform-pct { font-size: 11px; color: rgba(255,255,255,0.4); margin-left: 6px; }
+.platform-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------- TIMELINE ---------- */
+.timeline-wrap { overflow-x: auto; padding-bottom: 4px; }
+.timeline-chart {
+  display: flex; align-items: flex-end; gap: 4px; height: 220px;
+  min-width: 760px; position: relative; padding-top: 28px;
+}
+.timeline-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+.timeline-bar {
+  width: 100%; max-width: 20px; border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, #3B82F6, rgba(59,130,246,0.15));
+  cursor: pointer; transition: opacity 0.15s, transform 0.15s;
+  min-height: 2px;
+}
+.timeline-bar:hover { opacity: 0.75; }
+.timeline-bar.peak { background: linear-gradient(180deg, #45E85C, rgba(69,232,92,0.2)); }
+.timeline-peak-tag {
+  position: absolute; top: -26px; left: 50%; transform: translateX(-50%);
+  font-size: 8px; font-weight: 700; letter-spacing: 0.06em; color: #45E85C;
+  white-space: nowrap; text-transform: uppercase;
+}
+.timeline-axis { display: flex; gap: 4px; min-width: 760px; margin-top: 8px; }
+.timeline-axis span {
+  flex: 1; font-size: 8px; color: rgba(255,255,255,0.3);
+  text-align: center; white-space: nowrap;
+}
+.chart-tooltip {
+  position: absolute; pointer-events: none;
+  background: #16161a; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; padding: 8px 12px; font-size: 11px; white-space: nowrap;
+  transform: translate(-50%, -110%); opacity: 0; transition: opacity 0.1s;
+  z-index: 10; top: 0; left: 0;
+}
+.chart-tooltip strong { color: #45E85C; font-family: 'PP Neue Corp', sans-serif; font-size: 13px; }
+.chart-tooltip .tt-date { color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+/* ---------- SEARCH / FILTER ---------- */
+.search-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+}
+.filter-btn:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+.filter-btn.active {
+  background: rgba(69,232,92,0.12); border-color: rgba(69,232,92,0.3);
+  color: #45E85C;
+}
+.sort-select {
+  height: 38px; padding: 0 14px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #F5F8FF; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: inherit; outline: none; cursor: pointer;
+}
+.result-count {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
+}
+
+/* ---------- GALLERY ---------- */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+.gallery-card {
+  border-radius: 14px; border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  animation: fadeIn 0.3s ease;
+}
+.gallery-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.gallery-card-top { padding: 18px 16px 16px; position: relative; }
+.gallery-platform-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 6px;
+  background: rgba(0,0,0,0.3); color: #fff;
+}
+.gallery-platform-badge svg { width: 11px; height: 11px; }
+.gallery-rank {
+  position: absolute; top: 14px; right: 14px;
+  font-family: 'PP Neue Corp', sans-serif; font-size: 20px;
+  color: rgba(255,255,255,0.35);
+}
+.gallery-creator { font-size: 15px; font-weight: 700; color: #fff; margin-top: 12px; }
+.gallery-caption { font-size: 11.5px; color: rgba(255,255,255,0.6); margin-top: 6px; line-height: 1.5; }
+.gallery-card-body {
+  padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.015);
+}
+.gallery-stats { display: flex; gap: 20px; }
+.gallery-stat { display: flex; flex-direction: column; gap: 3px; }
+.gallery-stat .num { font-family: 'PP Neue Corp', sans-serif; font-size: 18px; color: #F5F8FF; }
+.gallery-stat .lbl { font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+.gallery-meta { display: flex; justify-content: space-between; align-items: center; }
+.gallery-date { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.03em; }
+.gallery-open {
+  color: #45E85C; text-decoration: none; font-weight: 700; font-size: 11px;
+  letter-spacing: 0.04em; text-transform: uppercase; transition: opacity 0.15s;
+}
+.gallery-open:hover { opacity: 0.7; }
+.gallery-empty {
+  padding: 60px 20px; text-align: center; color: rgba(255,255,255,0.3);
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  grid-column: 1 / -1;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .content { padding: 24px 20px 48px; }
+  .title-h1 { font-size: 40px; }
+  .nav { padding: 0 20px; }
+  .platform-icon-name { width: 100px; font-size: 11px; }
+  .platform-stats { width: 130px; }
+  .week-nav { flex-wrap: wrap; }
+}
+@media (max-width: 560px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .search-bar { flex-direction: column; align-items: stretch; }
+  .filter-group { justify-content: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <img class="nav-logo" src="https://jbfx-dev.github.io/outcome/logo.svg" alt="Outcome">
+    <span class="nav-divider">/</span>
+    <span class="nav-subtitle">CAMPAIGN WRAP-UP</span>
+  </div>
+  <div class="nav-right">
+    <div class="complete-badge">
+      <div class="complete-dot"></div>
+      CAMPAIGN COMPLETE
+    </div>
+    <div class="date-badge">JUN 21 &ndash; JUL 20, 2026</div>
+  </div>
+</nav>
+
+<div class="content">
+
+  <!-- WEEK NAV -->
+  <div class="week-nav">
+    <a href="/world-cup/">Overall</a>
+    <a href="/world-cup/1">Week 1</a>
+    <a href="/world-cup/2">Week 2</a>
+    <a href="/world-cup/3">Week 3</a>
+    <a href="/world-cup/4">Week 4</a>
+    <a href="/world-cup/5">Week 5</a>
+    <a href="/world-cup/channels">Channels</a>
+    <a href="/clicks-explorer/">Clicks</a>
+    <a href="/ugc-explorer/" class="active">UGC</a>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-area">
+    <div>
+      <div class="title-sub">UGC Explorer</div>
+      <h1 class="title-h1">CREATOR<br><span class="green">CONTENT</span></h1>
+    </div>
+    <div class="title-badges">
+      <div class="badge">10 CREATORS</div>
+      <div class="badge">349 POSTS</div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #45E85C, #45E85C80);"></div>
+      <div class="kpi-label">Total Creators</div>
+      <div class="kpi-value">10</div>
+      <div class="kpi-sub">UGC campaign creators</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #6F2EE4, #6F2EE480);"></div>
+      <div class="kpi-label">Total Posts</div>
+      <div class="kpi-value">349</div>
+      <div class="kpi-sub">Across all platforms</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #3B82F6, #3B82F680);"></div>
+      <div class="kpi-label">Total Views</div>
+      <div class="kpi-value">7.4M</div>
+      <div class="kpi-sub">7,373,400 views</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #45E85C, #45E85C80);"></div>
+      <div class="kpi-label">Total Engagement</div>
+      <div class="kpi-value">478.2K</div>
+      <div class="kpi-sub">478,185 total engagement</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #6F2EE4, #6F2EE480);"></div>
+      <div class="kpi-label">Avg Views / Post</div>
+      <div class="kpi-value">21.1K</div>
+      <div class="kpi-sub">21,127 views per post</div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CREATOR LEADERBOARD                                          -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">Creator Performance</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #45E85C;"></span>
+        Creator Leaderboard
+      </div>
+      <div class="card-meta">10 CREATORS &middot; SORTED BY TOTAL VIEWS</div>
+    </div>
+    <div style="overflow-x: auto;">
+    <table class="leaderboard-table" id="leaderboard-table">
+      <thead>
+        <tr>
+          <th data-sort="rank">Rank <span class="sort-arrow"></span></th>
+          <th data-sort="name">Creator <span class="sort-arrow"></span></th>
+          <th data-sort="posts">Posts <span class="sort-arrow"></span></th>
+          <th data-sort="views" class="sorted">Total Views <span class="sort-arrow">&#9660;</span></th>
+          <th data-sort="avg">Avg Views <span class="sort-arrow"></span></th>
+          <th data-sort="eng">Engagement <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PLATFORM BREAKDOWN                                           -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">Platform Distribution</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #3B82F6;"></span>
+        Platform Breakdown
+      </div>
+      <div class="card-meta">VIEWS BY PLATFORM</div>
+    </div>
+    <div id="platform-breakdown"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TIMELINE                                                     -->
+  <!-- ============================================================ -->
+  <div class="card" style="position: relative;">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #45E85C;"></span>
+        Daily Views Timeline
+      </div>
+      <div class="card-meta">JUN 21 &ndash; JUL 20, 2026 &middot; PEAK JUL 11</div>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-chart" id="timeline-chart"></div>
+      <div class="timeline-axis" id="timeline-axis"></div>
+    </div>
+    <div class="chart-tooltip" id="chart-tooltip"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- EMBEDDED CONTENT GALLERY                                     -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">Top Performing Content</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #F58220;"></span>
+        Content Gallery
+      </div>
+      <div class="card-meta" id="gallery-count">TOP 30 POSTS BY VIEWS</div>
+    </div>
+
+    <div class="search-bar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-platform="all" onclick="filterGallery('all', this)">All</button>
+        <button class="filter-btn" data-platform="Instagram" onclick="filterGallery('Instagram', this)">Instagram</button>
+        <button class="filter-btn" data-platform="TikTok" onclick="filterGallery('TikTok', this)">TikTok</button>
+        <button class="filter-btn" data-platform="Facebook" onclick="filterGallery('Facebook', this)">Facebook</button>
+        <button class="filter-btn" data-platform="YouTube" onclick="filterGallery('YouTube', this)">YouTube</button>
+      </div>
+      <select class="sort-select" id="gallery-sort" onchange="sortGallery(this.value)">
+        <option value="views-desc">Sort: Views (High &rarr; Low)</option>
+        <option value="views-asc">Sort: Views (Low &rarr; High)</option>
+        <option value="eng-desc">Sort: Engagement (High &rarr; Low)</option>
+        <option value="eng-asc">Sort: Engagement (Low &rarr; High)</option>
+        <option value="date-desc">Sort: Date (Newest)</option>
+        <option value="date-asc">Sort: Date (Oldest)</option>
+      </select>
+    </div>
+
+    <div class="result-count" id="gallery-results"></div>
+
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const creators = [
+  { rank: 1, name: 'ceofooty', handles: ['ceofooty_', 'ceofooty'], views: 4734112, posts: 84, avg: 56358, eng: 317436 },
+  { rank: 2, name: 'Letschatball', handles: ['Letschatball', 'letschat_ball', 'Letschatball1', 'letschatball1'], views: 1510479, posts: 41, avg: 36840, eng: 115266 },
+  { rank: 3, name: 'Bennyballss', handles: ['benny_ballss', 'Bennyballss', 'bennyclasher'], views: 667224, posts: 30, avg: 22240, eng: 30473 },
+  { rank: 4, name: 'Dannie', handles: ['Dannie'], views: 238557, posts: 125, avg: 1908, eng: 4141 },
+  { rank: 5, name: 'monstermike197', handles: ['monstermike197'], views: 145591, posts: 31, avg: 4696, eng: 6084 },
+  { rank: 6, name: 'mkdonny14', handles: ['mk.don14', 'mkdonny14', 'don.mk14'], views: 51893, posts: 21, avg: 2471, eng: 3584 },
+  { rank: 7, name: 'jahz524', handles: ['1kjahz', 'jahz524'], views: 20734, posts: 9, avg: 2303, eng: 1128 },
+  { rank: 8, name: 'TampaTwinsTM', handles: ['TampaTwinsTM', 'tampatwinstm'], views: 2542, posts: 3, avg: 847, eng: 31 },
+  { rank: 9, name: 'robshredzz', handles: ['robshredzz'], views: 2267, posts: 1, avg: 2267, eng: 42 },
+  { rank: 10, name: 'Outcomewc', handles: ['Outcomewc'], views: 1, posts: 4, avg: 0, eng: 0 }
+];
+
+const platformData = [
+  { name: 'Instagram', views: 3482303, posts: 154, eng: 260742, color: '#E1306C', grad: 'linear-gradient(90deg,#F58529,#DD2A7B,#8134AF)' },
+  { name: 'TikTok', views: 3003355, posts: 102, eng: 194141, color: '#25F4EE', grad: 'linear-gradient(90deg,#010101,#0A2E2C,#25F4EE)' },
+  { name: 'Facebook', views: 468800, posts: 13, eng: 14775, color: '#1877F2', grad: 'linear-gradient(90deg,#1877F2,#5B9BF7)' },
+  { name: 'YouTube', views: 418942, posts: 80, eng: 8527, color: '#FF0000', grad: 'linear-gradient(90deg,#CC0000,#FF3B3B)' }
+];
+
+const dailyViews = [
+  { label: '21 Jun', d: '21 Jun 2026', v: 7742 },
+  { label: '22 Jun', d: '22 Jun 2026', v: 7585 },
+  { label: '23 Jun', d: '23 Jun 2026', v: 948 },
+  { label: '24 Jun', d: '24 Jun 2026', v: 11381 },
+  { label: '25 Jun', d: '25 Jun 2026', v: 1798 },
+  { label: '26 Jun', d: '26 Jun 2026', v: 65796 },
+  { label: '27 Jun', d: '27 Jun 2026', v: 154264 },
+  { label: '28 Jun', d: '28 Jun 2026', v: 2221 },
+  { label: '29 Jun', d: '29 Jun 2026', v: 387082 },
+  { label: '30 Jun', d: '30 Jun 2026', v: 41897 },
+  { label: '01 Jul', d: '01 Jul 2026', v: 91566 },
+  { label: '02 Jul', d: '02 Jul 2026', v: 30186 },
+  { label: '03 Jul', d: '03 Jul 2026', v: 424005 },
+  { label: '04 Jul', d: '04 Jul 2026', v: 492827 },
+  { label: '05 Jul', d: '05 Jul 2026', v: 46819 },
+  { label: '06 Jul', d: '06 Jul 2026', v: 637590 },
+  { label: '07 Jul', d: '07 Jul 2026', v: 143758 },
+  { label: '08 Jul', d: '08 Jul 2026', v: 148249 },
+  { label: '09 Jul', d: '09 Jul 2026', v: 304865 },
+  { label: '10 Jul', d: '10 Jul 2026', v: 107923 },
+  { label: '11 Jul', d: '11 Jul 2026', v: 2886359 },
+  { label: '12 Jul', d: '12 Jul 2026', v: 269544 },
+  { label: '13 Jul', d: '13 Jul 2026', v: 228283 },
+  { label: '14 Jul', d: '14 Jul 2026', v: 350306 },
+  { label: '15 Jul', d: '15 Jul 2026', v: 177132 },
+  { label: '16 Jul', d: '16 Jul 2026', v: 73048 },
+  { label: '17 Jul', d: '17 Jul 2026', v: 69418 },
+  { label: '18 Jul', d: '18 Jul 2026', v: 143666 },
+  { label: '19 Jul', d: '19 Jul 2026', v: 59292 },
+  { label: '20 Jul', d: '20 Jul 2026', v: 7850 }
+];
+
+// platform, kind ("reel" | "video" | "post") drives the caption text
+const posts = [
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqC2dWiEn2/', views: 943553, eng: 97245, date: '2026-07-11', label: '11 Jul 2026', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqqtF1tcxr/', views: 831941, eng: 69260, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', views: 471500, eng: 37180, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #messi #argentina #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', views: 312400, eng: 23990, date: '2026-06-29', label: '29 Jun 2026', caption: 'Call it off now\u{1F62D}✌\u{1F3FB} #fyp #ceo #brazil #japan #worldcup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaWCC6rTts8/', views: 299722, eng: 25128, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense\u{1F62D} #fyp #ceo #portugal #croatia #worldcup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaXaZ9utD52/', views: 295028, eng: 31230, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659509405758590228', views: 270000, eng: 14790, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy\u{1F923} #fyp #ceo #portugal #spain #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661334176733433109', views: 228600, eng: 19151, date: '2026-07-11', label: '11 Jul 2026', caption: 'It might be broken\u{1F62D} #fyp #ceo #england #norway #worldcup' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/27311240818504787/', views: 215000, eng: 10000, date: '2026-07-11', label: '11 Jul 2026', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662277033153547541', views: 188400, eng: 9804, date: '2026-07-14', label: '14 Jul 2026', caption: 'Zip it bro\u{1F62D} #fyp #ceo #spain #france #worldcup' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', views: 131600, eng: 6091, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will England finally make Argentina pay? #worldcup #football' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662636637960026388', views: 118800, eng: 3949, date: '2026-07-15', label: '15 Jul 2026', caption: 'Call it of rn\u{1F639} #fyp #ceo #england #congo #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660638382355123476', views: 118600, eng: 5425, date: '2026-07-09', label: '09 Jul 2026', caption: 'Just wait ⏳ #fyp #ceo #france #morocco #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658401875233950996', views: 113200, eng: 12915, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense\u{1F62D} #fyp #ceo #portugal #croatia #worldcup' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1017349150702340/', views: 110000, eng: 3000, date: '2026-07-09', label: '09 Jul 2026', caption: 'France are deadly and they just destroyed Morocco' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661396579559034133', views: 108600, eng: 6586, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #england #bellingham #norway' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daii720vGAE/', views: 94119, eng: 6209, date: '2026-07-08', label: '08 Jul 2026', caption: 'The game is cooked.. goodbye France \u{1F494}\u{1F1EB}\u{1F1F7}\u{1F62D}' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dab9y8GtGdV/', views: 88443, eng: 5255, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering \u{1F62D}\u{1F64F}\u{1F3FB}\u{1F494} #fyp #ceo #worldcup #england #mexico' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658600702742203668', views: 88500, eng: 9971, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661519146877816085', views: 83300, eng: 3920, date: '2026-07-12', label: '12 Jul 2026', caption: 'We back again\u{1F62D}\u{1F64F}\u{1F3FB} #fyp #ceo #argentina #messi #worldcup' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1775938727154555/', views: 81000, eng: 714, date: '2026-07-18', label: '18 Jul 2026', caption: 'England destroyed France what a crazy game of football' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659256898318765333', views: 79100, eng: 5413, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering \u{1F937}\u{1F3FB} #fyp #ceo #england #mexico #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656176678841879828', views: 70500, eng: 1909, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps\u{1F62D}✌\u{1F3FB} #fyp #ceo #ronaldo #portugal #worldcup' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaLrrCOxMFj/', views: 61013, eng: 2048, date: '2026-06-29', label: '29 Jun 2026', caption: 'Brazil count your days, today was lucky... #worldcup #football' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DadtzRUNOZ3/', views: 61531, eng: 1623, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy\u{1F923} #fyp #ceo #portugal #spain #worldcup' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658478102166670613', views: 60200, eng: 3468, date: '2026-07-04', label: '04 Jul 2026', caption: 'What a game\u{1F633} #fyp #ceo #argentina #capeverde #worldcup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaByFAjNQCT/', views: 59513, eng: 1305, date: '2026-06-26', label: '26 Jun 2026', caption: 'Prime Yamal\u{1F633} #fyp #ceo #lamineyamal #barcelona #worldcup' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661439938482752799', views: 54900, eng: 4476, date: '2026-07-12', label: '12 Jul 2026', caption: 'Jude Bellingham the man you are ❤️ ENGLAND vs NORWAY' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaGl9AgtpAG/', views: 52756, eng: 265, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps\u{1F62D}✌\u{1F3FB} #fyp #ceo #ronaldo #portugal #worldcup' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661697236421659934', views: 49300, eng: 4128, date: '2026-07-12', label: '12 Jul 2026', caption: 'Julian Alvarez you deserve everything. \u{1F410}\u{1F1E6}\u{1F1F7} #argentina #worldcup' }
+];
+
+const PLATFORM_ICONS = {
+  Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
+  TikTok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.7 2.6 2.4 4.3 5 4.6v3.1c-1.9 0-3.6-.6-5-1.7v7c0 3.6-2.9 6.5-6.5 6.5S3 19.6 3 16s2.9-6.5 6.5-6.5c.5 0 1 .1 1.5.2v3.3a3.3 3.3 0 1 0 2 3V3h3z"/></svg>',
+  YouTube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><polygon points="10,9 16,12 10,15" fill="currentColor" stroke="none"/></svg>',
+  Facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>'
+};
+
+const PLATFORM_COLOR = { Instagram: '#DD2A7B', TikTok: '#25F4EE', YouTube: '#FF0000', Facebook: '#1877F2' };
+const PLATFORM_BG = {
+  Instagram: 'linear-gradient(135deg, rgba(131,58,180,0.35), rgba(221,42,118,0.3), rgba(253,29,141,0.18))',
+  TikTok: 'linear-gradient(135deg, rgba(0,0,0,0.6), rgba(37,244,238,0.12))',
+  YouTube: 'linear-gradient(135deg, rgba(255,0,0,0.28), rgba(0,0,0,0.5))',
+  Facebook: 'linear-gradient(135deg, rgba(24,119,242,0.32), rgba(0,0,0,0.4))'
+};
+const KIND_LABEL = {
+  Instagram: { reel: 'Instagram Reel', post: 'Instagram Post' },
+  TikTok: { video: 'TikTok Video' },
+  YouTube: { video: 'YouTube Video' },
+  Facebook: { reel: 'Facebook Reel', post: 'Facebook Post' }
+};
+
+function fmt(n) { return n.toLocaleString('en-US'); }
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+
+function renderLeaderboard(data) {
+  const tbody = document.querySelector('#leaderboard-table tbody');
+  tbody.innerHTML = data.map((c, i) => `
+    <tr>
+      <td><span class="lb-rank">${i + 1}</span></td>
+      <td>
+        <div class="lb-creator-name">${c.name}</div>
+        <div class="lb-creator-handles">${c.handles.map(h => '@' + h).join(', ')}</div>
+      </td>
+      <td>${fmt(c.posts)}</td>
+      <td class="lb-views">${fmt(c.views)}</td>
+      <td>${fmt(c.avg)}</td>
+      <td>${fmt(c.eng)}</td>
+    </tr>
+  `).join('');
+}
+
+function setupLeaderboardSort() {
+  const table = document.getElementById('leaderboard-table');
+  const headers = table.querySelectorAll('th');
+  let currentSort = 'views';
+  let currentDir = 'desc';
+  let data = [...creators];
+
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (!key) return;
+      if (currentSort === key) {
+        currentDir = currentDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        currentSort = key;
+        currentDir = (key === 'name') ? 'asc' : 'desc';
+      }
+      headers.forEach(h => { h.classList.remove('sorted'); h.querySelector('.sort-arrow').innerHTML = ''; });
+      th.classList.add('sorted');
+      th.querySelector('.sort-arrow').innerHTML = currentDir === 'desc' ? '&#9660;' : '&#9650;';
+
+      data = [...data].sort((a, b) => {
+        let va, vb;
+        if (key === 'rank') { va = a.views; vb = b.views; }
+        else if (key === 'name') { va = a.name.toLowerCase(); vb = b.name.toLowerCase(); }
+        else { va = a[key]; vb = b[key]; }
+        if (typeof va === 'string') return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+        return currentDir === 'desc' ? vb - va : va - vb;
+      });
+      renderLeaderboard(data);
+    });
+  });
+}
+
+// ============================================================
+// PLATFORM BREAKDOWN
+// ============================================================
+
+function renderPlatformBreakdown() {
+  const container = document.getElementById('platform-breakdown');
+  const totalViews = platformData.reduce((s, p) => s + p.views, 0);
+  const maxViews = Math.max(...platformData.map(p => p.views));
+
+  container.innerHTML = platformData.map(p => {
+    const pct = (p.views / totalViews * 100).toFixed(1);
+    const barPct = (p.views / maxViews * 100).toFixed(1);
+    return `
+      <div class="platform-row">
+        <div class="platform-icon-name" style="color:${p.color}">
+          ${PLATFORM_ICONS[p.name]}
+          <span style="color:#F5F8FF;">${p.name}</span>
+        </div>
+        <div class="platform-track">
+          <div class="platform-fill" style="width:${barPct}%; background:${p.grad};"></div>
+        </div>
+        <div class="platform-stats">
+          <span class="platform-views">${fmt(p.views)}</span><span class="platform-pct">${pct}%</span>
+          <div class="platform-sub">${fmt(p.posts)} posts &middot; ${fmt(p.eng)} eng</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// TIMELINE
+// ============================================================
+
+function renderTimeline() {
+  const chart = document.getElementById('timeline-chart');
+  const axis = document.getElementById('timeline-axis');
+  const tooltip = document.getElementById('chart-tooltip');
+  const maxV = Math.max(...dailyViews.map(d => d.v));
+
+  chart.innerHTML = dailyViews.map((d, i) => {
+    const h = Math.max((d.v / maxV * 100), 0.8);
+    const isPeak = d.v === maxV;
+    return `
+      <div class="timeline-bar-col">
+        ${isPeak ? `<div class="timeline-peak-tag">Peak &middot; ${fmt(d.v)}</div>` : ''}
+        <div class="timeline-bar${isPeak ? ' peak' : ''}" style="height:${h}%;" data-views="${d.v}" data-date="${d.d}"></div>
+      </div>
+    `;
+  }).join('');
+
+  axis.innerHTML = dailyViews.map((d, i) => `<span>${(i % 3 === 0) ? d.label : ''}</span>`).join('');
+
+  chart.querySelectorAll('.timeline-bar').forEach(bar => {
+    bar.addEventListener('mousemove', (e) => {
+      const rect = chart.getBoundingClientRect();
+      tooltip.style.left = (e.clientX - rect.left) + 'px';
+      tooltip.style.top = (e.clientY - rect.top) + 'px';
+      tooltip.innerHTML = `<strong>${fmt(parseInt(bar.dataset.views))}</strong> views<div class="tt-date">${bar.dataset.date}</div>`;
+      tooltip.style.opacity = '1';
+    });
+    bar.addEventListener('mouseleave', () => { tooltip.style.opacity = '0'; });
+  });
+}
+
+// ============================================================
+// GALLERY
+// ============================================================
+
+let galleryFilter = 'all';
+let gallerySort = 'views-desc';
+
+function captionFor(post) {
+  if (post.caption) {
+    const c = post.caption.length > 80 ? post.caption.slice(0, 77) + '...' : post.caption;
+    return c.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  const label = (KIND_LABEL[post.platform] && KIND_LABEL[post.platform][post.kind]) || (post.platform + ' Post');
+  return `${label} &middot; World Cup 2026 campaign content`;
+}
+
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  const results = document.getElementById('gallery-results');
+
+  let filtered = galleryFilter === 'all' ? [...posts] : posts.filter(p => p.platform === galleryFilter);
+
+  const [key, dir] = gallerySort.split('-');
+  filtered.sort((a, b) => {
+    let va, vb;
+    if (key === 'views') { va = a.views; vb = b.views; }
+    else if (key === 'eng') { va = a.eng; vb = b.eng; }
+    else { va = a.date; vb = b.date; }
+    if (key === 'date') return dir === 'desc' ? (va < vb ? 1 : -1) : (va > vb ? 1 : -1);
+    return dir === 'desc' ? vb - va : va - vb;
+  });
+
+  results.textContent = `SHOWING ${filtered.length} OF ${posts.length} POSTS`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty">No posts match this filter</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p, i) => `
+    <div class="gallery-card">
+      <div class="gallery-card-top" style="background:${PLATFORM_BG[p.platform]}">
+        <div class="gallery-platform-badge" style="color:${PLATFORM_COLOR[p.platform]}">
+          ${PLATFORM_ICONS[p.platform]} ${p.platform}
+        </div>
+        <div class="gallery-rank">#${i + 1}</div>
+        <div class="gallery-creator">@${p.creator}</div>
+        <div class="gallery-caption">${captionFor(p)}</div>
+      </div>
+      <div class="gallery-card-body">
+        <div class="gallery-stats">
+          <div class="gallery-stat"><span class="num">${fmt(p.views)}</span><span class="lbl">Views</span></div>
+          <div class="gallery-stat"><span class="num">${fmt(p.eng)}</span><span class="lbl">Engagement</span></div>
+        </div>
+        <div class="gallery-meta">
+          <span class="gallery-date">${p.label}</span>
+          <a class="gallery-open" href="${p.url}" target="_blank" rel="noopener noreferrer">Open &rarr;</a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterGallery(platform, btn) {
+  galleryFilter = platform;
+  document.querySelectorAll('.filter-group .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGallery();
+}
+
+function sortGallery(value) {
+  gallerySort = value;
+  renderGallery();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+renderLeaderboard(creators);
+setupLeaderboardSort();
+renderPlatformBreakdown();
+renderTimeline();
+renderGallery();
+</script>
+
+</body>
+</html>
