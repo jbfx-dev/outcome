@@ -1237,7 +1237,7 @@ function renderCard(p) {
   const engRate = p.views > 0 ? ((p.eng / p.views) * 100).toFixed(1) : '0.0';
   const caption = p.caption ? p.caption.replace(/</g, '&lt;') : '';
   const iframeHtml = embedUrl
-    ? '<iframe src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>'
+    ? '<iframe data-src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>'
     : '<div style="aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:11px;text-transform:uppercase;letter-spacing:0.1em">Preview unavailable</div>';
   return '<div class="video-card">' +
     iframeHtml +
@@ -1275,6 +1275,7 @@ function renderFeed() {
   grid.innerHTML = batch.map(renderCard).join('');
   feedPage = 1;
   document.getElementById('load-more-wrap').style.display = filtered.length > FEED_PAGE_SIZE ? '' : 'none';
+  observeIframes();
 }
 
 function loadMore() {
@@ -1288,6 +1289,24 @@ function loadMore() {
   const shown = Math.min(feedPage * FEED_PAGE_SIZE, filtered.length);
   results.textContent = 'SHOWING ' + shown + ' OF ' + filtered.length + ' POSTS';
   document.getElementById('load-more-wrap').style.display = shown >= filtered.length ? 'none' : '';
+  observeIframes();
+}
+
+// Lazy-load iframes only when scrolled into view (prevents platform rate-limiting)
+const iframeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const iframe = e.target;
+      if (iframe.dataset.src && !iframe.src) {
+        iframe.src = iframe.dataset.src;
+      }
+      iframeObserver.unobserve(iframe);
+    }
+  });
+}, { rootMargin: '200px' });
+
+function observeIframes() {
+  document.querySelectorAll('.video-card iframe[data-src]:not([src])').forEach(f => iframeObserver.observe(f));
 }
 
 function filterFeed(platform, btn) {

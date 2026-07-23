@@ -884,6 +884,16 @@ function getEmbedUrl(platform, url) {
   return null;
 }
 
+const ugcObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const iframe = e.target;
+      if (iframe.dataset.src && !iframe.src) iframe.src = iframe.dataset.src;
+      ugcObserver.unobserve(iframe);
+    }
+  });
+}, { rootMargin: '200px' });
+
 function selectDay(i){
   document.querySelectorAll('.day-col').forEach(c=>c.classList.remove('sel'));
   document.querySelector(`.day-col[data-i="${i}"]`).classList.add('sel');
@@ -945,7 +955,7 @@ function selectDay(i){
     ugc.forEach(p => {
       const embedUrl = getEmbedUrl(p.platform, p.url);
       const iframeHtml = embedUrl
-        ? '<iframe src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>'
+        ? '<iframe data-src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>'
         : '';
       html += '<div class="ugc-card">' +
         iframeHtml +
@@ -964,6 +974,9 @@ function selectDay(i){
 
   document.getElementById('ddPosts').innerHTML = html;
   document.getElementById('dayDetail').classList.add('open');
+
+  // lazy-load UGC iframes when scrolled into view
+  document.querySelectorAll('.ugc-card iframe[data-src]:not([src])').forEach(f => ugcObserver.observe(f));
 
   // render X embeds
   if(xp.length){ ensureTwitter(()=>{ window.twttr.widgets.load(document.getElementById('xEmbeds')); }); }
