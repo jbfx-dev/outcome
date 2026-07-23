@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcome.xyz - Clicks Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: condensed;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  background: #0A0A0B;
+  color: #F5F8FF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,11,0.74);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.date-badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- CONTENT ---------- */
+.content {
+  max-width: 1480px; margin: 0 auto;
+  padding: 44px 40px 64px;
+}
+
+/* ---------- TITLE ---------- */
+.title-area {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 32px; flex-wrap: wrap; margin-bottom: 34px;
+}
+.title-sub {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.16em;
+  color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
+}
+.title-h1 {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
+  font-stretch: condensed; text-transform: uppercase;
+  letter-spacing: -0.01em; font-size: 56px; line-height: 0.88;
+  color: #F5F8FF;
+}
+.title-h1 .green { color: #45E85C; }
+.title-h1 .purple { color: #6F2EE4; }
+.title-badges { display: flex; gap: 10px; align-items: center; }
+.badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+
+/* ---------- KPI CARDS ---------- */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+.kpi-card {
+  position: relative; padding: 20px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); overflow: hidden;
+}
+.kpi-bar {
+  position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+}
+.kpi-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 16px;
+  color: rgba(255,255,255,0.5);
+}
+.kpi-value {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
+  line-height: 1; color: #F5F8FF;
+}
+.kpi-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.card-meta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+}
+
+/* ---------- PAID CHANNEL TABLE ---------- */
+.paid-table { width: 100%; border-collapse: collapse; }
+.paid-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 8px 14px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+}
+.paid-table th:first-child { text-align: left; padding-left: 0; }
+.paid-table td {
+  padding: 16px 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
+  text-align: right;
+}
+.paid-table td:first-child {
+  text-align: left; color: #F5F8FF; font-weight: 600;
+  padding-left: 0;
+}
+.paid-table .channel-name {
+  display: flex; align-items: center; gap: 10px;
+}
+.paid-table .good { color: #45E85C; }
+.paid-table .warn { color: #F58220; }
+.paid-table .bad { color: #FF5C9E; }
+.paid-table .verdict-row td {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 2px solid rgba(255,255,255,0.08);
+  padding: 12px 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+}
+.verdict-pill {
+  display: inline-block; padding: 4px 12px; border-radius: 6px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.verdict-pill.winner {
+  background: rgba(69,232,92,0.12); color: #45E85C;
+  border: 1px solid rgba(69,232,92,0.25);
+}
+.verdict-pill.mixed {
+  background: rgba(245,130,32,0.12); color: #F58220;
+  border: 1px solid rgba(245,130,32,0.25);
+}
+.verdict-pill.poor {
+  background: rgba(255,92,158,0.12); color: #FF5C9E;
+  border: 1px solid rgba(255,92,158,0.25);
+}
+
+/* ---------- BREAKDOWN TABLE ---------- */
+.breakdown-table { width: 100%; border-collapse: collapse; }
+.breakdown-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 0 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.breakdown-table th:first-child { text-align: left; }
+.breakdown-table th:hover { color: rgba(255,255,255,0.7); }
+.breakdown-table th.sorted { color: #45E85C; }
+.breakdown-table th .sort-arrow { margin-left: 4px; font-size: 8px; }
+.breakdown-table td {
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  text-align: right;
+}
+.breakdown-table td:first-child { text-align: left; color: #F5F8FF; font-weight: 600; }
+.breakdown-table td.green { color: #45E85C; }
+
+/* ---------- BAR VIS ---------- */
+.bar-cell {
+  display: flex; align-items: center; gap: 10px; justify-content: flex-end;
+}
+.bar-track {
+  flex: 1; max-width: 120px; height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.04); overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-label { font-variant-numeric: tabular-nums; min-width: 60px; text-align: right; }
+
+/* ---------- TOP LINKS ---------- */
+.top-link-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.top-link-rank {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+.top-link-rank.gold { background: rgba(69,232,92,0.12); color: #45E85C; }
+.top-link-info { flex: 1; min-width: 0; }
+.top-link-key {
+  font-size: 13px; font-weight: 600; color: #F5F8FF;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.top-link-utm {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.35);
+  margin-top: 3px; letter-spacing: 0.02em;
+}
+.top-link-clicks {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-size: 20px; font-weight: 500; color: #F5F8FF;
+  flex-shrink: 0; min-width: 80px; text-align: right;
+}
+.top-link-bar {
+  width: 200px; height: 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.04); overflow: hidden; flex-shrink: 0;
+}
+.top-link-bar-fill { height: 100%; border-radius: 4px; }
+
+/* ---------- SEARCH / FILTER ---------- */
+.search-bar {
+  display: flex; gap: 12px; margin-bottom: 20px;
+}
+.search-input {
+  flex: 1; height: 40px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: #F5F8FF; font-size: 13px; font-family: inherit;
+  outline: none; transition: border-color 0.15s;
+}
+.search-input::placeholder { color: rgba(255,255,255,0.25); }
+.search-input:focus { border-color: rgba(69,232,92,0.4); }
+.filter-btn {
+  height: 40px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+}
+.filter-btn:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }
+.filter-btn.active {
+  background: rgba(111,46,228,0.12); border-color: rgba(111,46,228,0.3);
+  color: #A78BFA;
+}
+.result-count {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
+}
+
+/* ---------- SECTION DIVIDER ---------- */
+.section-gap { margin-top: 40px; margin-bottom: 24px; }
+.section-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+}
+
+/* ---------- RESPONSIVE ---------- */
+/* ---------- WEEK NAV ---------- */
+.week-nav {
+  display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px;
+}
+.week-nav a {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 8px 16px; border-radius: 8px;
+  cursor: pointer; text-decoration: none;
+  color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.15s ease;
+}
+.week-nav a:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.12); }
+.week-nav a.active {
+  color: #F5F8FF; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .content { padding: 24px 20px 48px; }
+  .title-h1 { font-size: 36px; }
+  .paid-table { font-size: 11px; }
+  .top-link-bar { display: none; }
+  .week-nav { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
+      <path d="M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z"/>
+      <path d="M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z"/>
+      <path d="M563.684 339.077C493.476 339.077 454 289.961 454 231.619C454 173.776 493.476 124.659 563.684 124.659C633.892 124.659 673.369 173.776 673.369 231.619C673.369 289.961 633.892 339.077 563.684 339.077ZM490.228 231.619C490.228 271.76 512.465 307.164 563.684 307.164C614.904 307.164 637.14 271.76 637.14 231.619C637.14 192.226 614.904 156.573 563.684 156.573C512.465 156.573 490.228 192.226 490.228 231.619Z"/>
+      <path d="M831.867 336.584V307.912C819.375 326.611 799.637 339.077 771.404 339.077C731.178 339.077 704.694 312.151 704.694 267.771V174.524H738.673V263.283C738.673 293.451 753.414 309.907 782.897 309.907C824.122 309.907 831.867 278.243 831.867 261.289V174.524H865.847V336.584H831.867Z"/>
+      <path d="M1029.93 174.524V203.695H971.711V280.237C971.711 300.682 975.209 307.413 989.451 307.413H1029.93V336.584H983.704C947.726 336.584 938.481 318.633 938.481 286.221V203.695H889.76V174.524H913.496C936.482 174.524 943.228 160.063 942.979 127.152H976.209C976.209 152.334 971.462 171.283 959.719 174.524H1029.93Z"/>
+      <path d="M1186.73 237.852C1185.23 220.898 1170.74 201.451 1137.26 201.451C1099.28 201.451 1084.04 223.89 1084.04 255.554V256.302C1084.04 287.218 1099.28 309.657 1137.51 309.657C1172.99 309.657 1185.23 290.21 1186.98 273.007L1187.73 266.275H1222.21L1221.46 273.007C1217.71 305.917 1191.98 339.077 1136.76 339.077C1078.04 339.077 1049.31 304.92 1049.31 255.554V255.055C1049.31 206.188 1078.04 172.031 1136.76 172.031C1191.48 172.031 1218.46 204.692 1221.46 237.852L1222.21 245.082H1187.73L1186.73 237.852Z"/>
+      <path d="M1331.91 339.077C1274.45 339.077 1246.21 304.92 1246.21 255.554C1246.21 206.188 1274.45 172.031 1331.91 172.031C1389.63 172.031 1417.61 206.188 1417.61 255.554C1417.61 304.92 1389.63 339.077 1331.91 339.077ZM1280.94 255.554C1280.94 287.218 1294.69 309.657 1331.91 309.657C1369.39 309.657 1383.13 287.218 1383.13 255.554C1383.13 223.89 1369.39 201.451 1331.91 201.451C1294.69 201.451 1280.94 223.89 1280.94 255.554Z"/>
+      <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
+      <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
+    </svg>
+    <span class="nav-divider">/</span>
+    <span class="nav-subtitle">CAMPAIGN TRACKER</span>
+  </div>
+  <div class="nav-right">
+    <div class="date-badge">JUN 10 &ndash; JUL 23, 2026</div>
+  </div>
+</nav>
+
+<div class="content">
+
+  <!-- WEEK NAV -->
+  <div class="week-nav">
+    <a href="/world-cup/">Overall</a>
+    <a href="/world-cup/1">Week 1</a>
+    <a href="/world-cup/2">Week 2</a>
+    <a href="/world-cup/3">Week 3</a>
+    <a href="/world-cup/4">Week 4</a>
+    <a href="/world-cup/5">Week 5</a>
+    <a href="/world-cup/channels">Channels</a>
+    <a href="/clicks-explorer/" class="active">Clicks</a>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-area">
+    <div>
+      <div class="title-sub">World Cup 2026 Campaign</div>
+      <h1 class="title-h1">CLICKS <span class="green">EXPLORER</span></h1>
+    </div>
+    <div class="title-badges">
+      <div class="badge">679 DUB LINKS</div>
+      <div class="badge">51,766 TOTAL CLICKS</div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #45E85C, #45E85C80);"></div>
+      <div class="kpi-label">Total Clicks</div>
+      <div class="kpi-value">51,766</div>
+      <div class="kpi-sub">Across 679 Dub links</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #6F2EE4, #6F2EE480);"></div>
+      <div class="kpi-label">Unique Sources</div>
+      <div class="kpi-value">10</div>
+      <div class="kpi-sub">UTM sources tracked</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #3B82F6, #3B82F680);"></div>
+      <div class="kpi-label">Avg Clicks / Link</div>
+      <div class="kpi-value">76.2</div>
+      <div class="kpi-sub">Median much lower — top 3 dominate</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-bar" style="background: linear-gradient(90deg, #F58220, #F5822080);"></div>
+      <div class="kpi-label">Paid Channel Spend</div>
+      <div class="kpi-value">$53,365</div>
+      <div class="kpi-sub">4 paid channels tracked</div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PAID CHANNEL PERFORMANCE — HERO SECTION                      -->
+  <!-- ============================================================ -->
+  <div class="card" style="border-color: rgba(69,232,92,0.15); margin-top: 8px;">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #45E85C;"></span>
+        Paid Channel Performance
+      </div>
+      <div class="card-meta">COST EFFICIENCY ANALYSIS</div>
+    </div>
+
+    <div style="overflow-x: auto;">
+    <table class="paid-table">
+      <thead>
+        <tr>
+          <th style="min-width:160px;">Channel</th>
+          <th>Spend</th>
+          <th>Clicks</th>
+          <th>Signups</th>
+          <th>Depositors</th>
+          <th>Traders</th>
+          <th>CPC</th>
+          <th>Cost / Signup</th>
+          <th>Cost / Trader</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- TG Channel Sponsorship -->
+        <tr>
+          <td><div class="channel-name"><span class="dot" style="background:#3B82F6;"></span>TG Channel Sponsor</div></td>
+          <td>$10,000</td>
+          <td style="color:#F5F8FF; font-weight:700;">40,784</td>
+          <td>591</td>
+          <td>0</td>
+          <td>4</td>
+          <td class="good">$0.25</td>
+          <td class="good">$16.92</td>
+          <td class="warn">$2,500</td>
+        </tr>
+        <tr class="verdict-row">
+          <td colspan="9" style="text-align:left;">
+            <span class="verdict-pill winner">BEST VALUE</span>
+            &nbsp;&nbsp;Massive click volume at $0.25 CPC. Best signup rate of all paid channels. However, zero depositors — these are top-of-funnel clicks, not traders. Still, the cheapest awareness play by far.
+          </td>
+        </tr>
+
+        <!-- Vision UGC -->
+        <tr>
+          <td><div class="channel-name"><span class="dot" style="background:#A78BFA;"></span>Vision UGC</div></td>
+          <td>$17,500</td>
+          <td style="color:#FF5C9E;">38</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="bad">$460.53</td>
+          <td class="bad">N/A</td>
+          <td class="bad">N/A</td>
+        </tr>
+        <tr class="verdict-row">
+          <td colspan="9" style="text-align:left;">
+            <span class="verdict-pill poor">DID NOT WORK</span>
+            &nbsp;&nbsp;$17.5K spent for 38 tracked clicks and zero conversions. Either the UTM tracking broke, traffic was bot/low-intent, or the content didn't land. Worst ROI of all channels.
+          </td>
+        </tr>
+
+        <!-- Telegram Ads -->
+        <tr>
+          <td><div class="channel-name"><span class="dot" style="background:#F58220;"></span>Telegram Ads</div></td>
+          <td>$5,865</td>
+          <td>2,055</td>
+          <td>24</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="warn">$2.85</td>
+          <td class="bad">$244.38</td>
+          <td class="bad">N/A</td>
+        </tr>
+        <tr class="verdict-row">
+          <td colspan="9" style="text-align:left;">
+            <span class="verdict-pill mixed">MIXED</span>
+            &nbsp;&nbsp;Reasonable CPC but very low signup conversion (1.2%). Zero depositors or traders from this channel. The ad placements drove clicks but not quality intent. Over-budget by $865.
+          </td>
+        </tr>
+
+        <!-- CoConnect -->
+        <tr>
+          <td><div class="channel-name"><span class="dot" style="background:#45E85C;"></span>CoConnect (Alphabot)</div></td>
+          <td>$20,000</td>
+          <td>2,469</td>
+          <td>122</td>
+          <td>0</td>
+          <td>10</td>
+          <td class="warn">$8.10</td>
+          <td class="warn">$163.93</td>
+          <td class="bad">$2,000</td>
+        </tr>
+        <tr class="verdict-row">
+          <td colspan="9" style="text-align:left;">
+            <span class="verdict-pill mixed">MIXED — VOLUME PLAY</span>
+            &nbsp;&nbsp;356 community links created, driving 2.5K clicks and 122 signups. Per-signup cost is high ($164) but this was the only channel producing active traders (10). CPC is steep at $8.10 across many small communities.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- Summary callouts -->
+    <div style="display:flex; gap:32px; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06); flex-wrap:wrap;">
+      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
+        <strong style="color:#45E85C;">Best CPC:</strong> TG Channel Sponsor — $0.25
+      </div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
+        <strong style="color:#45E85C;">Best Cost/Signup:</strong> TG Channel Sponsor — $16.92
+      </div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
+        <strong style="color:#FF5C9E;">Worst ROI:</strong> Vision UGC — $460/click, 0 signups
+      </div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.45); letter-spacing:0.04em;">
+        <strong style="color:#3B82F6;">Only Trader Source:</strong> CoConnect — 10 active traders
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SOURCE BREAKDOWN                                             -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">UTM Breakdown</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #6F2EE4;"></span>
+        Source Breakdown
+      </div>
+      <div class="card-meta">BY UTM_SOURCE</div>
+    </div>
+    <table class="breakdown-table" id="source-table">
+      <thead>
+        <tr>
+          <th data-sort="name">Source <span class="sort-arrow"></span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="links">Links <span class="sort-arrow"></span></th>
+          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
+          <th data-sort="share">Share <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MEDIUM BREAKDOWN                                             -->
+  <!-- ============================================================ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #3B82F6;"></span>
+        Medium Breakdown
+      </div>
+      <div class="card-meta">BY UTM_MEDIUM</div>
+    </div>
+    <table class="breakdown-table" id="medium-table">
+      <thead>
+        <tr>
+          <th data-sort="name">Medium <span class="sort-arrow"></span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="links">Links <span class="sort-arrow"></span></th>
+          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
+          <th data-sort="share">Share <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CONTENT ID EXPLORER                                          -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">Content Deep Dive</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #F58220;"></span>
+        Content ID Explorer
+      </div>
+      <div class="card-meta" id="content-count">485 CONTENT IDS</div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" class="search-input" id="content-search" placeholder="Search content IDs (e.g. coconnect, bio, posts, earncraft...)">
+      <button class="filter-btn" data-filter="all" onclick="filterContent('all', this)">All</button>
+      <button class="filter-btn" data-filter="cc-" onclick="filterContent('cc-', this)">CoConnect</button>
+      <button class="filter-btn" data-filter="tg-" onclick="filterContent('tg-', this)">TG Ads</button>
+      <button class="filter-btn" data-filter="posts" onclick="filterContent('posts', this)">Sponsor</button>
+    </div>
+
+    <div class="result-count" id="content-results"></div>
+
+    <table class="breakdown-table" id="content-table">
+      <thead>
+        <tr>
+          <th data-sort="name">Content ID <span class="sort-arrow"></span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="links">Links <span class="sort-arrow"></span></th>
+          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TOP 20 LINKS                                                 -->
+  <!-- ============================================================ -->
+  <div class="section-gap"><div class="section-label">Individual Link Performance</div></div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="dot" style="background: #45E85C;"></span>
+        Top 20 Links by Clicks
+      </div>
+      <div class="card-meta">RANKED BY CLICK VOLUME</div>
+    </div>
+    <div id="top-links"></div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const sourceData = [
+  ["telegram", 43713, 267],
+  ["twitter", 3615, 39],
+  ["alphabot.app", 2469, 356],
+  ["shortmob", 1337, 1],
+  ["(none)", 360, 1],
+  ["tiktok", 91, 1],
+  ["odds-checker", 90, 1],
+  ["discord", 41, 3],
+  ["vision", 38, 8],
+  ["blog", 12, 2]
+];
+
+const mediumData = [
+  ["referral", 43475, 366],
+  ["social", 4489, 50],
+  ["paid_social", 2093, 259],
+  ["display", 1337, 1],
+  ["(none)", 360, 1],
+  ["organic", 12, 2]
+];
+
+const contentData = [
+  ["posts-wk2",26811,1],["posts",10075,1],["channel2",3671,1],["bio",3192,3],
+  ["coconnect",1698,144],["banner-1",1337,1],["(none)",494,5],["earncraft-new",371,2],
+  ["portugalvsspain",318,1],["round-32",231,1],["gd-launch",186,2],["final-market",182,2],
+  ["announcement",177,1],["earn-tips",117,2],["money-networks",115,2],["kian",91,1],
+  ["cc-kiichain",73,1],["thesupercrypto",71,2],["reward-announcement",69,1],
+  ["binancefreebox-1",62,2],["cryptotradingg-1",61,2],["binanceredpacket-code",60,2],
+  ["binanceredpacket",60,2],["1taptrading",52,1],["Sky_sports_football_updates",52,2],
+  ["HYPE-1D",48,2],["David_Ornstein",47,2],["ironholdcrypto",45,2],
+  ["neuralzone",42,2],["cc-degen-alpha",40,1],["reply guy",37,2],["cc-ercc",34,1],
+  ["cc-w3ab",30,1],["oddschecker",29,1],["tnc-alpha",29,1],["realmadridinfos-2",29,1],
+  ["V41L4xDlhek0MTZk",28,1],["semifinals WC",28,1],["tg-wQMvd2ZquZYzNzVh",26,1],
+  ["cc-wagmidao",26,1],["cc-polyverse",26,1],["cc-ignite-dao",26,1],
+  ["sleepagotchi",25,1],["cc-w3gf",25,1],["cc-metafrens",25,1],["cc-umi",24,1],
+  ["realmadridinfos",23,1],["halftime",22,1],["premier",20,1],
+  ["tg-V41L4xDlhek0MTZk-2",20,1],["tg-_T4Uk2ZSkTE4NWQy",19,1],["loyal-hub",19,1],
+  ["web3-lab",19,1],["Realmadrid_world",17,1],["oneshieldplusteam",17,2],
+  ["betting-mikekawakubettz",17,2],["irismovies2",16,2],
+  ["lucra-dao",15,1],["SPORT_433ET",15,1],["premier_leagueTG",15,1],
+  ["World_Cup_2026_us",15,1],["cc-fortenation",15,1],["RQFqgS6VWh1hNzZk",14,1],
+  ["ibettingxx",14,1],["england-congo",14,1],["final-preview",14,1],
+  ["UefaChampion_League",13,1],["matchday 6",13,1],["best-ai-tools",13,2],
+  ["tg-FlxWWNpKg140ODlk",13,1],["cc-bitmap-emporium",13,1],["cc-cseers-dao",13,1],
+  ["mexico-southafrica",12,1],["Rewards day 9",12,1],["uzxvsvgsdsy1999",12,1],
+  ["cc-alpha-apes",12,1],["BurqaaIspoortii",12,1],["cc-source-alpha",11,1],
+  ["cc-the-otterside",11,1],["cc-nate-alex",11,1],["ChelseaFcWorldWide_001",11,1],
+  ["manchester",10,1],["cc-degens-of-degen",10,1],["TransferNews_Live",10,1],
+  ["cc-lucra-dao",9,1],["skysports_news01",9,1],["cc-the-blockchain-party",9,1],
+  ["cc-lucky-labs",9,1],["Espn_Football_News_uk",9,1],["matchday 16",9,1],
+  ["cc-flipping-fun",8,1],["cc-nifty-apes",8,1],["cc-xeno-nft",8,1],
+  ["RealMadrid_aficcionados",8,1],["cc-degenerateape",8,1],["cc-whale-empire",8,1],
+  ["cc-kaiju-army",8,1],["cash-onramp",7,1],["cc-nami-dao",7,1],
+  ["link_in_bio",7,1],["cc-meegos-gaming",7,1],["cc-monstrocity-club",7,1],
+  ["cc-crypto-clashers",7,1],["cc-cosmic-cats",6,1],["arsenal_london",6,1],
+  ["worldcup-knockouts",6,1],["uefa_champ_league",6,1],["abrenwin",6,1],
+  ["cc-neko-pirates",6,1],["cc-cryptic-rebels",5,1],["cc-soulcalibur",5,1],
+  ["cc-astro-apes",5,1],["portugalspain",5,1],["reJuqicdrwg5N2E1",5,1],
+  ["cc-bit-beasts",5,1],["cc-metazukis",4,1],["cc-sol-invictus",4,1],
+  ["cc-underdawg",4,1],["cc-critter-clash",4,1],["cc-cyber-knights",4,1],
+  ["TheBetInvestorHOS",4,1],["Premier_League_Update",3,1],["Manchester_Utdfc",3,1],
+  ["SouthKorea-Czechia",3,1]
+];
+
+const top20Links = [
+  {key:"yz2N0WP", clicks:26811, src:"telegram", med:"referral", content:"posts-wk2", camp:"worldcup2026_sponsorship"},
+  {key:"JEBXGzZ", clicks:10075, src:"telegram", med:"referral", content:"posts", camp:"worldcup2026_sponsorship"},
+  {key:"5aiHLWQ", clicks:3671, src:"telegram", med:"referral", content:"channel2", camp:"worldcup2026_sponsorship"},
+  {key:"x", clicks:3186, src:"twitter", med:"social", content:"bio", camp:"worldcup2026"},
+  {key:"shortmob", clicks:1337, src:"shortmob", med:"display", content:"banner-1", camp:"worldcup2026"},
+  {key:"tgf-earncraft-new", clicks:371, src:"telegram", med:"paid_social", content:"earncraft-new", camp:"world_cup"},
+  {key:"_root", clicks:360, src:"(direct)", med:"(none)", content:"(none)", camp:"(none)"},
+  {key:"tCuGDWg", clicks:318, src:"telegram", med:"social", content:"portugalvsspain", camp:"worldcup2026"},
+  {key:"uJp1FYJ", clicks:231, src:"telegram", med:"social", content:"round-32", camp:"worldcup2026"},
+  {key:"wc-final-tg", clicks:182, src:"telegram", med:"referral", content:"final-market", camp:"worldcup2026_sponsorship"},
+  {key:"0AXNsD6", clicks:177, src:"telegram", med:"referral", content:"announcement", camp:"worldcup2026_sponsorship"},
+  {key:"cc-zax", clicks:126, src:"alphabot.app", med:"referral", content:"coconnect", camp:"worldcup2026_coconnect"},
+  {key:"gd", clicks:126, src:"twitter", med:"social", content:"gd-launch", camp:"worldcup2026"},
+  {key:"tgf-earn-tips", clicks:117, src:"telegram", med:"paid_social", content:"earn-tips", camp:"world_cup"},
+  {key:"tgf-money-networks", clicks:115, src:"telegram", med:"paid_social", content:"money-networks", camp:"world_cup"},
+  {key:"mlXaXhE", clicks:91, src:"tiktok", med:"referral", content:"kian", camp:"worldcup2026"},
+  {key:"odds", clicks:90, src:"odds-checker", med:"referral", content:"oddschecker", camp:"worldcup2026"},
+  {key:"cc-clokies", clicks:89, src:"alphabot.app", med:"referral", content:"coconnect", camp:"worldcup2026_coconnect"},
+  {key:"cc-the-otterside", clicks:85, src:"alphabot.app", med:"referral", content:"coconnect", camp:"worldcup2026_coconnect"},
+  {key:"cc-kiichain", clicks:73, src:"alphabot.app", med:"referral", content:"cc-kiichain", camp:"worldcup2026_coconnect"}
+];
+
+const TOTAL_CLICKS = 51766;
+
+const sourceColors = {
+  'telegram': '#3B82F6',
+  'twitter': '#1DA1F2',
+  'alphabot.app': '#45E85C',
+  'shortmob': '#F58220',
+  'tiktok': '#FF5C9E',
+  'odds-checker': '#A78BFA',
+  'discord': '#5865F2',
+  'vision': '#EC4899',
+  'blog': '#6EE7B7',
+  '(none)': '#6B7280'
+};
+
+const mediumColors = {
+  'referral': '#3B82F6',
+  'social': '#45E85C',
+  'paid_social': '#F58220',
+  'display': '#A78BFA',
+  '(none)': '#6B7280',
+  'organic': '#6EE7B7'
+};
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+
+function renderBreakdownTable(tableId, data, colorMap, totalClicks) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  const maxClicks = data[0][1];
+  tbody.innerHTML = data.map(([name, clicks, links]) => {
+    const avg = (clicks / links).toFixed(1);
+    const share = ((clicks / totalClicks) * 100).toFixed(1);
+    const barPct = (clicks / maxClicks * 100).toFixed(1);
+    const color = colorMap[name] || '#6B7280';
+    return `<tr>
+      <td><span class="dot" style="background:${color}; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:middle;"></span>${name}</td>
+      <td>
+        <div class="bar-cell">
+          <div class="bar-track"><div class="bar-fill" style="width:${barPct}%; background:${color};"></div></div>
+          <span class="bar-label">${clicks.toLocaleString()}</span>
+        </div>
+      </td>
+      <td>${links}</td>
+      <td>${avg}</td>
+      <td class="green">${share}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderContentTable(filterText, prefixFilter) {
+  const tbody = document.querySelector('#content-table tbody');
+  let filtered = contentData;
+
+  if (prefixFilter && prefixFilter !== 'all') {
+    filtered = filtered.filter(([name]) => name.toLowerCase().startsWith(prefixFilter.toLowerCase()) ||
+      (prefixFilter === 'posts' && (name === 'posts' || name === 'posts-wk2' || name === 'channel2')));
+  }
+  if (filterText) {
+    filtered = filtered.filter(([name]) => name.toLowerCase().includes(filterText.toLowerCase()));
+  }
+
+  const maxClicks = filtered.length > 0 ? filtered[0][1] : 1;
+  document.getElementById('content-results').textContent =
+    `SHOWING ${filtered.length} OF ${contentData.length} CONTENT IDS`;
+  document.getElementById('content-count').textContent =
+    `${filtered.length} CONTENT IDS`;
+
+  tbody.innerHTML = filtered.map(([name, clicks, links]) => {
+    const avg = (clicks / links).toFixed(1);
+    const barPct = (clicks / maxClicks * 100).toFixed(1);
+    return `<tr>
+      <td>${name}</td>
+      <td>
+        <div class="bar-cell">
+          <div class="bar-track"><div class="bar-fill" style="width:${barPct}%; background:#F58220;"></div></div>
+          <span class="bar-label">${clicks.toLocaleString()}</span>
+        </div>
+      </td>
+      <td>${links}</td>
+      <td>${avg}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTopLinks() {
+  const container = document.getElementById('top-links');
+  const maxClicks = top20Links[0].clicks;
+  container.innerHTML = top20Links.map((l, i) => {
+    const barPct = (l.clicks / maxClicks * 100).toFixed(1);
+    const color = sourceColors[l.src] || '#6B7280';
+    const rankClass = i < 3 ? ' gold' : '';
+    return `<div class="top-link-row">
+      <div class="top-link-rank${rankClass}">${i + 1}</div>
+      <div class="top-link-info">
+        <div class="top-link-key">go.outcome.xyz/${l.key}</div>
+        <div class="top-link-utm">${l.src} / ${l.med} / ${l.content}</div>
+      </div>
+      <div class="top-link-clicks">${l.clicks.toLocaleString()}</div>
+      <div class="top-link-bar">
+        <div class="top-link-bar-fill" style="width:${barPct}%; background:${color};"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// SORTING
+// ============================================================
+
+function setupSorting(tableId, data, colorMap) {
+  const table = document.getElementById(tableId);
+  const headers = table.querySelectorAll('th');
+  let currentSort = 'clicks';
+  let currentDir = 'desc';
+
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const sortKey = th.dataset.sort;
+      if (!sortKey) return;
+
+      if (currentSort === sortKey) {
+        currentDir = currentDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        currentSort = sortKey;
+        currentDir = sortKey === 'name' ? 'asc' : 'desc';
+      }
+
+      headers.forEach(h => {
+        h.classList.remove('sorted');
+        h.querySelector('.sort-arrow').textContent = '';
+      });
+      th.classList.add('sorted');
+      th.querySelector('.sort-arrow').textContent = currentDir === 'desc' ? '▼' : '▲';
+
+      const sorted = [...data].sort((a, b) => {
+        let va, vb;
+        switch(sortKey) {
+          case 'name': va = a[0]; vb = b[0]; break;
+          case 'clicks': va = a[1]; vb = b[1]; break;
+          case 'links': va = a[2]; vb = b[2]; break;
+          case 'avg': va = a[1]/a[2]; vb = b[1]/b[2]; break;
+          case 'share': va = a[1]; vb = b[1]; break;
+        }
+        if (sortKey === 'name') {
+          return currentDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+        }
+        return currentDir === 'desc' ? vb - va : va - vb;
+      });
+
+      if (tableId === 'content-table') {
+        contentData.length = 0;
+        contentData.push(...sorted);
+        renderContentTable(
+          document.getElementById('content-search').value,
+          currentContentFilter
+        );
+      } else {
+        renderBreakdownTable(tableId, sorted, colorMap, TOTAL_CLICKS);
+      }
+    });
+  });
+}
+
+// ============================================================
+// CONTENT FILTER
+// ============================================================
+
+let currentContentFilter = 'all';
+
+function filterContent(prefix, btn) {
+  currentContentFilter = prefix;
+  document.querySelectorAll('.search-bar .filter-btn').forEach(b => b.classList.remove('active'));
+  if (prefix !== 'all') btn.classList.add('active');
+  renderContentTable(document.getElementById('content-search').value, prefix);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+renderBreakdownTable('source-table', sourceData, sourceColors, TOTAL_CLICKS);
+renderBreakdownTable('medium-table', mediumData, mediumColors, TOTAL_CLICKS);
+renderContentTable('', 'all');
+renderTopLinks();
+
+setupSorting('source-table', sourceData, sourceColors);
+setupSorting('medium-table', mediumData, mediumColors);
+setupSorting('content-table', contentData, {});
+
+document.getElementById('content-search').addEventListener('input', (e) => {
+  renderContentTable(e.target.value, currentContentFilter);
+});
+</script>
+
+</body>
+</html>

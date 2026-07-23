@@ -375,6 +375,31 @@ body {
 /* ---------- BUDGET TABLE ---------- */
 .budget-over { color: #FF5C9E !important; }
 
+/* ---------- TOP CONTENT EMBEDS ---------- */
+.content-embed-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px; align-items: start; margin-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.07); padding-top: 22px;
+}
+.content-embed-cell {
+  border-radius: 12px; overflow: hidden; min-height: 80px; position: relative;
+}
+.content-embed-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  padding: 5px 10px; border-radius: 7px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.6); text-transform: uppercase;
+}
+.content-embed-badge .rk {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 5px;
+  background: rgba(69,232,92,0.15); color: #45E85C; font-size: 9px; font-weight: 700;
+}
+.content-embed-badge .vw { color: #45E85C; }
+#topContentTable tbody tr { cursor: pointer; }
+#topContentTable tbody tr:hover td { color: #F5F8FF; }
+
 /* ---------- INSIGHT GRID ---------- */
 .insight-grid {
   display: grid;
@@ -462,6 +487,7 @@ body {
     <a href="/world-cup/4">Week 4</a>
     <a href="/world-cup/5">Week 5</a>
     <a href="/world-cup/channels">Channels</a>
+    <a href="/clicks-explorer/">Clicks</a>
   </div>
 
   <!-- TITLE -->
@@ -719,9 +745,9 @@ body {
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#FF5C9E"></div> TOP PERFORMING CONTENT</div>
-      <div class="card-meta">X POSTS BY IMPRESSIONS</div>
+      <div class="card-meta">TOP 10 POSTS BY IMPRESSIONS &middot; RENDERED BELOW</div>
     </div>
-    <table class="breakdown-table">
+    <table class="breakdown-table" id="topContentTable">
       <thead>
         <tr>
           <th>Rank</th>
@@ -730,69 +756,10 @@ body {
           <th>Views</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><span class="top-content-rank">1</span></td>
-          <td><span class="breakdown-date-main">Genesis Depositor Badge launch</span></td>
-          <td>Jul 9</td>
-          <td style="color:#45E85C;font-weight:600">291,209</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">2</span></td>
-          <td><span class="breakdown-date-main">WC trade-to-earn announcement</span></td>
-          <td>Jun 10</td>
-          <td style="color:#45E85C;font-weight:600">198,431</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">3</span></td>
-          <td><span class="breakdown-date-main">Hype 1d video</span></td>
-          <td>Jun 12</td>
-          <td>94,349</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">4</span></td>
-          <td><span class="breakdown-date-main">QRT giveaway NBA finals</span></td>
-          <td>Jun 13</td>
-          <td>80,089</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">5</span></td>
-          <td><span class="breakdown-date-main">1-tap trading Telegram</span></td>
-          <td>Jul 6</td>
-          <td>49,600</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">6</span></td>
-          <td><span class="breakdown-date-main">Who's gonna make it to final</span></td>
-          <td>Jul 13</td>
-          <td>45,320</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">7</span></td>
-          <td><span class="breakdown-date-main">Fiat onramp launch</span></td>
-          <td>Jun 18</td>
-          <td>45,223</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">8</span></td>
-          <td><span class="breakdown-date-main">WC Final pre-game</span></td>
-          <td>Jul 19</td>
-          <td>41,496</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">9</span></td>
-          <td><span class="breakdown-date-main">Coindesk/Cointelegraph 25M</span></td>
-          <td>Jul 2</td>
-          <td>39,011</td>
-        </tr>
-        <tr>
-          <td><span class="top-content-rank">10</span></td>
-          <td><span class="breakdown-date-main">HIP-4 permissionless deployment</span></td>
-          <td>Jul 20</td>
-          <td>25,975</td>
-        </tr>
-      </tbody>
+      <tbody></tbody>
     </table>
+    <div class="content-embed-grid" id="topContentEmbeds"></div>
+    <div class="conv-footnote">Post previews rendered via X / Telegram embeds. Click a row to jump to its preview.</div>
   </div>
 
   <!-- FOOTER -->
@@ -1012,6 +979,82 @@ body {
   });
 
   document.getElementById('retentionBody').innerHTML = html;
+})();
+
+// ===================== TOP PERFORMING CONTENT =====================
+(function() {
+  // type: 'x' (tweet id) or 'tg' (telegram post path)
+  var TOP = [
+    { rank: 1,  title: 'Genesis Depositor Badge launch', date: 'Jul 9',  views: 291209, type: 'x',  ref: '2075248468759839079' },
+    { rank: 2,  title: 'WC trade-to-earn announcement',  date: 'Jun 10', views: 198431, type: 'x',  ref: '2064793357071913268' },
+    { rank: 3,  title: 'Hype 1d video',                  date: 'Jun 12', views: 94349,  type: 'x',  ref: '2065388580424613932' },
+    { rank: 4,  title: 'QRT giveaway NBA finals',        date: 'Jun 13', views: 80089,  type: 'x',  ref: '2065794418712433078' },
+    { rank: 5,  title: '1-tap trading (Telegram)',       date: 'Jul 6',  views: 49600,  type: 'tg', ref: 'Announcement_Outcome/55' },
+    { rank: 6,  title: "Who's gonna make it to final",   date: 'Jul 13', views: 45320,  type: 'x',  ref: '2076703765672141076' },
+    { rank: 7,  title: 'Fiat onramp launch',             date: 'Jun 18', views: 45223,  type: 'x',  ref: '2067608028292198409' },
+    { rank: 8,  title: 'WC Final pre-game',              date: 'Jul 19', views: 41496,  type: 'x',  ref: '2078872549551972357' },
+    { rank: 9,  title: '$25M traded milestone',          date: 'Jul 2',  views: 39011,  type: 'x',  ref: '2072681867053301963' },
+    { rank: 10, title: 'HIP-4 permissionless deployment', date: 'Jul 20', views: 25975, type: 'x',  ref: '2079067128070619640' }
+  ];
+
+  function fmt(n) { return n.toLocaleString('en-US'); }
+
+  // build table rows
+  var tbody = document.querySelector('#topContentTable tbody');
+  tbody.innerHTML = TOP.map(function(p) {
+    var viewStyle = p.rank <= 2 ? ' style="color:#45E85C;font-weight:600"' : '';
+    return '<tr data-rank="' + p.rank + '">' +
+      '<td><span class="top-content-rank">' + p.rank + '</span></td>' +
+      '<td><span class="breakdown-date-main">' + p.title + '</span></td>' +
+      '<td>' + p.date + '</td>' +
+      '<td' + viewStyle + '>' + fmt(p.views) + '</td></tr>';
+  }).join('');
+
+  // build embed cells
+  var grid = document.getElementById('topContentEmbeds');
+  TOP.forEach(function(p) {
+    var cell = document.createElement('div');
+    cell.className = 'content-embed-cell';
+    cell.id = 'topEmbed' + p.rank;
+    cell.innerHTML = '<div class="content-embed-badge"><span class="rk">' + p.rank + '</span> ' +
+      p.title + ' &middot; <span class="vw">' + fmt(p.views) + ' views</span></div>';
+    if (p.type === 'x') {
+      var bq = document.createElement('blockquote');
+      bq.className = 'twitter-tweet';
+      bq.setAttribute('data-theme', 'dark');
+      bq.setAttribute('data-dnt', 'true');
+      var a = document.createElement('a');
+      a.href = 'https://twitter.com/Outcomexyz/status/' + p.ref;
+      bq.appendChild(a);
+      cell.appendChild(bq);
+    } else {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://telegram.org/js/telegram-widget.js?22';
+      s.setAttribute('data-telegram-post', p.ref);
+      s.setAttribute('data-width', '100%');
+      s.setAttribute('data-dark', '1');
+      cell.appendChild(s);
+    }
+    grid.appendChild(cell);
+  });
+
+  // load twitter widgets and render
+  var tw = document.createElement('script');
+  tw.src = 'https://platform.twitter.com/widgets.js';
+  tw.async = true;
+  tw.onload = function() {
+    if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(grid);
+  };
+  document.body.appendChild(tw);
+
+  // click a table row -> scroll to its rendered post
+  tbody.addEventListener('click', function(e) {
+    var tr = e.target.closest('tr');
+    if (!tr) return;
+    var el = document.getElementById('topEmbed' + tr.dataset.rank);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
 })();
 </script>
 
