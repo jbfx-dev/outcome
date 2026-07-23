@@ -184,9 +184,59 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
   font-size: 9px; color: rgba(255,255,255,0.65); line-height: 1.3; margin-top: 3px;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+
+/* ---------- VIDEO MODAL ---------- */
+.video-modal-backdrop {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.video-modal-backdrop.open { display: flex; }
+.video-modal {
+  position: relative; width: 100%; max-width: 420px;
+  background: #111; border-radius: 16px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+.video-modal-close {
+  position: absolute; top: 12px; right: 12px; z-index: 5;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff; font-size: 18px; line-height: 1;
+}
+.video-modal-close:hover { background: rgba(255,255,255,0.15); }
+.video-modal-embed { width: 100%; aspect-ratio: 9 / 16; background: #000; display: flex; align-items: center; justify-content: center; }
+.video-modal-embed iframe { width: 100%; height: 100%; border: none; }
+.video-modal-embed .embed-loading { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+.video-modal-info { padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.08); }
+.video-modal-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.video-modal-creator { font-size: 14px; font-weight: 700; color: #fff; }
+.video-modal-stats { font-family: 'PP Neue Corp', sans-serif; font-size: 14px; color: #45E85C; }
+.video-modal-caption { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+.video-modal-open { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-decoration: none; }
+.video-modal-open:hover { color: #45E85C; }
 </style>
 </head>
 <body>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal-backdrop" id="videoModal" onclick="if(event.target===this)closePlayer()">
+  <div class="video-modal">
+    <div class="video-modal-close" onclick="closePlayer()">&times;</div>
+    <div class="video-modal-embed" id="modalEmbed"><span class="embed-loading">Loading...</span></div>
+    <div class="video-modal-info">
+      <div class="video-modal-meta">
+        <span class="video-modal-creator" id="modalCreator"></span>
+        <span class="video-modal-stats" id="modalStats"></span>
+      </div>
+      <div class="video-modal-caption" id="modalCaption"></div>
+      <a class="video-modal-open" id="modalLink" href="#" target="_blank" rel="noopener">Open on platform &rarr;</a>
+    </div>
+  </div>
+</div>
 
 <nav class="nav">
   <div class="nav-left">
@@ -948,8 +998,8 @@ function selectDay(i){
       Facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>'
     };
     ugc.forEach(p => {
-      const cap = p.caption ? p.caption.replace(/</g,'&lt;') : '';
-      html += `<a class="ugc-card" href="${p.url}" target="_blank" rel="noopener">
+      const cap = p.caption ? p.caption.replace(/</g,'&lt;').replace(/'/g,"\\'") : '';
+      html += `<div class="ugc-card" onclick="openPlayer('${p.platform}','${p.url}','${p.creator}',${p.views},${p.eng||0},'${cap}')">
         <div class="ugc-card-bg" style="background:${platformGrad[p.platform]}"></div>
         <div class="ugc-card-overlay"></div>
         <div class="ugc-card-play"><svg viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19"/></svg></div>
@@ -961,7 +1011,7 @@ function selectDay(i){
           <div class="ugc-creator">@${p.creator}</div>
           <div class="ugc-caption">${cap}</div>
         </div>
-      </a>`;
+      </div>`;
     });
     html += `</div>`;
   }
@@ -989,6 +1039,50 @@ function selectDay(i){
   }
   document.getElementById('dayDetail').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
+
+// ---------- VIDEO MODAL PLAYER ----------
+function getEmbedUrl(platform, url) {
+  if (platform === 'TikTok') {
+    const m = url.match(/video\/(\d+)/);
+    return m ? 'https://www.tiktok.com/embed/v2/' + m[1] : null;
+  }
+  if (platform === 'Instagram') {
+    const m = url.match(/\/(reel|p)\/([^/]+)/);
+    return m ? 'https://www.instagram.com/' + m[1] + '/' + m[2] + '/embed/' : null;
+  }
+  if (platform === 'YouTube') {
+    const m = url.match(/(?:shorts\/|watch\?v=|youtu\.be\/)([^&?/]+)/);
+    return m ? 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1' : null;
+  }
+  if (platform === 'Facebook') {
+    return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&autoplay=true';
+  }
+  return null;
+}
+
+function openPlayer(platform, url, creator, views, eng, caption) {
+  const embedUrl = getEmbedUrl(platform, url);
+  const embed = document.getElementById('modalEmbed');
+  if (embedUrl) {
+    embed.innerHTML = '<iframe src="' + embedUrl + '" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+  } else {
+    embed.innerHTML = '<span class="embed-loading">Preview not available</span>';
+  }
+  document.getElementById('modalCreator').textContent = '@' + creator;
+  document.getElementById('modalStats').textContent = fmt(views) + ' views';
+  document.getElementById('modalCaption').textContent = caption || '';
+  document.getElementById('modalLink').href = url;
+  document.getElementById('videoModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePlayer() {
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('modalEmbed').innerHTML = '<span class="embed-loading">Loading...</span>';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePlayer(); });
 
 // default: open the WC Final day
 selectDay(39);
