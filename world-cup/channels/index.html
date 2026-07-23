@@ -138,6 +138,52 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
   .nav { padding: 0 20px; } .content { padding: 24px 20px 48px; } .title-h1 { font-size: 40px; }
   .dd-kpis { grid-template-columns: repeat(2, 1fr); } .embed-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- UGC VIDEO CARDS ---------- */
+.ugc-section { margin-top: 16px; }
+.ugc-feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
+.ugc-card {
+  position: relative; aspect-ratio: 9 / 16; border-radius: 10px;
+  overflow: hidden; cursor: pointer; text-decoration: none; display: block;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.ugc-card:hover { transform: scale(1.03); filter: brightness(1.1); }
+.ugc-card-bg { position: absolute; inset: 0; }
+.ugc-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, transparent 30%, transparent 55%, rgba(0,0,0,0.8) 100%);
+}
+.ugc-card-play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 44px; height: 44px; background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+.ugc-card-play svg { width: 18px; height: 18px; fill: #fff; margin-left: 2px; }
+.ugc-card-top {
+  position: absolute; top: 0; left: 0; right: 0; padding: 8px 10px;
+  display: flex; justify-content: space-between; align-items: flex-start; z-index: 2;
+}
+.ugc-badge {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 4px; background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px); color: #fff; display: flex; align-items: center; gap: 4px;
+}
+.ugc-badge svg { width: 9px; height: 9px; }
+.ugc-views {
+  font-family: 'PP Neue Corp', sans-serif; font-size: 11px; color: #fff;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  padding: 3px 7px; border-radius: 4px;
+}
+.ugc-card-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; z-index: 2;
+}
+.ugc-creator { font-size: 11px; font-weight: 700; color: #fff; }
+.ugc-caption {
+  font-size: 9px; color: rgba(255,255,255,0.65); line-height: 1.3; margin-top: 3px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -216,18 +262,6 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
       </tbody>
     </table>
     <div class="conv-footnote">*Total signups incl. 4,601 unattributed (post-sign-in events lose tracking params). Blended cost/signup uses all 5,530 signups. Cost/signup per channel uses attributed signups only &mdash; treat as upper bound. Over-budget items in pink.</div>
-  </div>
-
-  <!-- TOP UGC CONTENT -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#E1306C"></div> TOP UGC CONTENT</div>
-      <div class="card-meta">VISION UGC &middot; 371 POSTS &middot; 9.9M VIEWS &middot; 524K ENGAGEMENT</div>
-    </div>
-    <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:20px; line-height:1.6;">
-      Creator-generated content across Instagram, TikTok, Facebook, and YouTube. 10 creators produced 371 posts with 9.9M total views. Top 3 creators (ceofooty, Letschatball, Bennyballss) drove 93% of all views.
-    </div>
-    <div class="embed-grid" id="ugcEmbeds"></div>
   </div>
 
   <!-- DAILY EXPLORER -->
@@ -383,6 +417,441 @@ const CC = {
 "2026-07-18":["TENKE","RIFT","Watsny's Mind","Sprout Citizens","Coded Estate","RavenQuest","Cursed Stone","SNACKGANG","FroGlings","ELITIA","Zerion","Beggy Mob","TheFutureForgers","Mooners","ArenaX","Xanderia","tiny dinos","Punkism","MagicBlock","Youmio","Paradise Tycoon"]
 };
 
+const UGC_DAILY = {
+  "2026-06-21": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 3668, eng: 93, url: 'https://www.instagram.com/reel/DZ1OH3yum6X/', caption: 'Can Germany win it all?' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 3089, eng: 108, url: 'https://www.tiktok.com/@ceofooty_/video/7653677381906877717', caption: 'These takes are wild' },
+    { creator: 'Dannie', platform: 'YouTube', views: 985, eng: 8, url: 'https://www.youtube.com/shorts/EZdsgeJrDWQ', caption: 'Prime Mbappe is cooking' }
+  ],
+  "2026-06-22": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 3005, eng: 83, url: 'https://www.instagram.com/reel/DZ5tb_HtQpr/', caption: 'Imagine' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 2434, eng: 75, url: 'https://www.instagram.com/reel/DZ5hisitJFP/', caption: 'Its TIME' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1206, eng: 9, url: 'https://www.youtube.com/shorts/uMh48sgyq0w', caption: 'aged well...' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 940, eng: 35, url: 'https://www.tiktok.com/@ceofooty_/video/7654292849558867221', caption: 'Its TIME' }
+  ],
+  "2026-06-23": [
+    { creator: 'Dannie', platform: 'YouTube', views: 948, eng: 15, url: 'https://www.youtube.com/shorts/SbsKBmMEAo0', caption: 'the responses' }
+  ],
+  "2026-06-24": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 7175, eng: 477, url: 'https://www.tiktok.com/@ceofooty_/video/7655009456626928917', caption: 'This is forcing it now' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 3881, eng: 140, url: 'https://www.instagram.com/reel/DZ-fj_nN00L/', caption: 'This is forcing it now' },
+    { creator: 'Dannie', platform: 'Instagram', views: 305, eng: 4, url: 'https://www.instagram.com/p/DZ85dpjIKcA/', caption: 'i dont even want the ticket after todays match' },
+    { creator: 'Dannie', platform: 'YouTube', views: 20, eng: 0, url: 'https://www.youtube.com/shorts/MmsKgBbiwSA', caption: 'GG Croatia' }
+  ],
+  "2026-06-25": [
+    { creator: 'Dannie', platform: 'YouTube', views: 1228, eng: 14, url: 'https://www.youtube.com/shorts/eTz1CxRamEU', caption: 'messi you are cooked' },
+    { creator: 'Dannie', platform: 'Instagram', views: 337, eng: 6, url: 'https://www.instagram.com/p/DaBoLrKstQX/', caption: 'ENGLAND ftw' },
+    { creator: 'Dannie', platform: 'Instagram', views: 233, eng: 1, url: 'https://www.instagram.com/p/DZ_kLnroali/', caption: 'Or will the dictator decide...' }
+  ],
+  "2026-06-26": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 59513, eng: 1305, url: 'https://www.instagram.com/reel/DaByFAjNQCT/', caption: 'Prime Yamal' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 4016, eng: 179, url: 'https://www.tiktok.com/@ceofooty_/video/7655844051991923988', caption: 'They winning it 100%' },
+    { creator: 'robshredzz', platform: 'Instagram', views: 2267, eng: 42, url: 'https://www.instagram.com/reel/DaD5XkBAR2n/', caption: 'Lets go dictator' }
+  ],
+  "2026-06-27": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 70500, eng: 1909, url: 'https://www.tiktok.com/@ceofooty_/video/7656176678841879828', caption: 'It might be wraps' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 52756, eng: 265, url: 'https://www.instagram.com/reel/DaGl9AgtpAG/', caption: 'It might be wraps' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 12828, eng: 204, url: 'https://www.instagram.com/reel/DaDm21FtEcu/', caption: 'Baby Yamal' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 8938, eng: 325, url: 'https://www.instagram.com/reel/DaEw7SKuVAd/', caption: 'Spain Yamal' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 7955, eng: 209, url: 'https://www.instagram.com/reel/DaESC5PNNLW/', caption: 'They winning it 100%' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1287, eng: 16, url: 'https://www.youtube.com/shorts/1LPAA06NEGY', caption: 'well the witch spells didnt work' }
+  ],
+  "2026-06-28": [
+    { creator: 'Dannie', platform: 'Instagram', views: 2221, eng: 21, url: 'https://www.instagram.com/p/DaHUrkkI2Y5/', caption: 'well the witch spells didnt work' }
+  ],
+  "2026-06-29": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 312400, eng: 23990, url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', caption: 'Call it off now' },
+    { creator: 'Dannie', platform: 'Instagram', views: 61013, eng: 2048, url: 'https://www.instagram.com/p/DaLrrCOxMFj/', caption: 'Brazil count your days, today was lucky...' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 6938, eng: 160, url: 'https://www.instagram.com/reel/DaLpz5YNK0b/', caption: 'Call it off now' },
+    { creator: '1kjahz', platform: 'Instagram', views: 2432, eng: 98, url: 'https://www.instagram.com/reel/DaL4cvgg5-V/', caption: 'Stay selling my parlays' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2157, eng: 18, url: 'https://www.youtube.com/shorts/S1kRDgOO1Pk', caption: 'Brazil you got lucky today...' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1493, eng: 13, url: 'https://www.youtube.com/shorts/KTDIaBDQDOc', caption: 'i swear im not biased (this aged well...)' },
+    { creator: 'jahz524', platform: 'TikTok', views: 649, eng: 76, url: 'https://www.tiktok.com/@jahz524/video/7656938093659819278', caption: '#fyp #germany #worldcup' }
+  ],
+  "2026-06-30": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 9016, eng: 302, url: 'https://www.tiktok.com/@ceofooty_/video/7657290056029310229', caption: 'No point in playing' },
+    { creator: 'Dannie', platform: 'Instagram', views: 6557, eng: 148, url: 'https://www.instagram.com/p/DaNqixrs7UH/', caption: 'JAPAN GOT ROBBED (rip my rent)' },
+    { creator: 'Dannie', platform: 'Instagram', views: 6434, eng: 80, url: 'https://www.instagram.com/p/DaMqqofMIw1/', caption: 'ngl i forgot to pay my rent' },
+    { creator: 'Dannie', platform: 'Instagram', views: 5928, eng: 72, url: 'https://www.instagram.com/p/DaMHJVMqNav/', caption: 'i swear im not biased (video aged well gg)' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 4059, eng: 79, url: 'https://www.instagram.com/reel/DaOUUmJteGi/', caption: 'No point in playing' },
+    { creator: 'Dannie', platform: 'YouTube', views: 3899, eng: 11, url: 'https://www.youtube.com/shorts/ObTZM0Mlv3w', caption: 'gg to my rent' },
+    { creator: '1kjahz', platform: 'Instagram', views: 3098, eng: 154, url: 'https://www.instagram.com/reel/DaMH961A5Rz/', caption: '#explore #germany #worldcup #paraguay' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2111, eng: 12, url: 'https://www.youtube.com/shorts/Iw1MwHwrflQ', caption: 'JAPAN GOT ROBBED (rip my rent)' },
+    { creator: 'jahz524', platform: 'TikTok', views: 795, eng: 60, url: 'https://www.tiktok.com/@jahz524/video/7656972581047766286', caption: '#fyp #explore #germany #worldcup' }
+  ],
+  "2026-07-01": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 33518, eng: 789, url: 'https://www.instagram.com/reel/DaREYk5Is7P/', caption: 'How' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 22000, eng: 1010, url: 'https://www.tiktok.com/@ceofooty_/video/7657686512607382804', caption: 'How' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 20600, eng: 751, url: 'https://www.tiktok.com/@ceofooty_/video/7657638309098736916', caption: 'Call it of rn' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 10991, eng: 268, url: 'https://www.instagram.com/reel/DaQvI_lBZRM/', caption: 'Call it off rn' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1322, eng: 5, url: 'https://www.youtube.com/shorts/wbIQL2DCeSo', caption: 'Ecuador has the best flag and team...' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1059, eng: 47, url: 'https://www.tiktok.com/@danniewc/video/7657667899179519246', caption: 'Ecuador has the best flag and team...' },
+    { creator: 'Dannie', platform: 'Instagram', views: 880, eng: 5, url: 'https://www.instagram.com/p/DaQAPiTMuVe/', caption: 'Tunisia ggs' },
+    { creator: 'Dannie', platform: 'YouTube', views: 834, eng: 3, url: 'https://www.youtube.com/shorts/mj0ozYiiGsw', caption: 'Tunisia ggs' },
+    { creator: 'Dannie', platform: 'Instagram', views: 362, eng: 2, url: 'https://www.instagram.com/p/DaQ7l4nRSil/', caption: 'Ecuador has the best flag and team...' }
+  ],
+  "2026-07-02": [
+    { creator: 'Dannie', platform: 'YouTube', views: 23651, eng: 101, url: 'https://www.youtube.com/shorts/a6Brl3d8UoQ', caption: 'Ronaldo ur COOKED' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1747, eng: 34, url: 'https://www.instagram.com/p/DaTRhDoR5RH/', caption: 'Ronaldo ur COOKED' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1541, eng: 13, url: 'https://www.youtube.com/shorts/MU11UIJbv6w', caption: 'easiest prediction' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1495, eng: 15, url: 'https://www.youtube.com/shorts/ZReILzHI1GI', caption: 'AUSTRIA youre cooked' },
+    { creator: 'Dannie', platform: 'TikTok', views: 927, eng: 82, url: 'https://www.tiktok.com/@danniewc/video/7658006184179289358', caption: 'Ronaldo ur COOKED' },
+    { creator: 'Dannie', platform: 'TikTok', views: 825, eng: 48, url: 'https://www.tiktok.com/@danniewc/video/7658034364516666637', caption: 'AUSTRIA youre cooked' }
+  ],
+  "2026-07-03": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 299722, eng: 25128, url: 'https://www.instagram.com/reel/DaWCC6rTts8/', caption: 'Make it make sense' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 113200, eng: 12915, url: 'https://www.tiktok.com/@ceofooty_/video/7658401875233950996', caption: 'Make it make sense' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 5698, eng: 139, url: 'https://www.tiktok.com/@ceofooty_/video/7658442554526141716', caption: 'Its honestly insane' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 3419, eng: 70, url: 'https://www.instagram.com/reel/DaWUCgPTfGX/', caption: 'Its honestly crazy' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1562, eng: 21, url: 'https://www.instagram.com/p/DaUhZJFMX0n/', caption: 'easiest prediction' },
+    { creator: 'Dannie', platform: 'Instagram', views: 393, eng: 3, url: 'https://www.instagram.com/p/DaTdWAPxC1z/', caption: 'AUSTRIA youre cooked' },
+    { creator: 'Dannie', platform: 'TikTok', views: 11, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7658187016789642510', caption: 'easiest prediction' }
+  ],
+  "2026-07-04": [
+    { creator: 'ceofooty', platform: 'Instagram', views: 295028, eng: 31230, url: 'https://www.instagram.com/reel/DaXaZ9utD52/', caption: 'Here we go again' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 88500, eng: 9971, url: 'https://www.tiktok.com/@ceofooty_/video/7658600702742203668', caption: 'Here we go again' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 60200, eng: 3468, url: 'https://www.tiktok.com/@ceofooty_/video/7658478102166670613', caption: 'What a game' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 45807, eng: 1718, url: 'https://www.instagram.com/reel/DaWkUu6MVyk/', caption: 'What a game' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1746, eng: 23, url: 'https://www.youtube.com/watch?v=-dHhoX-nsFw', caption: 'BRAZIL AGAINST NORWAY' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1288, eng: 21, url: 'https://www.youtube.com/shorts/E0764YNKo6g', caption: 'paraguay pls secure my rent' },
+    { creator: 'Dannie', platform: 'Instagram', views: 251, eng: 1, url: 'https://www.instagram.com/p/DaY0E6ZMr5H/', caption: 'paraguay pls secure my rent' },
+    { creator: 'Dannie', platform: 'TikTok', views: 7, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7658805150110289166', caption: 'paraguay pls secure my rent' }
+  ],
+  "2026-07-05": [
+    { creator: 'Bennyballss', platform: 'YouTube', views: 12202, eng: 326, url: 'https://www.youtube.com/watch?v=os8ONMp4mn4', caption: 'Congratulations SPAIN!' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 11194, eng: 685, url: 'https://www.youtube.com/watch?v=e6noGHS9C9Y', caption: 'Mexico you fought hard' },
+    { creator: '1kjahz', platform: 'Instagram', views: 6372, eng: 303, url: 'https://www.instagram.com/reel/DabfGhVATP6/', caption: 'World Cup feels like a custody battle' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 4790, eng: 90, url: 'https://www.instagram.com/reel/DaZ4E0SNQNL/', caption: 'Im genuinely shocked' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 4135, eng: 218, url: 'https://www.instagram.com/reel/Daanfvgig3_/', caption: 'BRAZIL AGAINST NORWAY JOGA BONITO' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 2759, eng: 78, url: 'https://www.youtube.com/watch?v=orn-cn5R6QU', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 2399, eng: 73, url: 'https://www.tiktok.com/@ceofooty_/video/7658956011461561621', caption: 'Genuinely im shocked' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1526, eng: 16, url: 'https://www.youtube.com/shorts/lpSrd6sutRA', caption: 'Harry Kanes about to put the pizza in the oven' },
+    { creator: 'jahz524', platform: 'TikTok', views: 864, eng: 67, url: 'https://www.tiktok.com/@jahz524/video/7659185670698585358', caption: '#fyp #brazil #norway #worldcup' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 578, eng: 33, url: 'https://www.tiktok.com/@letschat_ball/video/7659062717818342678', caption: 'BRAZIL AGAINST NORWAY JOGA BONITO' }
+  ],
+  "2026-07-06": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 270000, eng: 14790, url: 'https://www.tiktok.com/@ceofooty_/video/7659509405758590228', caption: 'Its actually crazy' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 88443, eng: 5255, url: 'https://www.instagram.com/reel/Dab9y8GtGdV/', caption: 'Im still wondering' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 79100, eng: 5413, url: 'https://www.tiktok.com/@ceofooty_/video/7659256898318765333', caption: 'Im still wondering' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 61531, eng: 1623, url: 'https://www.instagram.com/reel/DadtzRUNOZ3/', caption: 'Its actually crazy' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 26500, eng: 1043, url: 'https://www.tiktok.com/@ceofooty_/video/7659231198446767381', caption: 'What a game tho' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 25661, eng: 572, url: 'https://www.youtube.com/watch?v=m7semOdK5_8', caption: 'USA I am so proud of you' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 22854, eng: 728, url: 'https://www.youtube.com/watch?v=L9RMXdQmUys', caption: 'There is no one like you Messi' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 20570, eng: 271, url: 'https://www.instagram.com/reel/Dace_kONRY5/', caption: 'Its sad ngl' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 12200, eng: 326, url: 'https://www.tiktok.com/@ceofooty_/video/7659331869309291796', caption: 'Its sad ngl' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 5300, eng: 78, url: 'https://www.facebook.com/reel/1547282050526780/', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 4927, eng: 178, url: 'https://www.tiktok.com/@letschat_ball/video/7659351369379335446', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 4255, eng: 82, url: 'https://www.instagram.com/reel/DabyQ6ehyop/', caption: 'What a game tho' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 3307, eng: 162, url: 'https://www.instagram.com/reel/DaeBQ_OvnQl/', caption: 'Mexico its okay next World Cup you will win' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 3040, eng: 25, url: 'https://www.youtube.com/watch?v=CmLKGM1rLhc', caption: 'ARE WE GONNA LOOSE MESSI TONIGHT' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 2825, eng: 120, url: 'https://www.instagram.com/reel/DadAlLXiXg1/', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 2209, eng: 102, url: 'https://www.instagram.com/reel/Dad9tKCv7ms/', caption: 'Spain WILL WIN the WorldCup' },
+    { creator: '1kjahz', platform: 'Instagram', views: 2007, eng: 108, url: 'https://www.instagram.com/reel/Dab031GM0ul/', caption: 'We got our boy back' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1466, eng: 5, url: 'https://www.youtube.com/shorts/FuLfPIOYqdw', caption: 'Englands secret weapon' },
+    { creator: 'TampaTwinsTM', platform: 'YouTube', views: 1191, eng: 11, url: 'https://www.youtube.com/watch?v=HpfKfQugDWU', caption: 'Ragebaiting Brazil Fans at the World Cup' },
+    { creator: 'Dannie', platform: 'Instagram', views: 197, eng: 1, url: 'https://www.instagram.com/p/Dab4J5Nor9D/', caption: 'Harry Kanes about to put the pizza in the oven' },
+    { creator: 'Dannie', platform: 'TikTok', views: 7, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7659246206069067022', caption: 'Harry Kanes about to put the pizza in the oven' }
+  ],
+  "2026-07-07": [
+    { creator: 'Bennyballss', platform: 'YouTube', views: 37569, eng: 685, url: 'https://www.youtube.com/watch?v=MAnIBAyAyWc', caption: 'The game is cooked goodbye France' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 36400, eng: 2739, url: 'https://www.tiktok.com/@ceofooty_/video/7659872796830600469', caption: 'Dude it happened again' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 27883, eng: 948, url: 'https://www.instagram.com/reel/DagPRmct3Za/', caption: 'It happened again bro' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 11500, eng: 548, url: 'https://www.tiktok.com/@ceofooty_/video/7659836278069824788', caption: 'Every single time' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 7171, eng: 170, url: 'https://www.instagram.com/reel/Daf_EeLtb5u/', caption: 'Every single time' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6100, eng: 98, url: 'https://www.facebook.com/reel/1053887920321912/', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 4080, eng: 104, url: 'https://www.instagram.com/reel/DafW3d9CrfZ/', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 3830, eng: 223, url: 'https://www.instagram.com/reel/DagM1dVsi9B/', caption: 'There is no one like you Messi. YOU ARE THE GREATEST.' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2261, eng: 8, url: 'https://www.youtube.com/shorts/I76kd1o0m-8', caption: 'Portugals curse is REAL RIP my rent money' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1799, eng: 38, url: 'https://www.youtube.com/shorts/tgbuFh4gZ5w', caption: 'Carpo Verde the real world cup winners' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1483, eng: 30, url: 'https://www.youtube.com/watch?v=iRpmq655QRI', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+    { creator: 'tampatwinstm', platform: 'Instagram', views: 1334, eng: 20, url: 'https://www.instagram.com/reel/Dafagc-Ia7Y/', caption: 'Ragebaiting Brazil fans at the World Cup' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 1137, eng: 50, url: 'https://www.tiktok.com/@letschat_ball/video/7659745951959043350', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+    { creator: 'Dannie', platform: 'TikTok', views: 268, eng: 10, url: 'https://www.tiktok.com/@danniewc/video/7659613903214660877', caption: 'Englands secret weapon' },
+    { creator: 'Dannie', platform: 'TikTok', views: 234, eng: 9, url: 'https://www.tiktok.com/@danniewc/video/7659930815194762510', caption: 'Portugals curse is REAL' },
+    { creator: 'Dannie', platform: 'Instagram', views: 225, eng: 0, url: 'https://www.instagram.com/p/DagoKtPsXEn/', caption: 'Portugals curse is REAL' },
+    { creator: 'Dannie', platform: 'TikTok', views: 185, eng: 10, url: 'https://www.tiktok.com/@danniewc/video/7659714091690282253', caption: 'Carpo Verde the real world cup winners' },
+    { creator: 'Dannie', platform: 'Instagram', views: 172, eng: 0, url: 'https://www.instagram.com/p/DaeadyjoRMe/', caption: 'Englands secret weapon' },
+    { creator: 'Dannie', platform: 'Instagram', views: 127, eng: 1, url: 'https://www.instagram.com/p/DaeppQXsIie/', caption: 'Carpo Verde the real world cup winners' },
+    { creator: 'Outcomewc', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@outcomewc/video/7659622886814108942', caption: 'this 100 racks is MINE' }
+  ],
+  "2026-07-08": [
+    { creator: 'benny_ballss', platform: 'Instagram', views: 94119, eng: 6209, url: 'https://www.instagram.com/reel/Daii720vGAE/', caption: 'The game is cooked goodbye France' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 19559, eng: 432, url: 'https://www.youtube.com/watch?v=gLfbL8jGsas', caption: 'Mbappe you are generational and Morocco you fought well' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 11910, eng: 210, url: 'https://www.instagram.com/reel/DagvA_VvNC5/', caption: 'USA I am so proud of you' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 5800, eng: 100, url: 'https://www.facebook.com/reel/1684190846164755/', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 3842, eng: 62, url: 'https://www.youtube.com/watch?v=7yOWKYyHlpI', caption: 'France are deadly and they just destroyed Morocco' },
+    { creator: 'Dannie', platform: 'YouTube', views: 3765, eng: 14, url: 'https://www.youtube.com/shorts/Ax85JuYBN5E', caption: 'I put my RENT on Argentina' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2480, eng: 8, url: 'https://www.youtube.com/shorts/FoeJCf46w1A', caption: 'When your rent money rides on Messi' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 1952, eng: 47, url: 'https://www.instagram.com/reel/Daht73IiTiu/', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1421, eng: 34, url: 'https://www.instagram.com/p/DajHB9oskqL/', caption: 'When your rent money rides on Messi' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1154, eng: 6, url: 'https://www.youtube.com/shorts/X_9pGmU2HhQ', caption: 'How far can Morocco go' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1079, eng: 13, url: 'https://www.youtube.com/watch?v=oqvZTn-zbQE', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 322, eng: 18, url: 'https://www.tiktok.com/@letschat_ball/video/7660085999610940694', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+    { creator: 'Dannie', platform: 'TikTok', views: 258, eng: 3, url: 'https://www.tiktok.com/@danniewc/video/7660288266305817869', caption: 'I put my RENT on Argentina' },
+    { creator: 'Dannie', platform: 'Instagram', views: 229, eng: 4, url: 'https://www.instagram.com/p/DaiMx43Mq22/', caption: 'How far can Morocco go' },
+    { creator: 'Dannie', platform: 'Instagram', views: 218, eng: 1, url: 'https://www.instagram.com/p/DajH9LTsnvE/', caption: 'Thats one third of my rent' },
+    { creator: 'Dannie', platform: 'YouTube', views: 66, eng: 4, url: 'https://www.youtube.com/shorts/YEkeNYBo0i8', caption: 'Argentinas comeback is REAL' },
+    { creator: 'Dannie', platform: 'YouTube', views: 40, eng: 3, url: 'https://www.youtube.com/shorts/riQNNXXqRFw', caption: 'Thats one third of my rent' },
+    { creator: 'Dannie', platform: 'TikTok', views: 23, eng: 3, url: 'https://www.tiktok.com/@danniewc/video/7660296597170818318', caption: 'gg rip my rent' },
+    { creator: 'Dannie', platform: 'TikTok', views: 11, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7660156997240769806', caption: 'How far can Morocco go' },
+    { creator: 'Outcomewc', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@outcomewc/video/7660080228643147022', caption: 'day 2 today was cooked' },
+    { creator: 'Outcomewc', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@outcomewc/video/7660172978298031373', caption: 'Day 3 Argentina less goooo' }
+  ],
+  "2026-07-09": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 118600, eng: 5425, url: 'https://www.tiktok.com/@ceofooty_/video/7660638382355123476', caption: 'Just wait' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 110000, eng: 3000, url: 'https://www.facebook.com/reel/1017349150702340/', caption: 'France are deadly' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 15200, eng: 422, url: 'https://www.tiktok.com/@ceofooty_/video/7660669878126349588', caption: 'Whos ready' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 10000, eng: 227, url: 'https://www.facebook.com/reel/1580859366709187/', caption: 'MESSI FANS ARE BEING EXPOSED' },
+    { creator: 'Dannie', platform: 'YouTube', views: 9546, eng: 32, url: 'https://www.youtube.com/shorts/pD5ilWYtUW4', caption: 'I CALLED IT! Messi is the GOAT' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 8452, eng: 280, url: 'https://www.youtube.com/watch?v=57d3t-QyDcc', caption: 'Spain is taking it HOME!' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 6655, eng: 111, url: 'https://www.instagram.com/reel/DaljbQuBMbJ/', caption: 'Just wait' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 5300, eng: 58, url: 'https://www.facebook.com/reel/1520294926777864/', caption: 'PRAY FOR PARIS' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 3868, eng: 71, url: 'https://www.instagram.com/reel/Dak9H8ktvwj/', caption: 'What else should I have asked' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 3381, eng: 83, url: 'https://www.instagram.com/reel/DalxdQnBaaG/', caption: 'Whos ready' },
+    { creator: '1kjahz', platform: 'Instagram', views: 3084, eng: 189, url: 'https://www.instagram.com/reel/DalfJLYAe76/', caption: 'Morocco vs France' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 2977, eng: 175, url: 'https://www.instagram.com/reel/Dalr1oyi5cR/', caption: 'France are deadly' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 2723, eng: 74, url: 'https://www.tiktok.com/@ceofooty_/video/7660551236889939220', caption: 'What should I have asked' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 1606, eng: 72, url: 'https://www.instagram.com/reel/Dakzp9UCKnT/', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1540, eng: 14, url: 'https://www.youtube.com/watch?v=0P5K2fC405A', caption: 'SPAIN AGAINST BELGIUM WAS UNSUCCESSFUL HATE WATCH' },
+    { creator: 'jahz524', platform: 'TikTok', views: 1433, eng: 73, url: 'https://www.tiktok.com/@jahz524/video/7660629020664433934', caption: 'Morocco vs France game today' },
+    { creator: 'Dannie', platform: 'TikTok', views: 405, eng: 33, url: 'https://www.tiktok.com/@danniewc/video/7660680605377629454', caption: 'Argentinas comeback is INSANE' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 54, eng: 4, url: 'https://www.tiktok.com/@letschat_ball/video/7660657844504595734', caption: 'France are deadly' },
+    { creator: 'letschat_ball', platform: 'TikTok', views: 39, eng: 3, url: 'https://www.tiktok.com/@letschat_ball/video/7660531405750832406', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+    { creator: 'Dannie', platform: 'TikTok', views: 2, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7660478712311237901', caption: 'Argentinas comeback is INSANE' }
+  ],
+  "2026-07-10": [
+    { creator: 'Letschatball1', platform: 'YouTube', views: 36270, eng: 1000, url: 'https://www.youtube.com/watch?v=_dxARgKyr0c', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 22900, eng: 573, url: 'https://www.tiktok.com/@ceofooty_/video/7660995138583399700', caption: 'Ferran Masterclass watch' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 19118, eng: 730, url: 'https://www.youtube.com/watch?v=jANRP8_W6x4', caption: 'Jude Bellingham the man you are' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6100, eng: 49, url: 'https://www.facebook.com/reel/1509985973687528/', caption: 'SPAIN AGAINST BELGIUM WAS UNSUCCESSFUL HATE WATCH' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 5720, eng: 109, url: 'https://www.instagram.com/reel/DaoMbZqNYaN/', caption: 'WHAT is on my lip' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 5357, eng: 330, url: 'https://www.instagram.com/reel/Dal4-N5BCW4/', caption: 'Mbappe you are truly generational' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 4028, eng: 69, url: 'https://www.instagram.com/reel/DaoBqc2NBA6/', caption: 'Ferran masterclass watch' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 3640, eng: 174, url: 'https://www.instagram.com/reel/DaoPecyvZda/', caption: 'Spain will not stop at Belgium' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 2261, eng: 95, url: 'https://www.tiktok.com/@ceofooty_/video/7661019274043084052', caption: 'Bro WHAT is on my lip' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1299, eng: 6, url: 'https://www.youtube.com/shorts/uZMQKOrCzhM', caption: 'You cant not love football fans' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1230, eng: 13, url: 'https://www.youtube.com/watch?v=eVU_ad4kn2k', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+    { creator: 'Outcomewc', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@outcomewc/video/7660699806553132301', caption: 'Day 1 of turning 100k into something' }
+  ],
+  "2026-07-11": [
+    { creator: 'letschatball1', platform: 'Instagram', views: 943553, eng: 97245, url: 'https://www.instagram.com/reel/DaqC2dWiEn2/', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 831941, eng: 69260, url: 'https://www.instagram.com/reel/DaqqtF1tcxr/', caption: 'Im done' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 471500, eng: 37180, url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', caption: 'Im done' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 228600, eng: 19151, url: 'https://www.tiktok.com/@ceofooty_/video/7661334176733433109', caption: 'It might be broken' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 215000, eng: 10000, url: 'https://www.facebook.com/reel/27311240818504787/', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 108600, eng: 6586, url: 'https://www.tiktok.com/@ceofooty_/video/7661396579559034133', caption: 'Im done' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 22224, eng: 626, url: 'https://www.youtube.com/watch?v=mPKy2yQcBqc', caption: 'Julian you deserve everything' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 21644, eng: 485, url: 'https://www.instagram.com/reel/Daqz5M5tviw/', caption: 'Im done' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 20036, eng: 491, url: 'https://www.youtube.com/watch?v=ir1DUL9eEjM', caption: 'As a Messi fan it is time to tell the truth' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 9574, eng: 151, url: 'https://www.instagram.com/reel/DaqYM24tIUg/', caption: 'It might be broken' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 5800, eng: 76, url: 'https://www.facebook.com/reel/1794826774875746/', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 3201, eng: 45, url: 'https://www.youtube.com/watch?v=Nvw1lh1qZUQ', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 1886, eng: 60, url: 'https://www.instagram.com/reel/DapccCiC5q-/', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1117, eng: 9, url: 'https://www.youtube.com/shorts/_dIIwIW4184', caption: 'Mbappe is a different beast' },
+    { creator: 'Dannie', platform: 'Instagram', views: 915, eng: 19, url: 'https://www.instagram.com/p/DaokAUyIxkk/', caption: 'You cant not love football fans' },
+    { creator: 'Dannie', platform: 'TikTok', views: 497, eng: 30, url: 'https://www.tiktok.com/@danniewc/video/7661073420674731277', caption: 'You cant not love football fans' },
+    { creator: 'Dannie', platform: 'TikTok', views: 271, eng: 10, url: 'https://www.tiktok.com/@danniewc/video/7661422463347166477', caption: 'Mbappe knew the whole time' }
+  ],
+  "2026-07-12": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 83300, eng: 3920, url: 'https://www.tiktok.com/@ceofooty_/video/7661519146877816085', caption: 'We back again' },
+    { creator: 'bennyclasher', platform: 'TikTok', views: 54900, eng: 4476, url: 'https://www.tiktok.com/@bennyclasher/video/7661439938482752799', caption: 'Jude Bellingham the man you are ENGLAND vs NORWAY' },
+    { creator: 'bennyclasher', platform: 'TikTok', views: 49300, eng: 4128, url: 'https://www.tiktok.com/@bennyclasher/video/7661697236421659934', caption: 'Julian Alvarez you deserve everything' },
+    { creator: 'bennyclasher', platform: 'TikTok', views: 24700, eng: 904, url: 'https://www.tiktok.com/@bennyclasher/video/7661782591594401054', caption: 'As a Messi fan I am here to tell you the truth' },
+    { creator: 'Bennyballss', platform: 'YouTube', views: 23951, eng: 377, url: 'https://www.youtube.com/watch?v=ACky75pOp90', caption: 'Will England finally get their get back' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 13907, eng: 461, url: 'https://www.instagram.com/reel/Darqj39uuP8/', caption: 'We back again' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6400, eng: 167, url: 'https://www.facebook.com/reel/2158314388128028/', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 5478, eng: 309, url: 'https://www.instagram.com/reel/DasYXrGiXDM/', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3898, eng: 103, url: 'https://www.instagram.com/reel/DatUDCTI-rZ/', caption: 'France and Spain finally meet at the World Cup' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1257, eng: 11, url: 'https://www.instagram.com/p/DarOFDsoc__/', caption: 'Mbappe is a different beast' },
+    { creator: 'Letschatball1', platform: 'YouTube', views: 1026, eng: 21, url: 'https://www.youtube.com/watch?v=rnqBqazUSAM', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+    { creator: 'mkdonny14', platform: 'YouTube', views: 548, eng: 7, url: 'https://www.youtube.com/watch?v=HVm-kpaNCUE', caption: 'Will Argentina change it up' },
+    { creator: 'Dannie', platform: 'TikTok', views: 369, eng: 28, url: 'https://www.tiktok.com/@danniewc/video/7661440425558822158', caption: 'Englands secret weapon You cant make this up' },
+    { creator: 'Dannie', platform: 'TikTok', views: 301, eng: 19, url: 'https://www.tiktok.com/@danniewc/video/7661648084719455502', caption: 'never doubt the dictator' },
+    { creator: 'Dannie', platform: 'TikTok', views: 192, eng: 15, url: 'https://www.tiktok.com/@danniewc/video/7661456617853947150', caption: 'Mbappe is a different beast' },
+    { creator: 'TampaTwinsTM', platform: 'YouTube', views: 17, eng: 0, url: 'https://www.youtube.com/watch?v=mIR35Fp-z_4', caption: 'Americans Dont Know Anything About Football' }
+  ],
+  "2026-07-13": [
+    { creator: 'bennyclasher', platform: 'TikTok', views: 131600, eng: 6091, url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', caption: 'Will England finally make Argentina pay' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 24800, eng: 1804, url: 'https://www.tiktok.com/@ceofooty_/video/7661844629641317652', caption: 'Honestly one day' },
+    { creator: 'don.mk14', platform: 'TikTok', views: 22300, eng: 1990, url: 'https://www.tiktok.com/@don.mk14/video/7661924372415827214', caption: 'Will Argentina change things' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 9697, eng: 188, url: 'https://www.tiktok.com/@ceofooty_/video/7661908102081416469', caption: 'Bro sold the world cup' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 8777, eng: 403, url: 'https://www.instagram.com/reel/DavpP3rhXHx/', caption: 'Messi has faced Manchester United five times' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 5800, eng: 93, url: 'https://www.facebook.com/reel/2604393209978305/', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 5573, eng: 366, url: 'https://www.instagram.com/reel/DavLmufCEz2/', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 5314, eng: 180, url: 'https://www.instagram.com/reel/Dat7Os7uv9K/', caption: 'Honestly one day' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 4748, eng: 201, url: 'https://www.instagram.com/reel/DavyGavvVKZ/', caption: 'Will England finally get their get back against Argentina' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 4295, eng: 70, url: 'https://www.instagram.com/reel/DauXSnSNOho/', caption: 'Bro sold the world cup' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2479, eng: 12, url: 'https://www.youtube.com/shorts/oQTQcZ6ocoY', caption: 'Norway got ROBBED' },
+    { creator: 'mk.don14', platform: 'Instagram', views: 1927, eng: 39, url: 'https://www.instagram.com/reel/DauepI0AbDg/', caption: 'Will Argentina change it up' },
+    { creator: 'mkdonny14', platform: 'YouTube', views: 527, eng: 11, url: 'https://www.youtube.com/watch?v=-R0XbEOnSTY', caption: 'Will they do it' },
+    { creator: 'Dannie', platform: 'Instagram', views: 437, eng: 3, url: 'https://www.instagram.com/p/Dauy9HAsQRj/', caption: 'Did FIFA just rob Norway' },
+    { creator: 'Dannie', platform: 'TikTok', views: 5, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662025525195509005', caption: 'Norway got robbed against England' },
+    { creator: 'Dannie', platform: 'TikTok', views: 4, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7661965886693051661', caption: 'Did it hit the SKY Wire' }
+  ],
+  "2026-07-14": [
+    { creator: 'ceofooty_', platform: 'TikTok', views: 188400, eng: 9804, url: 'https://www.tiktok.com/@ceofooty_/video/7662277033153547541', caption: 'Zip it bro' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 94500, eng: 5454, url: 'https://www.tiktok.com/@ceofooty_/video/7662503565943901461', caption: 'This close' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 43400, eng: 1208, url: 'https://www.tiktok.com/@ceofooty_/video/7662453561468407061', caption: 'France' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 37300, eng: 1885, url: 'https://www.tiktok.com/@ceofooty_/video/7662196576349211925', caption: 'Well see tmr' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 26442, eng: 1452, url: 'https://www.instagram.com/reel/DayTNIrhoG_/', caption: 'Argentinas whole plan really is Messi and pray' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 25543, eng: 672, url: 'https://www.instagram.com/reel/Daw7p8etPpF/', caption: 'Just zip it bro' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 15410, eng: 370, url: 'https://www.instagram.com/reel/Dayf3D-tIuJ/', caption: 'This close' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 7287, eng: 176, url: 'https://www.instagram.com/reel/DayKCiTNHCb/', caption: 'France' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 7007, eng: 116, url: 'https://www.instagram.com/reel/DayACJIA-Xa/', caption: 'How did Pedri sneak onto the team' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 6720, eng: 242, url: 'https://www.instagram.com/reel/DayLU2qoJBC/', caption: 'France cannot afford to take Spain lightly' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6200, eng: 115, url: 'https://www.facebook.com/reel/2045380609429493/', caption: 'THE REASON WHY FRANCE WILL BEAT SPAIN TODAY' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 5306, eng: 174, url: 'https://www.instagram.com/reel/Daynt8FB_l4/', caption: 'Messi haters are already preloading their excuses' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 4886, eng: 164, url: 'https://www.instagram.com/reel/Dax5CecyEKe/', caption: 'Show them Lamine' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 4497, eng: 88, url: 'https://www.instagram.com/reel/DayaF0DB6A1/', caption: 'Argentina did not rob Egypt' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3753, eng: 181, url: 'https://www.instagram.com/reel/DaynzOYBfiW/', caption: 'Cape Verde just wrote the greatest underdog story' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 3341, eng: 165, url: 'https://www.instagram.com/reel/Daxc4KnKGQh/', caption: 'THE REASON WHY FRANCE WILL BEAT SPAIN TODAY' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 3243, eng: 65, url: 'https://www.instagram.com/reel/DawXKTYO2bH/', caption: 'Well see tmr' },
+    { creator: 'don.mk14', platform: 'TikTok', views: 3127, eng: 175, url: 'https://www.tiktok.com/@don.mk14/video/7662296780087889165', caption: 'Can they do it' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2984, eng: 34, url: 'https://www.instagram.com/reel/DayG4tcomi6/', caption: 'Spain are worthy opponents but France are the ones who should scare everybody' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2351, eng: 16, url: 'https://www.youtube.com/shorts/Oyu9qPfPocs', caption: 'Englands dirty goal and Norways disputed calls' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1775, eng: 11, url: 'https://www.youtube.com/shorts/2IY5AEsrafY', caption: 'France is about to show Spain' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1703, eng: 18, url: 'https://www.youtube.com/shorts/bxCg3KQbyOk', caption: 'Sorloth had ONE job' },
+    { creator: 'mk.don14', platform: 'Instagram', views: 1522, eng: 43, url: 'https://www.instagram.com/reel/DaxE7B5gDQc/', caption: 'Will they do it' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 1510, eng: 91, url: 'https://www.instagram.com/reel/Daysn-bOV58/', caption: 'Spain has proved to the world once again' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1435, eng: 30, url: 'https://www.instagram.com/p/DayGq2rxqVM/', caption: 'Frances too stacked Spain is Cookeddddd' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1384, eng: 30, url: 'https://www.instagram.com/p/Dax-F-PsuzX/', caption: 'Englands dirty goal stole the game off Norway' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1286, eng: 20, url: 'https://www.instagram.com/p/DayQAcMRuHT/', caption: 'France takes the crown The dictator has spoken' },
+    { creator: 'Dannie', platform: 'Instagram', views: 650, eng: 18, url: 'https://www.instagram.com/p/Dax1gcNMp-R/', caption: 'Norway had ONE job Sorloth cost them everything' },
+    { creator: 'mkdonny14', platform: 'YouTube', views: 534, eng: 11, url: 'https://www.youtube.com/watch?v=jnAKLi9-_g0', caption: '#england' },
+    { creator: 'Dannie', platform: 'YouTube', views: 47, eng: 0, url: 'https://www.youtube.com/shorts/KZgb9QzITgk', caption: 'France takes the crown' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662422155845569806', caption: 'Englands stats look clean' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662405872714255629', caption: 'Sorloth threw away the entire game' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662446061931351310', caption: 'France is about to run this' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662460807497764110', caption: 'France have got the dictator on their side' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662505786085510414', caption: 'France have got the dictator' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662506161077243149', caption: 'France is about to run this' }
+  ],
+  "2026-07-15": [
+    { creator: 'benny_ballss', platform: 'Instagram', views: 198213, eng: 17712, url: 'https://www.instagram.com/reel/Dayzq_2u8aO/', caption: 'France why do you always do this' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 163800, eng: 10440, url: 'https://www.tiktok.com/@ceofooty_/video/7662849349499587860', caption: 'Already bro' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 118800, eng: 3949, url: 'https://www.tiktok.com/@ceofooty_/video/7662636637960026388', caption: 'Call it of rn' },
+    { creator: 'ceofooty_', platform: 'TikTok', views: 36400, eng: 1922, url: 'https://www.tiktok.com/@ceofooty_/video/7662873377194970389', caption: 'Well played' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 33202, eng: 1409, url: 'https://www.instagram.com/reel/Da05GARNHF8/', caption: 'Already bro' },
+    { creator: 'Dannie', platform: 'YouTube', views: 25168, eng: 233, url: 'https://www.youtube.com/shorts/aI1S2caTTvY', caption: 'Argentina shutting down the haters' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 12890, eng: 961, url: 'https://www.instagram.com/reel/Da1JIUEhm4a/', caption: 'England lost because they spent an hour hiding' },
+    { creator: 'ceofooty', platform: 'Instagram', views: 10621, eng: 201, url: 'https://www.instagram.com/reel/Da1ERGWtOPO/', caption: 'Well played' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 9494, eng: 288, url: 'https://www.instagram.com/reel/Da1HMLXPKtM/', caption: 'If England loses I will shave my eyebrows' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6600, eng: 74, url: 'https://www.facebook.com/reel/1052391973977481/', caption: 'ENGLAND AGAINST ARGENTINA WHO WINS' },
+    { creator: 'Letschatball', platform: 'Facebook', views: 6200, eng: 60, url: 'https://www.facebook.com/reel/2093720418248766/', caption: 'ITS COMING HOME ENGLAND IS GOING TO THE FINAL' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 5519, eng: 511, url: 'https://www.instagram.com/reel/Da1CUvioBIQ/', caption: 'Argentina did it again and this time it was England' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 4570, eng: 359, url: 'https://www.instagram.com/reel/Da1RwP3BXjf/', caption: 'Genuine question for the Messi haters' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 3600, eng: 126, url: 'https://www.instagram.com/reel/Da1PWqMMvu3/', caption: 'There will never be another player like you Messi' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3387, eng: 70, url: 'https://www.instagram.com/reel/DayunK4hGyD/', caption: 'Alexander Sorloth had Haaland completely unmarked' },
+    { creator: 'Dannie', platform: 'YouTube', views: 3135, eng: 23, url: 'https://www.youtube.com/shorts/BLVXQpp1qQ0', caption: 'Messi is locked in Argentina are about to destroy England' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2166, eng: 59, url: 'https://www.instagram.com/reel/Da0vZ6zhav5/', caption: 'The true Diego Maradona was never one thing' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 1937, eng: 43, url: 'https://www.instagram.com/reel/Da0M0aRiYfD/', caption: 'ENGLAND AGAINST ARGENTINA WHO WINS' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1726, eng: 15, url: 'https://www.youtube.com/shorts/htmt-cCCW-I', caption: 'Argentina are going all the way' },
+    { creator: 'don.mk14', platform: 'TikTok', views: 1725, eng: 81, url: 'https://www.tiktok.com/@don.mk14/video/7662661487751597325', caption: 'Hoping for a thriller' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1700, eng: 92, url: 'https://www.instagram.com/p/DazbXossSQO/', caption: 'Messi has visited the wall' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1698, eng: 44, url: 'https://www.instagram.com/p/Da0H_aMsOgu/', caption: 'Argentina are cheating Shut your mouth man' },
+    { creator: 'mk.don14', platform: 'Instagram', views: 1660, eng: 17, url: 'https://www.instagram.com/reel/Dazl_dLgpEi/', caption: 'england argentina worldcup' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 1643, eng: 45, url: 'https://www.instagram.com/reel/Da0hqxuBkG2/', caption: 'Diego Maradona scored the most audacious goal' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 1522, eng: 70, url: 'https://www.instagram.com/reel/Da0gS0RCSUv/', caption: 'ITS COMING HOME ENGLAND IS GOING TO THE FINAL' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1514, eng: 38, url: 'https://www.instagram.com/p/Da047JeRjiw/', caption: 'Argentinas the defending champs putting my RENT on it' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1464, eng: 27, url: 'https://www.instagram.com/p/Da0xhGnxLXX/', caption: 'Youre all sleeping on Argentina' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 1453, eng: 45, url: 'https://www.instagram.com/reel/Da0m0SyB88H/', caption: 'Gabriel Batistuta was so lethal' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1416, eng: 22, url: 'https://www.instagram.com/p/Da0wXvyxmRD/', caption: 'You cant deny the goat' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 1371, eng: 77, url: 'https://www.instagram.com/reel/Da0jxBHMIzU/', caption: 'Jude please be okay England needs you' },
+    { creator: 'Dannie', platform: 'Instagram', views: 452, eng: 9, url: 'https://www.instagram.com/p/Da0qV6tsWkx/', caption: 'Sorry Egypt Argentina are going all the way' },
+    { creator: 'Dannie', platform: 'YouTube', views: 68, eng: 3, url: 'https://www.youtube.com/shorts/Dba0QADM3uQ', caption: 'Argentinas taking it all' },
+    { creator: 'Dannie', platform: 'YouTube', views: 65, eng: 2, url: 'https://www.youtube.com/shorts/5qxZcgF2unI', caption: 'Youre all sleeping on Argentina man' },
+    { creator: 'Dannie', platform: 'YouTube', views: 46, eng: 0, url: 'https://www.youtube.com/shorts/D9RgpEPginI', caption: 'You cant deny the goat' },
+    { creator: 'Dannie', platform: 'TikTok', views: 2, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662796577286720782', caption: 'Argentina is cheating your mouth man' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662793544419134733', caption: 'Messi has visited the wall' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662828871728827661', caption: 'It is Rigged Argentina are cheating your mouth man' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662832267588390157', caption: 'Argentinas winning EVERYTHING while Im eating' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662630934235139341', caption: 'Messi has visited the wall' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662723533079956750', caption: 'Argentina are cheating Shut your mouth' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662808722523098381', caption: 'Some people need to chill Argentina are going all the way' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7662825356004576526', caption: 'Messi has visited the wall Argentina Masterclass incoming' }
+  ],
+  "2026-07-16": [
+    { creator: 'Letschatball', platform: 'Facebook', views: 2000000, eng: 22000, url: 'https://www.facebook.com/reel/874609058621642/', caption: 'SACK THOMAS HE SOLD THE GAME' },
+    { creator: 'letschatball1', platform: 'Instagram', views: 91551, eng: 684, url: 'https://www.instagram.com/reel/Da25r8si8MF/', caption: 'SACK THOMAS HE SOLD THE GAME' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 19804, eng: 953, url: 'https://www.instagram.com/reel/Da15KWJROgs/', caption: 'Defenders have spent two decades trying to figure out Messi' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 15041, eng: 643, url: 'https://www.instagram.com/reel/Da20tWoIZSf/', caption: 'People are swearing this World Cup is rigged for Argentina' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 8398, eng: 499, url: 'https://www.instagram.com/reel/Da1x__iohcM/', caption: 'Messi delivered the game winning assist in the 92nd minute' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 5869, eng: 292, url: 'https://www.instagram.com/reel/Da3Sd04hyAU/', caption: 'BREAKING FIFA has officially confirmed Argentinas run was rigged' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 5622, eng: 263, url: 'https://www.instagram.com/reel/Da1dugshqEx/', caption: 'Football has never actually been about goals and assists' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 4645, eng: 106, url: 'https://www.instagram.com/reel/Da28JqzhSTU/', caption: 'Arsenal fans keep making Messi comparison posters' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 4462, eng: 295, url: 'https://www.instagram.com/reel/Da2DM6DoQ0o/', caption: 'There is a real photo of a 20 year old Messi bathing Yamal' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3337, eng: 44, url: 'https://www.instagram.com/reel/Da3LpIohQOy/', caption: 'Manchester United have as good a chance as anybody' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3308, eng: 93, url: 'https://www.instagram.com/reel/Da1W6Krhmsr/', caption: 'England deserved better than what Tuchel gave them' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1848, eng: 18, url: 'https://www.youtube.com/shorts/Jbh_oUsbbpI', caption: 'Told you so Argentina ranked LOWEST' },
+    { creator: 'Dannie', platform: 'Instagram', views: 642, eng: 19, url: 'https://www.instagram.com/p/Da2zzSIMlqG/', caption: 'Told you so Argentina ranked LOWEST' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663126484944571661', caption: 'Told you so Argentina ranked LOWEST' }
+  ],
+  "2026-07-17": [
+    { creator: 'Letschatball', platform: 'Facebook', views: 6500, eng: 93, url: 'https://www.facebook.com/reel/2412031956292029/', caption: 'AS A REAL MADRID FAN THIS IS THE FIRST TIME I AGREE WITH LAPORTA' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1720, eng: 10, url: 'https://www.youtube.com/shorts/Z73TT8UA5HM', caption: 'THE GOAT DEBATE IS OVER Messi at 39' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1642, eng: 6, url: 'https://www.youtube.com/shorts/TYW-rHggHuk', caption: 'I TOLD YOU SO Messi at the wall' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1443, eng: 87, url: 'https://www.instagram.com/p/Da6Rbz5ssji/', caption: 'At 39 Messi is STILL the GOAT' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1441, eng: 61, url: 'https://www.instagram.com/p/Da6Gcb7x7t5/', caption: 'I TOLD YOU SO Messi at the wall' },
+    { creator: 'mkdonny14', platform: 'YouTube', views: 636, eng: 5, url: 'https://www.youtube.com/watch?v=3tPortfhPm4', caption: 'Still watching' },
+    { creator: 'Dannie', platform: 'Instagram', views: 210, eng: 0, url: 'https://www.instagram.com/p/Da6O5VRxmqo/', caption: 'Argentina just proved everyone wrong' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663599974776622349', caption: 'I TOLD YOU Argentina came back' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663620384784239886', caption: 'England fans got rage baited' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663624698688736526', caption: 'The GOAT at 39 years old' }
+  ],
+  "2026-07-18": [
+    { creator: 'Letschatball', platform: 'Facebook', views: 81000, eng: 714, url: 'https://www.facebook.com/reel/1775938727154555/', caption: 'England destroyed France what a crazy game' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 10419, eng: 793, url: 'https://www.instagram.com/reel/Da8TGwiopQW/', caption: 'Messi haters have officially run out of real arguments' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 7298, eng: 175, url: 'https://www.instagram.com/reel/Da83gZ6Bs72/', caption: 'Morgan Rogers is now the 4th most expensive transfer' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 6737, eng: 154, url: 'https://www.instagram.com/reel/Da8py9zhlI8/', caption: 'I would never play a sport suspended in the air' },
+    { creator: 'don.mk14', platform: 'TikTok', views: 4701, eng: 727, url: 'https://www.tiktok.com/@don.mk14/video/7663767097033510158', caption: 'Still watching' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 4471, eng: 161, url: 'https://www.instagram.com/reel/Da8a01AIKGo/', caption: 'Chelsea just hijacked Arsenals move for Morgan Rogers' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 4408, eng: 106, url: 'https://www.instagram.com/reel/Da6s3WpRojc/', caption: 'England WE will be praying for you' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3586, eng: 129, url: 'https://www.instagram.com/reel/Da7zFFeIAO7/', caption: 'It has to be genuinely unlucky to land on Tottenham' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3377, eng: 130, url: 'https://www.instagram.com/reel/Da9AqtIBbor/', caption: 'People love saying the third place match is meaningless' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 3138, eng: 136, url: 'https://www.instagram.com/reel/Da8i4q_BmUV/', caption: 'United losing a friendly to Wrexham' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2557, eng: 101, url: 'https://www.instagram.com/reel/Da8AmXbB8P5/', caption: 'Real Madrid fans rooting against Messi' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2251, eng: 59, url: 'https://www.instagram.com/reel/Da8xNYEoS_l/', caption: 'Fair warning right now if France lose this bronze final' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2108, eng: 42, url: 'https://www.instagram.com/reel/Da80pXhodlB/', caption: '4-0 France and honestly I dont even feel like ragebaiting' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1990, eng: 10, url: 'https://www.youtube.com/shorts/KO0XLIYU1vg', caption: 'Messi is breaking through Spains defense' },
+    { creator: 'mk.don14', platform: 'Instagram', views: 1416, eng: 20, url: 'https://www.instagram.com/reel/Da7RWNFgdFV/', caption: 'Still watching' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1320, eng: 42, url: 'https://www.instagram.com/p/Da8R4LiMgnF/', caption: 'Messi is breaking through Spains defense' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1292, eng: 49, url: 'https://www.instagram.com/p/Da72t--MU2l/', caption: 'Messi has always been the GOAT' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1055, eng: 7, url: 'https://www.youtube.com/shorts/IttlwdvsrF0', caption: 'Messi has always been the GOAT' },
+    { creator: 'mkdonny14', platform: 'YouTube', views: 542, eng: 13, url: 'https://www.youtube.com/watch?v=YzvmRL3an4o', caption: '#spain' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663853630658776333', caption: 'Messi has always been the GOAT' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7663915109097491725', caption: 'Messi is breaking through Spains defense' }
+  ],
+  "2026-07-19": [
+    { creator: 'Dannie', platform: 'Instagram', views: 16243, eng: 217, url: 'https://www.instagram.com/p/Da_ES0VR46C/', caption: 'Just because Messi touched Yamal doesnt mean Spain wins' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 11829, eng: 361, url: 'https://www.instagram.com/reel/Da_eVbptRtI/', caption: 'Leandro Paredes lost it after the final whistle' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 5085, eng: 224, url: 'https://www.instagram.com/reel/Da-146hNuNI/', caption: 'People love telling themselves that greatness has to wait' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 4800, eng: 197, url: 'https://www.instagram.com/reel/Da9QYQ_xqHE/', caption: 'Saka finally ends the Messi debate' },
+    { creator: 'Dannie', platform: 'Instagram', views: 3876, eng: 51, url: 'https://www.instagram.com/p/Da_Eu9yR0Nh/', caption: 'Argentina has this in the bag' },
+    { creator: 'monstermike197', platform: 'Instagram', views: 2656, eng: 148, url: 'https://www.instagram.com/reel/Da_bkrsxtwr/', caption: 'Spain are world champions' },
+    { creator: 'Dannie', platform: 'YouTube', views: 2635, eng: 18, url: 'https://www.youtube.com/shorts/lJbv_YyXUNU', caption: 'England underestimated the GOAT' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1856, eng: 34, url: 'https://www.instagram.com/p/Da-_NdGsI_l/', caption: 'Sorry Spain Argentina will win' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1707, eng: 9, url: 'https://www.youtube.com/shorts/kjlTK67KdmQ', caption: 'Lamine Yamal is not taking Messis throne' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1681, eng: 4, url: 'https://www.youtube.com/shorts/nmdsHChgun0', caption: 'MY RENTS ON ARGENTINA' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1381, eng: 24, url: 'https://www.instagram.com/p/Da-sVOIM1-0/', caption: 'Lamine Yamal is not taking Messis throne' },
+    { creator: 'Dannie', platform: 'Instagram', views: 1353, eng: 31, url: 'https://www.instagram.com/p/Da-2oh5scBv/', caption: 'MY RENTS ON ARGENTINA' },
+    { creator: 'don.mk14', platform: 'TikTok', views: 1252, eng: 74, url: 'https://www.tiktok.com/@don.mk14/video/7664164517697326349', caption: 'spain argentina worldcup' },
+    { creator: 'Dannie', platform: 'YouTube', views: 1124, eng: 5, url: 'https://www.youtube.com/shorts/o_2zRwR1Ffs', caption: 'Just because Messi touched Yamal' },
+    { creator: 'Dannie', platform: 'YouTube', views: 857, eng: 3, url: 'https://www.youtube.com/shorts/So8eOLz2zaw', caption: 'Argentina has this in the bag' },
+    { creator: 'Dannie', platform: 'YouTube', views: 771, eng: 3, url: 'https://www.youtube.com/shorts/VmxpJPIoQh0', caption: 'Sorry Spain I Know You Are Crying' },
+    { creator: 'mk.don14', platform: 'Instagram', views: 143, eng: 8, url: 'https://www.instagram.com/reel/Da-BzhIgFiw/', caption: 'spain argentina worldcup' },
+    { creator: 'Dannie', platform: 'Instagram', views: 41, eng: 0, url: 'https://www.instagram.com/p/Da-Utj8s-PT/', caption: 'England underestimated the GOAT' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7664295062817328397', caption: 'MY RENTS ON ARGENTINA' },
+    { creator: 'Dannie', platform: 'TikTok', views: 1, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7664316906777611534', caption: 'Just because Messi touched Yamal' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7664209325581159693', caption: 'England underestimated the GOAT' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7664280318580493581', caption: 'Lamine Yamal is not taking Messis throne' },
+    { creator: 'Dannie', platform: 'TikTok', views: 0, eng: 0, url: 'https://www.tiktok.com/@danniewc/video/7664305224403717389', caption: 'Sorry Spain I Know You Are Crying' }
+  ],
+  "2026-07-20": [
+    { creator: 'monstermike197', platform: 'Instagram', views: 4926, eng: 308, url: 'https://www.instagram.com/reel/Da_4bZ5BuKI/', caption: 'A genuine apology to Cristiano Ronaldo' },
+    { creator: 'benny_ballss', platform: 'Instagram', views: 2924, eng: 148, url: 'https://www.instagram.com/reel/Da_0esZyxWe/', caption: 'If Spain loses Im SHAVING my eyebrows' }
+  ]
+};
+
 // ---------- RENDER ----------
 const fmt = n => n.toLocaleString('en-US');
 const fmtVol = v => v >= 1000000 ? '$'+(v/1000000).toFixed(1)+'M' : v > 0 ? '$'+Math.round(v/1000)+'K' : '—';
@@ -461,7 +930,42 @@ function selectDay(i){
     html += `<div class="dd-section-title"><div class="dot" style="background:#9B7CFF"></div> COCONNECT COLLABS — ${cc.length} COMMUNIT${cc.length>1?'IES':'Y'}</div>`;
     html += `<div>` + cc.map(n=>`<span class="post-chip">${n}</span>`).join('') + `</div>`;
   }
-  if(!xp.length && !tg.length && !ads && !sponsor && !cc.length){
+  const ugc = UGC_DAILY[date] || [];
+  if(ugc.length){
+    const totalUgcViews = ugc.reduce((s,p) => s+p.views, 0);
+    html += `<div class="dd-section-title"><div class="dot" style="background:#E1306C"></div> UGC CREATOR CONTENT — ${ugc.length} POST${ugc.length>1?'S':''} <span style="font-weight:400;color:rgba(255,255,255,0.4);margin-left:8px;">${fmt(totalUgcViews)} total views</span></div>`;
+    html += `<div class="ugc-feed">`;
+    const platformGrad = {
+      Instagram: 'linear-gradient(135deg, #833AB4, #C13584, #E1306C, #F77737)',
+      TikTok: 'linear-gradient(135deg, #010101, #25F4EE 50%, #FE2C55)',
+      YouTube: 'linear-gradient(135deg, #282828, #FF0000)',
+      Facebook: 'linear-gradient(135deg, #1877F2, #4267B2)'
+    };
+    const platformIcon = {
+      Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg>',
+      TikTok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.7 2.6 2.4 4.3 5 4.6v3.1c-1.9 0-3.6-.6-5-1.7v7c0 3.6-2.9 6.5-6.5 6.5S3 19.6 3 16s2.9-6.5 6.5-6.5c.5 0 1 .1 1.5.2v3.3a3.3 3.3 0 1 0 2 3V3h3z"/></svg>',
+      YouTube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><polygon points="10,9 16,12 10,15" fill="currentColor" stroke="none"/></svg>',
+      Facebook: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>'
+    };
+    ugc.forEach(p => {
+      const cap = p.caption ? p.caption.replace(/</g,'&lt;') : '';
+      html += `<a class="ugc-card" href="${p.url}" target="_blank" rel="noopener">
+        <div class="ugc-card-bg" style="background:${platformGrad[p.platform]}"></div>
+        <div class="ugc-card-overlay"></div>
+        <div class="ugc-card-play"><svg viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19"/></svg></div>
+        <div class="ugc-card-top">
+          <div class="ugc-badge">${platformIcon[p.platform]} ${p.platform}</div>
+          <div class="ugc-views">${fmt(p.views)}</div>
+        </div>
+        <div class="ugc-card-bottom">
+          <div class="ugc-creator">@${p.creator}</div>
+          <div class="ugc-caption">${cap}</div>
+        </div>
+      </a>`;
+    });
+    html += `</div>`;
+  }
+  if(!xp.length && !tg.length && !ads && !sponsor && !cc.length && !ugc.length){
     html += `<div class="no-posts">No logged posts on this day. Traffic driven by ongoing sponsor placements and organic discovery.</div>`;
   }
 
@@ -489,62 +993,6 @@ function selectDay(i){
 // default: open the WC Final day
 selectDay(39);
 
-// ---------- UGC VIDEO EMBEDS ----------
-const UGC_POSTS = [
-  { platform: 'instagram', url: 'https://www.instagram.com/reel/DaqC2dWiEn2/', creator: 'letschatball1', views: 943553, caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
-  { platform: 'tiktok', url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', creator: 'ceofooty_', views: 471500, caption: 'Im done #argentina #messi #worldcup' },
-  { platform: 'tiktok', url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', creator: 'ceofooty_', views: 312400, caption: 'Call it off now #brazil #japan #worldcup' },
-  { platform: 'instagram', url: 'https://www.instagram.com/reel/DaWCC6rTts8/', creator: 'ceofooty', views: 299722, caption: 'Make it make sense #portugal #croatia #worldcup' },
-  { platform: 'facebook', url: 'https://www.facebook.com/reel/27311240818504787/', creator: 'Letschatball', views: 215000, caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
-  { platform: 'tiktok', url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', creator: 'bennyclasher', views: 131600, caption: 'Will England finally make Argentina pay? #worldcup' }
-];
-
-function renderUGCEmbeds() {
-  const container = document.getElementById('ugcEmbeds');
-  if (!container) return;
-
-  container.innerHTML = UGC_POSTS.map(p => {
-    let embedHtml = '';
-    if (p.platform === 'tiktok') {
-      const videoId = p.url.match(/video\/(\d+)/)?.[1] || '';
-      const username = p.url.match(/@([^/]+)/)?.[1] || '';
-      embedHtml = `<blockquote class="tiktok-embed" cite="${p.url}" data-video-id="${videoId}" style="max-width:100%;min-width:280px;">
-        <section><a target="_blank" href="${p.url}">@${username}</a></section>
-      </blockquote>`;
-    } else if (p.platform === 'instagram') {
-      embedHtml = `<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${p.url}" data-instgrm-version="14" style="background:#0A0A0B; border:0; border-radius:12px; max-width:100%; min-width:280px; padding:0; width:100%;">
-        <a href="${p.url}" target="_blank">View on Instagram</a>
-      </blockquote>`;
-    } else if (p.platform === 'facebook') {
-      const encodedUrl = encodeURIComponent(p.url);
-      embedHtml = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&t=0" width="100%" height="400" style="border:none;overflow:hidden;border-radius:12px;background:#000;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>`;
-    }
-
-    return `<div class="embed-cell" style="position:relative;">
-      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-        <span>@${p.creator}</span>
-        <span style="color:#45E85C;font-family:'PP Neue Corp',sans-serif;font-size:14px;">${fmt(p.views)} views</span>
-      </div>
-      ${embedHtml}
-    </div>`;
-  }).join('');
-
-  // Load embed scripts
-  if (!document.querySelector('script[src*="tiktok.com/embed"]')) {
-    const tts = document.createElement('script');
-    tts.src = 'https://www.tiktok.com/embed.js';
-    tts.async = true;
-    document.body.appendChild(tts);
-  }
-  if (!document.querySelector('script[src*="instagram.com/embed"]')) {
-    const igs = document.createElement('script');
-    igs.src = '//www.instagram.com/embed.js';
-    igs.async = true;
-    document.body.appendChild(igs);
-  }
-}
-
-renderUGCEmbeds();
 </script>
 
 </body>

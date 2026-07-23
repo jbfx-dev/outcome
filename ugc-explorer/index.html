@@ -274,67 +274,89 @@ body {
   letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
 }
 
-/* ---------- GALLERY ---------- */
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
-.gallery-card {
-  border-radius: 14px; border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.02); overflow: hidden;
-  display: flex; flex-direction: column;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-  animation: fadeIn 0.3s ease;
+/* ---------- VIDEO FEED ---------- */
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
 }
-.gallery-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16); }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.gallery-card-top { padding: 18px 16px 16px; position: relative; }
-.gallery-platform-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 5px 10px; border-radius: 6px;
-  background: rgba(0,0,0,0.3); color: #fff;
+.video-card {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  text-decoration: none;
 }
-.gallery-platform-badge svg { width: 11px; height: 11px; }
-.gallery-rank {
-  position: absolute; top: 14px; right: 14px;
-  font-family: 'PP Neue Corp', sans-serif; font-size: 20px;
-  color: rgba(255,255,255,0.35);
+.video-card:hover { transform: scale(1.02); filter: brightness(1.1); }
+.video-card-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
 }
-.gallery-creator { font-size: 15px; font-weight: 700; color: #fff; margin-top: 12px; }
-.gallery-caption { font-size: 11.5px; color: rgba(255,255,255,0.6); margin-top: 6px; line-height: 1.5; }
-.gallery-card-body {
-  padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px;
-  border-top: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.015);
+.video-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 30%, transparent 50%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
 }
-.gallery-stats { display: flex; gap: 20px; }
-.gallery-stat { display: flex; flex-direction: column; gap: 3px; }
-.gallery-stat .num { font-family: 'PP Neue Corp', sans-serif; font-size: 18px; color: #F5F8FF; }
-.gallery-stat .lbl { font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-.gallery-meta { display: flex; justify-content: space-between; align-items: center; }
-.gallery-date { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.03em; }
-.gallery-open {
-  color: #45E85C; text-decoration: none; font-weight: 700; font-size: 11px;
-  letter-spacing: 0.04em; text-transform: uppercase; transition: opacity 0.15s;
+.video-card-play {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px; height: 56px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid rgba(255,255,255,0.25);
+  transition: background 0.2s, transform 0.2s;
+  pointer-events: none;
 }
-.gallery-open:hover { opacity: 0.7; }
-.gallery-empty {
+.video-card:hover .video-card-play { background: rgba(255,255,255,0.25); transform: translate(-50%, -50%) scale(1.1); }
+.video-card-play svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+.video-card-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 12px 14px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  z-index: 2;
+}
+.video-platform-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 8px; border-radius: 6px;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  color: #fff;
+}
+.video-platform-badge svg { width: 11px; height: 11px; }
+.video-views {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500; color: #fff;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  padding: 4px 10px; border-radius: 6px;
+}
+.video-card-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 16px 14px;
+  z-index: 2;
+}
+.video-creator {
+  font-size: 14px; font-weight: 700; color: #fff;
+  margin-bottom: 4px;
+}
+.video-caption {
+  font-size: 11px; color: rgba(255,255,255,0.7);
+  line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.video-eng {
+  font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.feed-empty {
   padding: 60px 20px; text-align: center; color: rgba(255,255,255,0.3);
   font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
   grid-column: 1 / -1;
-}
-
-/* ---------- EMBED CONTAINER ---------- */
-.embed-container {
-  padding: 16px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  display: none;
-}
-.embed-container.active { display: block; }
-.embed-container iframe {
-  width: 100%;
-  border: none;
-  border-radius: 8px;
-}
-.gallery-open {
-  background: none; border: none; cursor: pointer; font-family: inherit;
 }
 
 /* ---------- CORRELATION CHART ---------- */
@@ -527,17 +549,17 @@ body {
 
     <div class="search-bar">
       <div class="filter-group">
-        <button class="filter-btn active" data-platform="all" onclick="filterGallery('all', this)">All</button>
-        <button class="filter-btn" data-platform="Instagram" onclick="filterGallery('Instagram', this)">Instagram</button>
-        <button class="filter-btn" data-platform="TikTok" onclick="filterGallery('TikTok', this)">TikTok</button>
-        <button class="filter-btn" data-platform="Facebook" onclick="filterGallery('Facebook', this)">Facebook</button>
-        <button class="filter-btn" data-platform="YouTube" onclick="filterGallery('YouTube', this)">YouTube</button>
+        <button class="filter-btn active" data-platform="all" onclick="filterFeed('all', this)">All</button>
+        <button class="filter-btn" data-platform="Instagram" onclick="filterFeed('Instagram', this)">Instagram</button>
+        <button class="filter-btn" data-platform="TikTok" onclick="filterFeed('TikTok', this)">TikTok</button>
+        <button class="filter-btn" data-platform="Facebook" onclick="filterFeed('Facebook', this)">Facebook</button>
+        <button class="filter-btn" data-platform="YouTube" onclick="filterFeed('YouTube', this)">YouTube</button>
       </div>
-      <select class="sort-select" id="gallery-sort" onchange="sortGallery(this.value)">
+      <select class="sort-select" id="gallery-sort" onchange="sortFeed(this.value)">
         <option value="views-desc">Sort: Views (High &rarr; Low)</option>
         <option value="views-asc">Sort: Views (Low &rarr; High)</option>
         <option value="eng-desc">Sort: Engagement (High &rarr; Low)</option>
-        <option value="eng-asc">Sort: Engagement (Low &rarr; High)</option>
+        <option value="engrate-desc">Sort: Eng. Rate (High &rarr; Low)</option>
         <option value="date-desc">Sort: Date (Newest)</option>
         <option value="date-asc">Sort: Date (Oldest)</option>
       </select>
@@ -545,7 +567,7 @@ body {
 
     <div class="result-count" id="gallery-results"></div>
 
-    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="feed-grid" id="feed-grid"></div>
   </div>
 
   <!-- ============================================================ -->
@@ -673,36 +695,378 @@ const dailyViews = [
 
 // platform, kind ("reel" | "video" | "post") drives the caption text
 const posts = [
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/874609058621642/', views: 2000000, eng: 22000, date: '2026-07-16', label: '16 Jul 2026', caption: 'SACK THOMAS HE SOLD THE GAME' },
   { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqC2dWiEn2/', views: 943553, eng: 97245, date: '2026-07-11', label: '11 Jul 2026', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqqtF1tcxr/', views: 831941, eng: 69260, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', views: 471500, eng: 37180, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #messi #argentina #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', views: 312400, eng: 23990, date: '2026-06-29', label: '29 Jun 2026', caption: 'Call it off now\u{1F62D}✌\u{1F3FB} #fyp #ceo #brazil #japan #worldcup' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaWCC6rTts8/', views: 299722, eng: 25128, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense\u{1F62D} #fyp #ceo #portugal #croatia #worldcup' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaXaZ9utD52/', views: 295028, eng: 31230, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659509405758590228', views: 270000, eng: 14790, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy\u{1F923} #fyp #ceo #portugal #spain #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661334176733433109', views: 228600, eng: 19151, date: '2026-07-11', label: '11 Jul 2026', caption: 'It might be broken\u{1F62D} #fyp #ceo #england #norway #worldcup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqqtF1tcxr/', views: 831941, eng: 69260, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', views: 471500, eng: 37180, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', views: 312400, eng: 23990, date: '2026-06-29', label: '29 Jun 2026', caption: 'Call it off now' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaWCC6rTts8/', views: 299722, eng: 25128, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaXaZ9utD52/', views: 295028, eng: 31230, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659509405758590228', views: 270000, eng: 14790, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661334176733433109', views: 228600, eng: 19151, date: '2026-07-11', label: '11 Jul 2026', caption: 'It might be broken' },
   { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/27311240818504787/', views: 215000, eng: 10000, date: '2026-07-11', label: '11 Jul 2026', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662277033153547541', views: 188400, eng: 9804, date: '2026-07-14', label: '14 Jul 2026', caption: 'Zip it bro\u{1F62D} #fyp #ceo #spain #france #worldcup' },
-  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', views: 131600, eng: 6091, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will England finally make Argentina pay? #worldcup #football' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662636637960026388', views: 118800, eng: 3949, date: '2026-07-15', label: '15 Jul 2026', caption: 'Call it of rn\u{1F639} #fyp #ceo #england #congo #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660638382355123476', views: 118600, eng: 5425, date: '2026-07-09', label: '09 Jul 2026', caption: 'Just wait ⏳ #fyp #ceo #france #morocco #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658401875233950996', views: 113200, eng: 12915, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense\u{1F62D} #fyp #ceo #portugal #croatia #worldcup' },
-  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1017349150702340/', views: 110000, eng: 3000, date: '2026-07-09', label: '09 Jul 2026', caption: 'France are deadly and they just destroyed Morocco' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661396579559034133', views: 108600, eng: 6586, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done\u{1F62D} #fyp #ceo #england #bellingham #norway' },
-  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daii720vGAE/', views: 94119, eng: 6209, date: '2026-07-08', label: '08 Jul 2026', caption: 'The game is cooked.. goodbye France \u{1F494}\u{1F1EB}\u{1F1F7}\u{1F62D}' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dab9y8GtGdV/', views: 88443, eng: 5255, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering \u{1F62D}\u{1F64F}\u{1F3FB}\u{1F494} #fyp #ceo #worldcup #england #mexico' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658600702742203668', views: 88500, eng: 9971, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again\u{1F62D} #fyp #ceo #argentina #messi #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661519146877816085', views: 83300, eng: 3920, date: '2026-07-12', label: '12 Jul 2026', caption: 'We back again\u{1F62D}\u{1F64F}\u{1F3FB} #fyp #ceo #argentina #messi #worldcup' },
-  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1775938727154555/', views: 81000, eng: 714, date: '2026-07-18', label: '18 Jul 2026', caption: 'England destroyed France what a crazy game of football' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659256898318765333', views: 79100, eng: 5413, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering \u{1F937}\u{1F3FB} #fyp #ceo #england #mexico #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656176678841879828', views: 70500, eng: 1909, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps\u{1F62D}✌\u{1F3FB} #fyp #ceo #ronaldo #portugal #worldcup' },
-  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaLrrCOxMFj/', views: 61013, eng: 2048, date: '2026-06-29', label: '29 Jun 2026', caption: 'Brazil count your days, today was lucky... #worldcup #football' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DadtzRUNOZ3/', views: 61531, eng: 1623, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy\u{1F923} #fyp #ceo #portugal #spain #worldcup' },
-  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658478102166670613', views: 60200, eng: 3468, date: '2026-07-04', label: '04 Jul 2026', caption: 'What a game\u{1F633} #fyp #ceo #argentina #capeverde #worldcup' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaByFAjNQCT/', views: 59513, eng: 1305, date: '2026-06-26', label: '26 Jun 2026', caption: 'Prime Yamal\u{1F633} #fyp #ceo #lamineyamal #barcelona #worldcup' },
-  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661439938482752799', views: 54900, eng: 4476, date: '2026-07-12', label: '12 Jul 2026', caption: 'Jude Bellingham the man you are ❤️ ENGLAND vs NORWAY' },
-  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaGl9AgtpAG/', views: 52756, eng: 265, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps\u{1F62D}✌\u{1F3FB} #fyp #ceo #ronaldo #portugal #worldcup' },
-  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661697236421659934', views: 49300, eng: 4128, date: '2026-07-12', label: '12 Jul 2026', caption: 'Julian Alvarez you deserve everything. \u{1F410}\u{1F1E6}\u{1F1F7} #argentina #worldcup' }
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dayzq_2u8aO/', views: 198213, eng: 17712, date: '2026-07-15', label: '15 Jul 2026', caption: 'France why do you always do this' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662277033153547541', views: 188400, eng: 9804, date: '2026-07-14', label: '14 Jul 2026', caption: 'Zip it bro' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662849349499587860', views: 163800, eng: 10440, date: '2026-07-15', label: '15 Jul 2026', caption: 'Already bro' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7662111048396197151', views: 131600, eng: 6091, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will England finally make Argentina pay' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662636637960026388', views: 118800, eng: 3949, date: '2026-07-15', label: '15 Jul 2026', caption: 'Call it of rn' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660638382355123476', views: 118600, eng: 5425, date: '2026-07-09', label: '09 Jul 2026', caption: 'Just wait' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658401875233950996', views: 113200, eng: 12915, date: '2026-07-03', label: '03 Jul 2026', caption: 'Make it make sense' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1017349150702340/', views: 110000, eng: 3000, date: '2026-07-09', label: '09 Jul 2026', caption: 'France are deadly' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661396579559034133', views: 108600, eng: 6586, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662503565943901461', views: 94500, eng: 5454, date: '2026-07-14', label: '14 Jul 2026', caption: 'This close' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daii720vGAE/', views: 94119, eng: 6209, date: '2026-07-08', label: '08 Jul 2026', caption: 'The game is cooked goodbye France' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da25r8si8MF/', views: 91551, eng: 684, date: '2026-07-16', label: '16 Jul 2026', caption: 'SACK THOMAS HE SOLD THE GAME' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658600702742203668', views: 88500, eng: 9971, date: '2026-07-04', label: '04 Jul 2026', caption: 'Here we go again' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dab9y8GtGdV/', views: 88443, eng: 5255, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661519146877816085', views: 83300, eng: 3920, date: '2026-07-12', label: '12 Jul 2026', caption: 'We back again' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1775938727154555/', views: 81000, eng: 714, date: '2026-07-18', label: '18 Jul 2026', caption: 'England destroyed France what a crazy game' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659256898318765333', views: 79100, eng: 5413, date: '2026-07-06', label: '06 Jul 2026', caption: 'Im still wondering' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7656176678841879828', views: 70500, eng: 1909, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DadtzRUNOZ3/', views: 61531, eng: 1623, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its actually crazy' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaLrrCOxMFj/', views: 61013, eng: 2048, date: '2026-06-29', label: '29 Jun 2026', caption: 'Brazil count your days, today was lucky...' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658478102166670613', views: 60200, eng: 3468, date: '2026-07-04', label: '04 Jul 2026', caption: 'What a game' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaByFAjNQCT/', views: 59513, eng: 1305, date: '2026-06-26', label: '26 Jun 2026', caption: 'Prime Yamal' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661439938482752799', views: 54900, eng: 4476, date: '2026-07-12', label: '12 Jul 2026', caption: 'Jude Bellingham the man you are ENGLAND vs NORWAY' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaGl9AgtpAG/', views: 52756, eng: 265, date: '2026-06-27', label: '27 Jun 2026', caption: 'It might be wraps' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661697236421659934', views: 49300, eng: 4128, date: '2026-07-12', label: '12 Jul 2026', caption: 'Julian Alvarez you deserve everything' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaWkUu6MVyk/', views: 45807, eng: 1718, date: '2026-07-04', label: '04 Jul 2026', caption: 'What a game' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662453561468407061', views: 43400, eng: 1208, date: '2026-07-14', label: '14 Jul 2026', caption: 'France' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=MAnIBAyAyWc', views: 37569, eng: 685, date: '2026-07-07', label: '07 Jul 2026', caption: 'The game is cooked goodbye France' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662196576349211925', views: 37300, eng: 1885, date: '2026-07-14', label: '14 Jul 2026', caption: 'Well see tmr' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659872796830600469', views: 36400, eng: 2739, date: '2026-07-07', label: '07 Jul 2026', caption: 'Dude it happened again' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7662873377194970389', views: 36400, eng: 1922, date: '2026-07-15', label: '15 Jul 2026', caption: 'Well played' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=_dxARgKyr0c', views: 36270, eng: 1000, date: '2026-07-10', label: '10 Jul 2026', caption: 'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaREYk5Is7P/', views: 33518, eng: 789, date: '2026-07-01', label: '01 Jul 2026', caption: 'How' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da05GARNHF8/', views: 33202, eng: 1409, date: '2026-07-15', label: '15 Jul 2026', caption: 'Already bro' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DagPRmct3Za/', views: 27883, eng: 948, date: '2026-07-07', label: '07 Jul 2026', caption: 'It happened again bro' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659231198446767381', views: 26500, eng: 1043, date: '2026-07-06', label: '06 Jul 2026', caption: 'What a game tho' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayTNIrhoG_/', views: 26442, eng: 1452, date: '2026-07-14', label: '14 Jul 2026', caption: 'Argentinas whole plan really is Messi and pray' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=m7semOdK5_8', views: 25661, eng: 572, date: '2026-07-06', label: '06 Jul 2026', caption: 'USA I am so proud of you' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daw7p8etPpF/', views: 25543, eng: 672, date: '2026-07-14', label: '14 Jul 2026', caption: 'Just zip it bro' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/aI1S2caTTvY', views: 25168, eng: 233, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina shutting down the haters' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661844629641317652', views: 24800, eng: 1804, date: '2026-07-13', label: '13 Jul 2026', caption: 'Honestly one day' },
+  { creator: 'bennyclasher', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@bennyclasher/video/7661782591594401054', views: 24700, eng: 904, date: '2026-07-12', label: '12 Jul 2026', caption: 'As a Messi fan I am here to tell you the truth' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=ACky75pOp90', views: 23951, eng: 377, date: '2026-07-12', label: '12 Jul 2026', caption: 'Will England finally get their get back' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/a6Brl3d8UoQ', views: 23651, eng: 101, date: '2026-07-02', label: '02 Jul 2026', caption: 'Ronaldo ur COOKED' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660995138583399700', views: 22900, eng: 573, date: '2026-07-10', label: '10 Jul 2026', caption: 'Ferran Masterclass watch' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=L9RMXdQmUys', views: 22854, eng: 728, date: '2026-07-06', label: '06 Jul 2026', caption: 'There is no one like you Messi' },
+  { creator: 'don.mk14', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@don.mk14/video/7661924372415827214', views: 22300, eng: 1990, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will Argentina change things' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=mPKy2yQcBqc', views: 22224, eng: 626, date: '2026-07-11', label: '11 Jul 2026', caption: 'Julian you deserve everything' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7657686512607382804', views: 22000, eng: 1010, date: '2026-07-01', label: '01 Jul 2026', caption: 'How' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daqz5M5tviw/', views: 21644, eng: 485, date: '2026-07-11', label: '11 Jul 2026', caption: 'Im done' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7657638309098736916', views: 20600, eng: 751, date: '2026-07-01', label: '01 Jul 2026', caption: 'Call it of rn' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dace_kONRY5/', views: 20570, eng: 271, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its sad ngl' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=ir1DUL9eEjM', views: 20036, eng: 491, date: '2026-07-11', label: '11 Jul 2026', caption: 'As a Messi fan it is time to tell the truth' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da15KWJROgs/', views: 19804, eng: 953, date: '2026-07-16', label: '16 Jul 2026', caption: 'Defenders have spent two decades trying to figure out Messi' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=gLfbL8jGsas', views: 19559, eng: 432, date: '2026-07-08', label: '08 Jul 2026', caption: 'Mbappe you are generational and Morocco you fought well' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=jANRP8_W6x4', views: 19118, eng: 730, date: '2026-07-10', label: '10 Jul 2026', caption: 'Jude Bellingham the man you are' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da_ES0VR46C/', views: 16243, eng: 217, date: '2026-07-19', label: '19 Jul 2026', caption: 'Just because Messi touched Yamal doesnt mean Spain wins' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dayf3D-tIuJ/', views: 15410, eng: 370, date: '2026-07-14', label: '14 Jul 2026', caption: 'This close' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660669878126349588', views: 15200, eng: 422, date: '2026-07-09', label: '09 Jul 2026', caption: 'Whos ready' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da20tWoIZSf/', views: 15041, eng: 643, date: '2026-07-16', label: '16 Jul 2026', caption: 'People are swearing this World Cup is rigged for Argentina' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Darqj39uuP8/', views: 13907, eng: 461, date: '2026-07-12', label: '12 Jul 2026', caption: 'We back again' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1JIUEhm4a/', views: 12890, eng: 961, date: '2026-07-15', label: '15 Jul 2026', caption: 'England lost because they spent an hour hiding' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaDm21FtEcu/', views: 12828, eng: 204, date: '2026-06-27', label: '27 Jun 2026', caption: 'Baby Yamal' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=os8ONMp4mn4', views: 12202, eng: 326, date: '2026-07-05', label: '05 Jul 2026', caption: 'Congratulations SPAIN!' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659331869309291796', views: 12200, eng: 326, date: '2026-07-06', label: '06 Jul 2026', caption: 'Its sad ngl' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DagvA_VvNC5/', views: 11910, eng: 210, date: '2026-07-08', label: '08 Jul 2026', caption: 'USA I am so proud of you' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da_eVbptRtI/', views: 11829, eng: 361, date: '2026-07-19', label: '19 Jul 2026', caption: 'Leandro Paredes lost it after the final whistle' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7659836278069824788', views: 11500, eng: 548, date: '2026-07-07', label: '07 Jul 2026', caption: 'Every single time' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=e6noGHS9C9Y', views: 11194, eng: 685, date: '2026-07-05', label: '05 Jul 2026', caption: 'Mexico you fought hard' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaQvI_lBZRM/', views: 10991, eng: 268, date: '2026-07-01', label: '01 Jul 2026', caption: 'Call it off rn' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1ERGWtOPO/', views: 10621, eng: 201, date: '2026-07-15', label: '15 Jul 2026', caption: 'Well played' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8TGwiopQW/', views: 10419, eng: 793, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi haters have officially run out of real arguments' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1580859366709187/', views: 10000, eng: 227, date: '2026-07-09', label: '09 Jul 2026', caption: 'MESSI FANS ARE BEING EXPOSED' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661908102081416469', views: 9697, eng: 188, date: '2026-07-13', label: '13 Jul 2026', caption: 'Bro sold the world cup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaqYM24tIUg/', views: 9574, eng: 151, date: '2026-07-11', label: '11 Jul 2026', caption: 'It might be broken' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/pD5ilWYtUW4', views: 9546, eng: 32, date: '2026-07-09', label: '09 Jul 2026', caption: 'I CALLED IT! Messi is the GOAT' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1HMLXPKtM/', views: 9494, eng: 288, date: '2026-07-15', label: '15 Jul 2026', caption: 'If England loses I will shave my eyebrows' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7657290056029310229', views: 9016, eng: 302, date: '2026-06-30', label: '30 Jun 2026', caption: 'No point in playing' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaEw7SKuVAd/', views: 8938, eng: 325, date: '2026-06-27', label: '27 Jun 2026', caption: 'Spain Yamal' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DavpP3rhXHx/', views: 8777, eng: 403, date: '2026-07-13', label: '13 Jul 2026', caption: 'Messi has faced Manchester United five times' },
+  { creator: 'Bennyballss', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=57d3t-QyDcc', views: 8452, eng: 280, date: '2026-07-09', label: '09 Jul 2026', caption: 'Spain is taking it HOME!' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1x__iohcM/', views: 8398, eng: 499, date: '2026-07-16', label: '16 Jul 2026', caption: 'Messi delivered the game winning assist in the 92nd minute' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaESC5PNNLW/', views: 7955, eng: 209, date: '2026-06-27', label: '27 Jun 2026', caption: 'They winning it 100%' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da83gZ6Bs72/', views: 7298, eng: 175, date: '2026-07-18', label: '18 Jul 2026', caption: 'Morgan Rogers is now the 4th most expensive transfer' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayKCiTNHCb/', views: 7287, eng: 176, date: '2026-07-14', label: '14 Jul 2026', caption: 'France' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7655009456626928917', views: 7175, eng: 477, date: '2026-06-24', label: '24 Jun 2026', caption: 'This is forcing it now' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daf_EeLtb5u/', views: 7171, eng: 170, date: '2026-07-07', label: '07 Jul 2026', caption: 'Every single time' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayACJIA-Xa/', views: 7007, eng: 116, date: '2026-07-14', label: '14 Jul 2026', caption: 'How did Pedri sneak onto the team' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaLpz5YNK0b/', views: 6938, eng: 160, date: '2026-06-29', label: '29 Jun 2026', caption: 'Call it off now' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8py9zhlI8/', views: 6737, eng: 154, date: '2026-07-18', label: '18 Jul 2026', caption: 'I would never play a sport suspended in the air' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayLU2qoJBC/', views: 6720, eng: 242, date: '2026-07-14', label: '14 Jul 2026', caption: 'France cannot afford to take Spain lightly' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaljbQuBMbJ/', views: 6655, eng: 111, date: '2026-07-09', label: '09 Jul 2026', caption: 'Just wait' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1052391973977481/', views: 6600, eng: 74, date: '2026-07-15', label: '15 Jul 2026', caption: 'ENGLAND AGAINST ARGENTINA WHO WINS' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaNqixrs7UH/', views: 6557, eng: 148, date: '2026-06-30', label: '30 Jun 2026', caption: 'JAPAN GOT ROBBED (rip my rent)' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/2412031956292029/', views: 6500, eng: 93, date: '2026-07-17', label: '17 Jul 2026', caption: 'AS A REAL MADRID FAN THIS IS THE FIRST TIME I AGREE WITH LAPORTA' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaMqqofMIw1/', views: 6434, eng: 80, date: '2026-06-30', label: '30 Jun 2026', caption: 'ngl i forgot to pay my rent' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/2158314388128028/', views: 6400, eng: 167, date: '2026-07-12', label: '12 Jul 2026', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+  { creator: '1kjahz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DabfGhVATP6/', views: 6372, eng: 303, date: '2026-07-05', label: '05 Jul 2026', caption: 'World Cup feels like a custody battle' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/2045380609429493/', views: 6200, eng: 115, date: '2026-07-14', label: '14 Jul 2026', caption: 'THE REASON WHY FRANCE WILL BEAT SPAIN TODAY' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/2093720418248766/', views: 6200, eng: 60, date: '2026-07-15', label: '15 Jul 2026', caption: 'ITS COMING HOME ENGLAND IS GOING TO THE FINAL' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1053887920321912/', views: 6100, eng: 98, date: '2026-07-07', label: '07 Jul 2026', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1509985973687528/', views: 6100, eng: 49, date: '2026-07-10', label: '10 Jul 2026', caption: 'SPAIN AGAINST BELGIUM WAS UNSUCCESSFUL HATE WATCH' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaMHJVMqNav/', views: 5928, eng: 72, date: '2026-06-30', label: '30 Jun 2026', caption: 'i swear im not biased (video aged well gg)' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da3Sd04hyAU/', views: 5869, eng: 292, date: '2026-07-16', label: '16 Jul 2026', caption: 'BREAKING FIFA has officially confirmed Argentinas run was rigged' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1684190846164755/', views: 5800, eng: 100, date: '2026-07-08', label: '08 Jul 2026', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1794826774875746/', views: 5800, eng: 76, date: '2026-07-11', label: '11 Jul 2026', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/2604393209978305/', views: 5800, eng: 93, date: '2026-07-13', label: '13 Jul 2026', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaoMbZqNYaN/', views: 5720, eng: 109, date: '2026-07-10', label: '10 Jul 2026', caption: 'WHAT is on my lip' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658442554526141716', views: 5698, eng: 139, date: '2026-07-03', label: '03 Jul 2026', caption: 'Its honestly insane' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1dugshqEx/', views: 5622, eng: 263, date: '2026-07-16', label: '16 Jul 2026', caption: 'Football has never actually been about goals and assists' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DavLmufCEz2/', views: 5573, eng: 366, date: '2026-07-13', label: '13 Jul 2026', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1CUvioBIQ/', views: 5519, eng: 511, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina did it again and this time it was England' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DasYXrGiXDM/', views: 5478, eng: 309, date: '2026-07-12', label: '12 Jul 2026', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dal4-N5BCW4/', views: 5357, eng: 330, date: '2026-07-10', label: '10 Jul 2026', caption: 'Mbappe you are truly generational' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dat7Os7uv9K/', views: 5314, eng: 180, date: '2026-07-13', label: '13 Jul 2026', caption: 'Honestly one day' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daynt8FB_l4/', views: 5306, eng: 174, date: '2026-07-14', label: '14 Jul 2026', caption: 'Messi haters are already preloading their excuses' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1547282050526780/', views: 5300, eng: 78, date: '2026-07-06', label: '06 Jul 2026', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+  { creator: 'Letschatball', platform: 'Facebook', kind: 'reel', url: 'https://www.facebook.com/reel/1520294926777864/', views: 5300, eng: 58, date: '2026-07-09', label: '09 Jul 2026', caption: 'PRAY FOR PARIS' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da-146hNuNI/', views: 5085, eng: 224, date: '2026-07-19', label: '19 Jul 2026', caption: 'People love telling themselves that greatness has to wait' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7659351369379335446', views: 4927, eng: 178, date: '2026-07-06', label: '06 Jul 2026', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da_4bZ5BuKI/', views: 4926, eng: 308, date: '2026-07-20', label: '20 Jul 2026', caption: 'A genuine apology to Cristiano Ronaldo' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dax5CecyEKe/', views: 4886, eng: 164, date: '2026-07-14', label: '14 Jul 2026', caption: 'Show them Lamine' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da9QYQ_xqHE/', views: 4800, eng: 197, date: '2026-07-19', label: '19 Jul 2026', caption: 'Saka finally ends the Messi debate' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaZ4E0SNQNL/', views: 4790, eng: 90, date: '2026-07-05', label: '05 Jul 2026', caption: 'Im genuinely shocked' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DavyGavvVKZ/', views: 4748, eng: 201, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will England finally get their get back against Argentina' },
+  { creator: 'don.mk14', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@don.mk14/video/7663767097033510158', views: 4701, eng: 727, date: '2026-07-18', label: '18 Jul 2026', caption: 'Still watching' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da28JqzhSTU/', views: 4645, eng: 106, date: '2026-07-16', label: '16 Jul 2026', caption: 'Arsenal fans keep making Messi comparison posters' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1RwP3BXjf/', views: 4570, eng: 359, date: '2026-07-15', label: '15 Jul 2026', caption: 'Genuine question for the Messi haters' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayaF0DB6A1/', views: 4497, eng: 88, date: '2026-07-14', label: '14 Jul 2026', caption: 'Argentina did not rob Egypt' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8a01AIKGo/', views: 4471, eng: 161, date: '2026-07-18', label: '18 Jul 2026', caption: 'Chelsea just hijacked Arsenals move for Morgan Rogers' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da2DM6DoQ0o/', views: 4462, eng: 295, date: '2026-07-16', label: '16 Jul 2026', caption: 'There is a real photo of a 20 year old Messi bathing Yamal' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da6s3WpRojc/', views: 4408, eng: 106, date: '2026-07-18', label: '18 Jul 2026', caption: 'England WE will be praying for you' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DauXSnSNOho/', views: 4295, eng: 70, date: '2026-07-13', label: '13 Jul 2026', caption: 'Bro sold the world cup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DabyQ6ehyop/', views: 4255, eng: 82, date: '2026-07-06', label: '06 Jul 2026', caption: 'What a game tho' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daanfvgig3_/', views: 4135, eng: 218, date: '2026-07-05', label: '05 Jul 2026', caption: 'BRAZIL AGAINST NORWAY JOGA BONITO' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DafW3d9CrfZ/', views: 4080, eng: 104, date: '2026-07-07', label: '07 Jul 2026', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaOUUmJteGi/', views: 4059, eng: 79, date: '2026-06-30', label: '30 Jun 2026', caption: 'No point in playing' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaoBqc2NBA6/', views: 4028, eng: 69, date: '2026-07-10', label: '10 Jul 2026', caption: 'Ferran masterclass watch' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7655844051991923988', views: 4016, eng: 179, date: '2026-06-26', label: '26 Jun 2026', caption: 'They winning it 100%' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/ObTZM0Mlv3w', views: 3899, eng: 11, date: '2026-06-30', label: '30 Jun 2026', caption: 'gg to my rent' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DatUDCTI-rZ/', views: 3898, eng: 103, date: '2026-07-12', label: '12 Jul 2026', caption: 'France and Spain finally meet at the World Cup' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DZ-fj_nN00L/', views: 3881, eng: 140, date: '2026-06-24', label: '24 Jun 2026', caption: 'This is forcing it now' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da_Eu9yR0Nh/', views: 3876, eng: 51, date: '2026-07-19', label: '19 Jul 2026', caption: 'Argentina has this in the bag' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dak9H8ktvwj/', views: 3868, eng: 71, date: '2026-07-09', label: '09 Jul 2026', caption: 'What else should I have asked' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=7yOWKYyHlpI', views: 3842, eng: 62, date: '2026-07-08', label: '08 Jul 2026', caption: 'France are deadly and they just destroyed Morocco' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DagM1dVsi9B/', views: 3830, eng: 223, date: '2026-07-07', label: '07 Jul 2026', caption: 'There is no one like you Messi. YOU ARE THE GREATEST.' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Ax85JuYBN5E', views: 3765, eng: 14, date: '2026-07-08', label: '08 Jul 2026', caption: 'I put my RENT on Argentina' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaynzOYBfiW/', views: 3753, eng: 181, date: '2026-07-14', label: '14 Jul 2026', caption: 'Cape Verde just wrote the greatest underdog story' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DZ1OH3yum6X/', views: 3668, eng: 93, date: '2026-06-21', label: '21 Jun 2026', caption: 'Can Germany win it all?' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaoPecyvZda/', views: 3640, eng: 174, date: '2026-07-10', label: '10 Jul 2026', caption: 'Spain will not stop at Belgium' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1PWqMMvu3/', views: 3600, eng: 126, date: '2026-07-15', label: '15 Jul 2026', caption: 'There will never be another player like you Messi' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da7zFFeIAO7/', views: 3586, eng: 129, date: '2026-07-18', label: '18 Jul 2026', caption: 'It has to be genuinely unlucky to land on Tottenham' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaWUCgPTfGX/', views: 3419, eng: 70, date: '2026-07-03', label: '03 Jul 2026', caption: 'Its honestly crazy' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayunK4hGyD/', views: 3387, eng: 70, date: '2026-07-15', label: '15 Jul 2026', caption: 'Alexander Sorloth had Haaland completely unmarked' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DalxdQnBaaG/', views: 3381, eng: 83, date: '2026-07-09', label: '09 Jul 2026', caption: 'Whos ready' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da9AqtIBbor/', views: 3377, eng: 130, date: '2026-07-18', label: '18 Jul 2026', caption: 'People love saying the third place match is meaningless' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daxc4KnKGQh/', views: 3341, eng: 165, date: '2026-07-14', label: '14 Jul 2026', caption: 'THE REASON WHY FRANCE WILL BEAT SPAIN TODAY' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da3LpIohQOy/', views: 3337, eng: 44, date: '2026-07-16', label: '16 Jul 2026', caption: 'Manchester United have as good a chance as anybody' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da1W6Krhmsr/', views: 3308, eng: 93, date: '2026-07-16', label: '16 Jul 2026', caption: 'England deserved better than what Tuchel gave them' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaeBQ_OvnQl/', views: 3307, eng: 162, date: '2026-07-06', label: '06 Jul 2026', caption: 'Mexico its okay next World Cup you will win' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DawXKTYO2bH/', views: 3243, eng: 65, date: '2026-07-14', label: '14 Jul 2026', caption: 'Well see tmr' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=Nvw1lh1qZUQ', views: 3201, eng: 45, date: '2026-07-11', label: '11 Jul 2026', caption: 'JUDE BELINGHAM MAGIC NEEDS APPRECIATION' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8i4q_BmUV/', views: 3138, eng: 136, date: '2026-07-18', label: '18 Jul 2026', caption: 'United losing a friendly to Wrexham' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/BLVXQpp1qQ0', views: 3135, eng: 23, date: '2026-07-15', label: '15 Jul 2026', caption: 'Messi is locked in Argentina are about to destroy England' },
+  { creator: 'don.mk14', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@don.mk14/video/7662296780087889165', views: 3127, eng: 175, date: '2026-07-14', label: '14 Jul 2026', caption: 'Can they do it' },
+  { creator: '1kjahz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaMH961A5Rz/', views: 3098, eng: 154, date: '2026-06-30', label: '30 Jun 2026', caption: '#explore #germany #worldcup #paraguay' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7653677381906877717', views: 3089, eng: 108, date: '2026-06-21', label: '21 Jun 2026', caption: 'These takes are wild' },
+  { creator: '1kjahz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DalfJLYAe76/', views: 3084, eng: 189, date: '2026-07-09', label: '09 Jul 2026', caption: 'Morocco vs France' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=CmLKGM1rLhc', views: 3040, eng: 25, date: '2026-07-06', label: '06 Jul 2026', caption: 'ARE WE GONNA LOOSE MESSI TONIGHT' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DZ5tb_HtQpr/', views: 3005, eng: 83, date: '2026-06-22', label: '22 Jun 2026', caption: 'Imagine' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DayG4tcomi6/', views: 2984, eng: 34, date: '2026-07-14', label: '14 Jul 2026', caption: 'Spain are worthy opponents but France are the ones who should scare everybody' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dalr1oyi5cR/', views: 2977, eng: 175, date: '2026-07-09', label: '09 Jul 2026', caption: 'France are deadly' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da_0esZyxWe/', views: 2924, eng: 148, date: '2026-07-20', label: '20 Jul 2026', caption: 'If Spain loses Im SHAVING my eyebrows' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DadAlLXiXg1/', views: 2825, eng: 120, date: '2026-07-06', label: '06 Jul 2026', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=orn-cn5R6QU', views: 2759, eng: 78, date: '2026-07-05', label: '05 Jul 2026', caption: 'PORTUGAL AGAINST SPAIN IS GOING TO BE ABSOLUTE CINEMA' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7660551236889939220', views: 2723, eng: 74, date: '2026-07-09', label: '09 Jul 2026', caption: 'What should I have asked' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da_bkrsxtwr/', views: 2656, eng: 148, date: '2026-07-19', label: '19 Jul 2026', caption: 'Spain are world champions' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/lJbv_YyXUNU', views: 2635, eng: 18, date: '2026-07-19', label: '19 Jul 2026', caption: 'England underestimated the GOAT' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8AmXbB8P5/', views: 2557, eng: 101, date: '2026-07-18', label: '18 Jul 2026', caption: 'Real Madrid fans rooting against Messi' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/FoeJCf46w1A', views: 2480, eng: 8, date: '2026-07-08', label: '08 Jul 2026', caption: 'When your rent money rides on Messi' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/oQTQcZ6ocoY', views: 2479, eng: 12, date: '2026-07-13', label: '13 Jul 2026', caption: 'Norway got ROBBED' },
+  { creator: 'ceofooty', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DZ5hisitJFP/', views: 2434, eng: 75, date: '2026-06-22', label: '22 Jun 2026', caption: 'Its TIME' },
+  { creator: '1kjahz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaL4cvgg5-V/', views: 2432, eng: 98, date: '2026-06-29', label: '29 Jun 2026', caption: 'Stay selling my parlays' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7658956011461561621', views: 2399, eng: 73, date: '2026-07-05', label: '05 Jul 2026', caption: 'Genuinely im shocked' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Oyu9qPfPocs', views: 2351, eng: 16, date: '2026-07-14', label: '14 Jul 2026', caption: 'Englands dirty goal and Norways disputed calls' },
+  { creator: 'robshredzz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaD5XkBAR2n/', views: 2267, eng: 42, date: '2026-06-26', label: '26 Jun 2026', caption: 'Lets go dictator' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/I76kd1o0m-8', views: 2261, eng: 8, date: '2026-07-07', label: '07 Jul 2026', caption: 'Portugals curse is REAL RIP my rent money' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7661019274043084052', views: 2261, eng: 95, date: '2026-07-10', label: '10 Jul 2026', caption: 'Bro WHAT is on my lip' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da8xNYEoS_l/', views: 2251, eng: 59, date: '2026-07-18', label: '18 Jul 2026', caption: 'Fair warning right now if France lose this bronze final' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaHUrkkI2Y5/', views: 2221, eng: 21, date: '2026-06-28', label: '28 Jun 2026', caption: 'well the witch spells didnt work' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dad9tKCv7ms/', views: 2209, eng: 102, date: '2026-07-06', label: '06 Jul 2026', caption: 'Spain WILL WIN the WorldCup' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0vZ6zhav5/', views: 2166, eng: 59, date: '2026-07-15', label: '15 Jul 2026', caption: 'The true Diego Maradona was never one thing' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/S1kRDgOO1Pk', views: 2157, eng: 18, date: '2026-06-29', label: '29 Jun 2026', caption: 'Brazil you got lucky today...' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Iw1MwHwrflQ', views: 2111, eng: 12, date: '2026-06-30', label: '30 Jun 2026', caption: 'JAPAN GOT ROBBED (rip my rent)' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da80pXhodlB/', views: 2108, eng: 42, date: '2026-07-18', label: '18 Jul 2026', caption: '4-0 France and honestly I dont even feel like ragebaiting' },
+  { creator: '1kjahz', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dab031GM0ul/', views: 2007, eng: 108, date: '2026-07-06', label: '06 Jul 2026', caption: 'We got our boy back' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/KO0XLIYU1vg', views: 1990, eng: 10, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi is breaking through Spains defense' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daht73IiTiu/', views: 1952, eng: 47, date: '2026-07-08', label: '08 Jul 2026', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0M0aRiYfD/', views: 1937, eng: 43, date: '2026-07-15', label: '15 Jul 2026', caption: 'ENGLAND AGAINST ARGENTINA WHO WINS' },
+  { creator: 'mk.don14', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DauepI0AbDg/', views: 1927, eng: 39, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will Argentina change it up' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DapccCiC5q-/', views: 1886, eng: 60, date: '2026-07-11', label: '11 Jul 2026', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da-_NdGsI_l/', views: 1856, eng: 34, date: '2026-07-19', label: '19 Jul 2026', caption: 'Sorry Spain Argentina will win' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Jbh_oUsbbpI', views: 1848, eng: 18, date: '2026-07-16', label: '16 Jul 2026', caption: 'Told you so Argentina ranked LOWEST' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/tgbuFh4gZ5w', views: 1799, eng: 38, date: '2026-07-07', label: '07 Jul 2026', caption: 'Carpo Verde the real world cup winners' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/2IY5AEsrafY', views: 1775, eng: 11, date: '2026-07-14', label: '14 Jul 2026', caption: 'France is about to show Spain' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaTRhDoR5RH/', views: 1747, eng: 34, date: '2026-07-02', label: '02 Jul 2026', caption: 'Ronaldo ur COOKED' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=-dHhoX-nsFw', views: 1746, eng: 23, date: '2026-07-04', label: '04 Jul 2026', caption: 'BRAZIL AGAINST NORWAY' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/htmt-cCCW-I', views: 1726, eng: 15, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina are going all the way' },
+  { creator: 'don.mk14', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@don.mk14/video/7662661487751597325', views: 1725, eng: 81, date: '2026-07-15', label: '15 Jul 2026', caption: 'Hoping for a thriller' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Z73TT8UA5HM', views: 1720, eng: 10, date: '2026-07-17', label: '17 Jul 2026', caption: 'THE GOAT DEBATE IS OVER Messi at 39' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/kjlTK67KdmQ', views: 1707, eng: 9, date: '2026-07-19', label: '19 Jul 2026', caption: 'Lamine Yamal is not taking Messis throne' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/bxCg3KQbyOk', views: 1703, eng: 18, date: '2026-07-14', label: '14 Jul 2026', caption: 'Sorloth had ONE job' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DazbXossSQO/', views: 1700, eng: 92, date: '2026-07-15', label: '15 Jul 2026', caption: 'Messi has visited the wall' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da0H_aMsOgu/', views: 1698, eng: 44, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina are cheating Shut your mouth man' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/nmdsHChgun0', views: 1681, eng: 4, date: '2026-07-19', label: '19 Jul 2026', caption: 'MY RENTS ON ARGENTINA' },
+  { creator: 'mk.don14', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dazl_dLgpEi/', views: 1660, eng: 17, date: '2026-07-15', label: '15 Jul 2026', caption: 'england argentina worldcup' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0hqxuBkG2/', views: 1643, eng: 45, date: '2026-07-15', label: '15 Jul 2026', caption: 'Diego Maradona scored the most audacious goal' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/TYW-rHggHuk', views: 1642, eng: 6, date: '2026-07-17', label: '17 Jul 2026', caption: 'I TOLD YOU SO Messi at the wall' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dakzp9UCKnT/', views: 1606, eng: 72, date: '2026-07-09', label: '09 Jul 2026', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaUhZJFMX0n/', views: 1562, eng: 21, date: '2026-07-03', label: '03 Jul 2026', caption: 'easiest prediction' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/MU11UIJbv6w', views: 1541, eng: 13, date: '2026-07-02', label: '02 Jul 2026', caption: 'easiest prediction' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=0P5K2fC405A', views: 1540, eng: 14, date: '2026-07-09', label: '09 Jul 2026', caption: 'SPAIN AGAINST BELGIUM WAS UNSUCCESSFUL HATE WATCH' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/lpSrd6sutRA', views: 1526, eng: 16, date: '2026-07-05', label: '05 Jul 2026', caption: 'Harry Kanes about to put the pizza in the oven' },
+  { creator: 'mk.don14', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/DaxE7B5gDQc/', views: 1522, eng: 43, date: '2026-07-14', label: '14 Jul 2026', caption: 'Will they do it' },
+  { creator: 'letschatball1', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0gS0RCSUv/', views: 1522, eng: 70, date: '2026-07-15', label: '15 Jul 2026', caption: 'ITS COMING HOME ENGLAND IS GOING TO THE FINAL' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da047JeRjiw/', views: 1514, eng: 38, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentinas the defending champs putting my RENT on it' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Daysn-bOV58/', views: 1510, eng: 91, date: '2026-07-14', label: '14 Jul 2026', caption: 'Spain has proved to the world once again' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/ZReILzHI1GI', views: 1495, eng: 15, date: '2026-07-02', label: '02 Jul 2026', caption: 'AUSTRIA youre cooked' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/KTDIaBDQDOc', views: 1493, eng: 13, date: '2026-06-29', label: '29 Jun 2026', caption: 'i swear im not biased (this aged well...)' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=iRpmq655QRI', views: 1483, eng: 30, date: '2026-07-07', label: '07 Jul 2026', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/FuLfPIOYqdw', views: 1466, eng: 5, date: '2026-07-06', label: '06 Jul 2026', caption: 'Englands secret weapon' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da0xhGnxLXX/', views: 1464, eng: 27, date: '2026-07-15', label: '15 Jul 2026', caption: 'Youre all sleeping on Argentina' },
+  { creator: 'monstermike197', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0m0SyB88H/', views: 1453, eng: 45, date: '2026-07-15', label: '15 Jul 2026', caption: 'Gabriel Batistuta was so lethal' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da6Rbz5ssji/', views: 1443, eng: 87, date: '2026-07-17', label: '17 Jul 2026', caption: 'At 39 Messi is STILL the GOAT' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da6Gcb7x7t5/', views: 1441, eng: 61, date: '2026-07-17', label: '17 Jul 2026', caption: 'I TOLD YOU SO Messi at the wall' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DayGq2rxqVM/', views: 1435, eng: 30, date: '2026-07-14', label: '14 Jul 2026', caption: 'Frances too stacked Spain is Cookeddddd' },
+  { creator: 'jahz524', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@jahz524/video/7660629020664433934', views: 1433, eng: 73, date: '2026-07-09', label: '09 Jul 2026', caption: 'Morocco vs France game today' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DajHB9oskqL/', views: 1421, eng: 34, date: '2026-07-08', label: '08 Jul 2026', caption: 'When your rent money rides on Messi' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da0wXvyxmRD/', views: 1416, eng: 22, date: '2026-07-15', label: '15 Jul 2026', caption: 'You cant deny the goat' },
+  { creator: 'mk.don14', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da7RWNFgdFV/', views: 1416, eng: 20, date: '2026-07-18', label: '18 Jul 2026', caption: 'Still watching' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Dax-F-PsuzX/', views: 1384, eng: 30, date: '2026-07-14', label: '14 Jul 2026', caption: 'Englands dirty goal stole the game off Norway' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da-sVOIM1-0/', views: 1381, eng: 24, date: '2026-07-19', label: '19 Jul 2026', caption: 'Lamine Yamal is not taking Messis throne' },
+  { creator: 'benny_ballss', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da0jxBHMIzU/', views: 1371, eng: 77, date: '2026-07-15', label: '15 Jul 2026', caption: 'Jude please be okay England needs you' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da-2oh5scBv/', views: 1353, eng: 31, date: '2026-07-19', label: '19 Jul 2026', caption: 'MY RENTS ON ARGENTINA' },
+  { creator: 'tampatwinstm', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Dafagc-Ia7Y/', views: 1334, eng: 20, date: '2026-07-07', label: '07 Jul 2026', caption: 'Ragebaiting Brazil fans at the World Cup' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/wbIQL2DCeSo', views: 1322, eng: 5, date: '2026-07-01', label: '01 Jul 2026', caption: 'Ecuador has the best flag and team...' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da8R4LiMgnF/', views: 1320, eng: 42, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi is breaking through Spains defense' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/uZMQKOrCzhM', views: 1299, eng: 6, date: '2026-07-10', label: '10 Jul 2026', caption: 'You cant not love football fans' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da72t--MU2l/', views: 1292, eng: 49, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi has always been the GOAT' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/E0764YNKo6g', views: 1288, eng: 21, date: '2026-07-04', label: '04 Jul 2026', caption: 'paraguay pls secure my rent' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/1LPAA06NEGY', views: 1287, eng: 16, date: '2026-06-27', label: '27 Jun 2026', caption: 'well the witch spells didnt work' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DayQAcMRuHT/', views: 1286, eng: 20, date: '2026-07-14', label: '14 Jul 2026', caption: 'France takes the crown The dictator has spoken' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DarOFDsoc__/', views: 1257, eng: 11, date: '2026-07-12', label: '12 Jul 2026', caption: 'Mbappe is a different beast' },
+  { creator: 'don.mk14', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@don.mk14/video/7664164517697326349', views: 1252, eng: 74, date: '2026-07-19', label: '19 Jul 2026', caption: 'spain argentina worldcup' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=eVU_ad4kn2k', views: 1230, eng: 13, date: '2026-07-10', label: '10 Jul 2026', caption: 'LAMINE YAMAL IS BURRYING SPAIN' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/eTz1CxRamEU', views: 1228, eng: 14, date: '2026-06-25', label: '25 Jun 2026', caption: 'messi you are cooked' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/uMh48sgyq0w', views: 1206, eng: 9, date: '2026-06-22', label: '22 Jun 2026', caption: 'aged well...' },
+  { creator: 'TampaTwinsTM', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=HpfKfQugDWU', views: 1191, eng: 11, date: '2026-07-06', label: '06 Jul 2026', caption: 'Ragebaiting Brazil Fans at the World Cup' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/X_9pGmU2HhQ', views: 1154, eng: 6, date: '2026-07-08', label: '08 Jul 2026', caption: 'How far can Morocco go' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7659745951959043350', views: 1137, eng: 50, date: '2026-07-07', label: '07 Jul 2026', caption: 'ARGENTINA AGAINST EGYPT IS GOING TO BE CRAZY' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/o_2zRwR1Ffs', views: 1124, eng: 5, date: '2026-07-19', label: '19 Jul 2026', caption: 'Just because Messi touched Yamal' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/_dIIwIW4184', views: 1117, eng: 9, date: '2026-07-11', label: '11 Jul 2026', caption: 'Mbappe is a different beast' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=oqvZTn-zbQE', views: 1079, eng: 13, date: '2026-07-08', label: '08 Jul 2026', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7657667899179519246', views: 1059, eng: 47, date: '2026-07-01', label: '01 Jul 2026', caption: 'Ecuador has the best flag and team...' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/IttlwdvsrF0', views: 1055, eng: 7, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi has always been the GOAT' },
+  { creator: 'Letschatball1', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=rnqBqazUSAM', views: 1026, eng: 21, date: '2026-07-12', label: '12 Jul 2026', caption: 'JUDE BELINGHAM BETTER THAN BARCELONA WHOLE MIDFIELD' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/EZdsgeJrDWQ', views: 985, eng: 8, date: '2026-06-21', label: '21 Jun 2026', caption: 'Prime Mbappe is cooking' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/SbsKBmMEAo0', views: 948, eng: 15, date: '2026-06-23', label: '23 Jun 2026', caption: 'the responses' },
+  { creator: 'ceofooty_', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@ceofooty_/video/7654292849558867221', views: 940, eng: 35, date: '2026-06-22', label: '22 Jun 2026', caption: 'Its TIME' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7658006184179289358', views: 927, eng: 82, date: '2026-07-02', label: '02 Jul 2026', caption: 'Ronaldo ur COOKED' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaokAUyIxkk/', views: 915, eng: 19, date: '2026-07-11', label: '11 Jul 2026', caption: 'You cant not love football fans' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaQAPiTMuVe/', views: 880, eng: 5, date: '2026-07-01', label: '01 Jul 2026', caption: 'Tunisia ggs' },
+  { creator: 'jahz524', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@jahz524/video/7659185670698585358', views: 864, eng: 67, date: '2026-07-05', label: '05 Jul 2026', caption: '#fyp #brazil #norway #worldcup' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/So8eOLz2zaw', views: 857, eng: 3, date: '2026-07-19', label: '19 Jul 2026', caption: 'Argentina has this in the bag' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/mj0ozYiiGsw', views: 834, eng: 3, date: '2026-07-01', label: '01 Jul 2026', caption: 'Tunisia ggs' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7658034364516666637', views: 825, eng: 48, date: '2026-07-02', label: '02 Jul 2026', caption: 'AUSTRIA youre cooked' },
+  { creator: 'jahz524', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@jahz524/video/7656972581047766286', views: 795, eng: 60, date: '2026-06-30', label: '30 Jun 2026', caption: '#fyp #explore #germany #worldcup' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/VmxpJPIoQh0', views: 771, eng: 3, date: '2026-07-19', label: '19 Jul 2026', caption: 'Sorry Spain I Know You Are Crying' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Dax1gcNMp-R/', views: 650, eng: 18, date: '2026-07-14', label: '14 Jul 2026', caption: 'Norway had ONE job Sorloth cost them everything' },
+  { creator: 'jahz524', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@jahz524/video/7656938093659819278', views: 649, eng: 76, date: '2026-06-29', label: '29 Jun 2026', caption: '#fyp #germany #worldcup' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da2zzSIMlqG/', views: 642, eng: 19, date: '2026-07-16', label: '16 Jul 2026', caption: 'Told you so Argentina ranked LOWEST' },
+  { creator: 'mkdonny14', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=3tPortfhPm4', views: 636, eng: 5, date: '2026-07-17', label: '17 Jul 2026', caption: 'Still watching' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7659062717818342678', views: 578, eng: 33, date: '2026-07-05', label: '05 Jul 2026', caption: 'BRAZIL AGAINST NORWAY JOGA BONITO' },
+  { creator: 'mkdonny14', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=HVm-kpaNCUE', views: 548, eng: 7, date: '2026-07-12', label: '12 Jul 2026', caption: 'Will Argentina change it up' },
+  { creator: 'mkdonny14', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=YzvmRL3an4o', views: 542, eng: 13, date: '2026-07-18', label: '18 Jul 2026', caption: '#spain' },
+  { creator: 'mkdonny14', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=jnAKLi9-_g0', views: 534, eng: 11, date: '2026-07-14', label: '14 Jul 2026', caption: '#england' },
+  { creator: 'mkdonny14', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=-R0XbEOnSTY', views: 527, eng: 11, date: '2026-07-13', label: '13 Jul 2026', caption: 'Will they do it' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661073420674731277', views: 497, eng: 30, date: '2026-07-11', label: '11 Jul 2026', caption: 'You cant not love football fans' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da0qV6tsWkx/', views: 452, eng: 9, date: '2026-07-15', label: '15 Jul 2026', caption: 'Sorry Egypt Argentina are going all the way' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Dauy9HAsQRj/', views: 437, eng: 3, date: '2026-07-13', label: '13 Jul 2026', caption: 'Did FIFA just rob Norway' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7660680605377629454', views: 405, eng: 33, date: '2026-07-09', label: '09 Jul 2026', caption: 'Argentinas comeback is INSANE' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaTdWAPxC1z/', views: 393, eng: 3, date: '2026-07-03', label: '03 Jul 2026', caption: 'AUSTRIA youre cooked' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661440425558822158', views: 369, eng: 28, date: '2026-07-12', label: '12 Jul 2026', caption: 'Englands secret weapon You cant make this up' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaQ7l4nRSil/', views: 362, eng: 2, date: '2026-07-01', label: '01 Jul 2026', caption: 'Ecuador has the best flag and team...' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaBoLrKstQX/', views: 337, eng: 6, date: '2026-06-25', label: '25 Jun 2026', caption: 'ENGLAND ftw' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7660085999610940694', views: 322, eng: 18, date: '2026-07-08', label: '08 Jul 2026', caption: 'ARGENTINA WORLD CUP IS REAL MADRID CHAMPIONS LEAGUE' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DZ85dpjIKcA/', views: 305, eng: 4, date: '2026-06-24', label: '24 Jun 2026', caption: 'i dont even want the ticket after todays match' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661648084719455502', views: 301, eng: 19, date: '2026-07-12', label: '12 Jul 2026', caption: 'never doubt the dictator' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661422463347166477', views: 271, eng: 10, date: '2026-07-11', label: '11 Jul 2026', caption: 'Mbappe knew the whole time' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7659613903214660877', views: 268, eng: 10, date: '2026-07-07', label: '07 Jul 2026', caption: 'Englands secret weapon' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7660288266305817869', views: 258, eng: 3, date: '2026-07-08', label: '08 Jul 2026', caption: 'I put my RENT on Argentina' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaY0E6ZMr5H/', views: 251, eng: 1, date: '2026-07-04', label: '04 Jul 2026', caption: 'paraguay pls secure my rent' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7659930815194762510', views: 234, eng: 9, date: '2026-07-07', label: '07 Jul 2026', caption: 'Portugals curse is REAL' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DZ_kLnroali/', views: 233, eng: 1, date: '2026-06-25', label: '25 Jun 2026', caption: 'Or will the dictator decide...' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaiMx43Mq22/', views: 229, eng: 4, date: '2026-07-08', label: '08 Jul 2026', caption: 'How far can Morocco go' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DagoKtPsXEn/', views: 225, eng: 0, date: '2026-07-07', label: '07 Jul 2026', caption: 'Portugals curse is REAL' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DajH9LTsnvE/', views: 218, eng: 1, date: '2026-07-08', label: '08 Jul 2026', caption: 'Thats one third of my rent' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da6O5VRxmqo/', views: 210, eng: 0, date: '2026-07-17', label: '17 Jul 2026', caption: 'Argentina just proved everyone wrong' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Dab4J5Nor9D/', views: 197, eng: 1, date: '2026-07-06', label: '06 Jul 2026', caption: 'Harry Kanes about to put the pizza in the oven' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661456617853947150', views: 192, eng: 15, date: '2026-07-12', label: '12 Jul 2026', caption: 'Mbappe is a different beast' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7659714091690282253', views: 185, eng: 10, date: '2026-07-07', label: '07 Jul 2026', caption: 'Carpo Verde the real world cup winners' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaeadyjoRMe/', views: 172, eng: 0, date: '2026-07-07', label: '07 Jul 2026', caption: 'Englands secret weapon' },
+  { creator: 'mk.don14', platform: 'Instagram', kind: 'reel', url: 'https://www.instagram.com/reel/Da-BzhIgFiw/', views: 143, eng: 8, date: '2026-07-19', label: '19 Jul 2026', caption: 'spain argentina worldcup' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/DaeppQXsIie/', views: 127, eng: 1, date: '2026-07-07', label: '07 Jul 2026', caption: 'Carpo Verde the real world cup winners' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/Dba0QADM3uQ', views: 68, eng: 3, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentinas taking it all' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/YEkeNYBo0i8', views: 66, eng: 4, date: '2026-07-08', label: '08 Jul 2026', caption: 'Argentinas comeback is REAL' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/5qxZcgF2unI', views: 65, eng: 2, date: '2026-07-15', label: '15 Jul 2026', caption: 'Youre all sleeping on Argentina man' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7660657844504595734', views: 54, eng: 4, date: '2026-07-09', label: '09 Jul 2026', caption: 'France are deadly' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/KZgb9QzITgk', views: 47, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'France takes the crown' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/D9RgpEPginI', views: 46, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'You cant deny the goat' },
+  { creator: 'Dannie', platform: 'Instagram', kind: 'post', url: 'https://www.instagram.com/p/Da-Utj8s-PT/', views: 41, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'England underestimated the GOAT' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/riQNNXXqRFw', views: 40, eng: 3, date: '2026-07-08', label: '08 Jul 2026', caption: 'Thats one third of my rent' },
+  { creator: 'letschat_ball', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@letschat_ball/video/7660531405750832406', views: 39, eng: 3, date: '2026-07-09', label: '09 Jul 2026', caption: 'PRAY FOR PARIS MOROCCO AGAINST FRANCE' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7660296597170818318', views: 23, eng: 3, date: '2026-07-08', label: '08 Jul 2026', caption: 'gg rip my rent' },
+  { creator: 'Dannie', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/shorts/MmsKgBbiwSA', views: 20, eng: 0, date: '2026-06-24', label: '24 Jun 2026', caption: 'GG Croatia' },
+  { creator: 'TampaTwinsTM', platform: 'YouTube', kind: 'video', url: 'https://www.youtube.com/watch?v=mIR35Fp-z_4', views: 17, eng: 0, date: '2026-07-12', label: '12 Jul 2026', caption: 'Americans Dont Know Anything About Football' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7658187016789642510', views: 11, eng: 0, date: '2026-07-03', label: '03 Jul 2026', caption: 'easiest prediction' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7660156997240769806', views: 11, eng: 0, date: '2026-07-08', label: '08 Jul 2026', caption: 'How far can Morocco go' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7658805150110289166', views: 7, eng: 0, date: '2026-07-04', label: '04 Jul 2026', caption: 'paraguay pls secure my rent' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7659246206069067022', views: 7, eng: 0, date: '2026-07-06', label: '06 Jul 2026', caption: 'Harry Kanes about to put the pizza in the oven' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662025525195509005', views: 5, eng: 0, date: '2026-07-13', label: '13 Jul 2026', caption: 'Norway got robbed against England' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7661965886693051661', views: 4, eng: 0, date: '2026-07-13', label: '13 Jul 2026', caption: 'Did it hit the SKY Wire' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7660478712311237901', views: 2, eng: 0, date: '2026-07-09', label: '09 Jul 2026', caption: 'Argentinas comeback is INSANE' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662796577286720782', views: 2, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina is cheating your mouth man' },
+  { creator: 'Outcomewc', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@outcomewc/video/7660080228643147022', views: 1, eng: 0, date: '2026-07-08', label: '08 Jul 2026', caption: 'day 2 today was cooked' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662422155845569806', views: 1, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'Englands stats look clean' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662793544419134733', views: 1, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Messi has visited the wall' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662828871728827661', views: 1, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'It is Rigged Argentina are cheating your mouth man' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662832267588390157', views: 1, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentinas winning EVERYTHING while Im eating' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663126484944571661', views: 1, eng: 0, date: '2026-07-16', label: '16 Jul 2026', caption: 'Told you so Argentina ranked LOWEST' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7664295062817328397', views: 1, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'MY RENTS ON ARGENTINA' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7664316906777611534', views: 1, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'Just because Messi touched Yamal' },
+  { creator: 'Outcomewc', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@outcomewc/video/7659622886814108942', views: 0, eng: 0, date: '2026-07-07', label: '07 Jul 2026', caption: 'this 100 racks is MINE' },
+  { creator: 'Outcomewc', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@outcomewc/video/7660172978298031373', views: 0, eng: 0, date: '2026-07-08', label: '08 Jul 2026', caption: 'Day 3 Argentina less goooo' },
+  { creator: 'Outcomewc', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@outcomewc/video/7660699806553132301', views: 0, eng: 0, date: '2026-07-10', label: '10 Jul 2026', caption: 'Day 1 of turning 100k into something' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662405872714255629', views: 0, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'Sorloth threw away the entire game' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662446061931351310', views: 0, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'France is about to run this' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662460807497764110', views: 0, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'France have got the dictator on their side' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662505786085510414', views: 0, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'France have got the dictator' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662506161077243149', views: 0, eng: 0, date: '2026-07-14', label: '14 Jul 2026', caption: 'France is about to run this' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662630934235139341', views: 0, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Messi has visited the wall' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662723533079956750', views: 0, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Argentina are cheating Shut your mouth' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662808722523098381', views: 0, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Some people need to chill Argentina are going all the way' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7662825356004576526', views: 0, eng: 0, date: '2026-07-15', label: '15 Jul 2026', caption: 'Messi has visited the wall Argentina Masterclass incoming' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663599974776622349', views: 0, eng: 0, date: '2026-07-17', label: '17 Jul 2026', caption: 'I TOLD YOU Argentina came back' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663620384784239886', views: 0, eng: 0, date: '2026-07-17', label: '17 Jul 2026', caption: 'England fans got rage baited' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663624698688736526', views: 0, eng: 0, date: '2026-07-17', label: '17 Jul 2026', caption: 'The GOAT at 39 years old' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663853630658776333', views: 0, eng: 0, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi has always been the GOAT' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7663915109097491725', views: 0, eng: 0, date: '2026-07-18', label: '18 Jul 2026', caption: 'Messi is breaking through Spains defense' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7664209325581159693', views: 0, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'England underestimated the GOAT' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7664280318580493581', views: 0, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'Lamine Yamal is not taking Messis throne' },
+  { creator: 'Dannie', platform: 'TikTok', kind: 'video', url: 'https://www.tiktok.com/@danniewc/video/7664305224403717389', views: 0, eng: 0, date: '2026-07-19', label: '19 Jul 2026', caption: 'Sorry Spain I Know You Are Crying' }
 ];
 
 const PLATFORM_ICONS = {
@@ -849,113 +1213,80 @@ function renderTimeline() {
 }
 
 // ============================================================
-// GALLERY
+// VIDEO FEED
 // ============================================================
 
-let galleryFilter = 'all';
-let gallerySort = 'views-desc';
+let feedFilter = 'all';
+let feedSort = 'views-desc';
 
-function captionFor(post) {
-  if (post.caption) {
-    const c = post.caption.length > 80 ? post.caption.slice(0, 77) + '...' : post.caption;
-    return c.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  const label = (KIND_LABEL[post.platform] && KIND_LABEL[post.platform][post.kind]) || (post.platform + ' Post');
-  return `${label} &middot; World Cup 2026 campaign content`;
-}
+const PLATFORM_BG_GRAD = {
+  Instagram: 'linear-gradient(135deg, #833AB4 0%, #C13584 40%, #E1306C 60%, #F77737 100%)',
+  TikTok: 'linear-gradient(135deg, #010101 0%, #25F4EE 50%, #FE2C55 100%)',
+  YouTube: 'linear-gradient(135deg, #282828 0%, #FF0000 100%)',
+  Facebook: 'linear-gradient(135deg, #1877F2 0%, #4267B2 100%)'
+};
 
-function renderGallery() {
-  const grid = document.getElementById('gallery-grid');
+function renderFeed() {
+  const grid = document.getElementById('feed-grid');
   const results = document.getElementById('gallery-results');
+  const countEl = document.getElementById('gallery-count');
 
-  let filtered = galleryFilter === 'all' ? [...posts] : posts.filter(p => p.platform === galleryFilter);
+  let filtered = feedFilter === 'all' ? [...posts] : posts.filter(p => p.platform === feedFilter);
 
-  const [key, dir] = gallerySort.split('-');
+  const [key, dir] = feedSort.split('-');
   filtered.sort((a, b) => {
     let va, vb;
     if (key === 'views') { va = a.views; vb = b.views; }
     else if (key === 'eng') { va = a.eng; vb = b.eng; }
+    else if (key === 'engrate') { va = a.views > 0 ? a.eng / a.views : 0; vb = b.views > 0 ? b.eng / b.views : 0; }
     else { va = a.date; vb = b.date; }
     if (key === 'date') return dir === 'desc' ? (va < vb ? 1 : -1) : (va > vb ? 1 : -1);
     return dir === 'desc' ? vb - va : va - vb;
   });
 
   results.textContent = `SHOWING ${filtered.length} OF ${posts.length} POSTS`;
+  countEl.textContent = `${filtered.length} POSTS · SORTED BY ${key.toUpperCase()}`;
 
   if (filtered.length === 0) {
-    grid.innerHTML = '<div class="gallery-empty">No posts match this filter</div>';
+    grid.innerHTML = '<div class="feed-empty">No posts match this filter</div>';
     return;
   }
 
-  grid.innerHTML = filtered.map((p, i) => `
-    <div class="gallery-card">
-      <div class="gallery-card-top" style="background:${PLATFORM_BG[p.platform]}">
-        <div class="gallery-platform-badge" style="color:${PLATFORM_COLOR[p.platform]}">
+  grid.innerHTML = filtered.map(p => {
+    const engRate = p.views > 0 ? ((p.eng / p.views) * 100).toFixed(1) : '0.0';
+    const caption = p.caption ? (p.caption.length > 80 ? p.caption.slice(0, 77) + '...' : p.caption).replace(/</g, '&lt;') : '';
+    return `
+    <a class="video-card" href="${p.url}" target="_blank" rel="noopener noreferrer">
+      <div class="video-card-bg" style="background:${PLATFORM_BG_GRAD[p.platform]}"></div>
+      <div class="video-card-overlay"></div>
+      <div class="video-card-play">
+        <svg viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19"/></svg>
+      </div>
+      <div class="video-card-top">
+        <div class="video-platform-badge" style="color:${PLATFORM_COLOR[p.platform]}">
           ${PLATFORM_ICONS[p.platform]} ${p.platform}
         </div>
-        <div class="gallery-rank">#${i + 1}</div>
-        <div class="gallery-creator">@${p.creator}</div>
-        <div class="gallery-caption">${captionFor(p)}</div>
+        <div class="video-views">${fmt(p.views)}</div>
       </div>
-      <div class="gallery-card-body">
-        <div class="gallery-stats">
-          <div class="gallery-stat"><span class="num">${fmt(p.views)}</span><span class="lbl">Views</span></div>
-          <div class="gallery-stat"><span class="num">${fmt(p.eng)}</span><span class="lbl">Engagement</span></div>
-        </div>
-        <div class="gallery-meta">
-          <span class="gallery-date">${p.label}</span>
-          <button class="gallery-open" onclick="toggleEmbed(this, '${p.platform}', '${p.url}')">Play &#9654;</button>
-        </div>
+      <div class="video-card-bottom">
+        <div class="video-creator">@${p.creator}</div>
+        <div class="video-caption">${caption}</div>
+        <div class="video-eng">${fmt(p.eng)} engagement · ${engRate}% rate</div>
       </div>
-      <div class="embed-container"></div>
-    </div>
-  `).join('');
+    </a>`;
+  }).join('');
 }
 
-function filterGallery(platform, btn) {
-  galleryFilter = platform;
+function filterFeed(platform, btn) {
+  feedFilter = platform;
   document.querySelectorAll('.filter-group .filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderGallery();
+  renderFeed();
 }
 
-function sortGallery(value) {
-  gallerySort = value;
-  renderGallery();
-}
-
-// ============================================================
-// EMBED TOGGLE
-// ============================================================
-
-function toggleEmbed(btn, platform, url) {
-  const card = btn.closest('.gallery-card');
-  const container = card.querySelector('.embed-container');
-
-  if (container.classList.contains('active')) {
-    container.classList.remove('active');
-    container.innerHTML = '';
-    btn.textContent = 'Play ▶';
-    return;
-  }
-
-  container.classList.add('active');
-  btn.textContent = 'Close ✕';
-
-  if (platform === 'TikTok') {
-    container.innerHTML = '<blockquote class="tiktok-embed" cite="' + url + '" data-video-id="" style="max-width:605px;min-width:325px;"><section></section></blockquote>';
-    if (window.tiktokEmbed && tiktokEmbed.lib) tiktokEmbed.lib.render();
-  } else if (platform === 'Instagram') {
-    container.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="max-width:540px;min-width:326px;width:100%;"><a href="' + url + '"></a></blockquote>';
-    if (window.instgrm) instgrm.Embeds.process();
-  } else if (platform === 'YouTube') {
-    var videoId = '';
-    var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-    if (m) videoId = m[1];
-    container.innerHTML = '<iframe width="100%" height="315" src="https://www.youtube.com/embed/' + videoId + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-  } else if (platform === 'Facebook') {
-    container.innerHTML = '<iframe width="100%" height="400" src="https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false" style="border:none;overflow:hidden" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>';
-  }
+function sortFeed(value) {
+  feedSort = value;
+  renderFeed();
 }
 
 // ============================================================
@@ -1136,12 +1467,10 @@ renderLeaderboard(creators);
 setupLeaderboardSort();
 renderPlatformBreakdown();
 renderTimeline();
-renderGallery();
+renderFeed();
 renderCorrelationChart();
 </script>
 
-<script async src="https://www.tiktok.com/embed.js"></script>
-<script async src="//www.instagram.com/embed.js"></script>
 
 </body>
 </html>
