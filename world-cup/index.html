@@ -3,24 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outcome.xyz - World Cup 2026 Campaign Wrap-Up</title>
+<title>World Cup 2026 Campaign Dashboard | Outcome</title>
+<meta name="description" content="Full campaign dashboard: $29.4M volume, 7,927 signups, 49.3% peak market share across 41 days. Week-by-week performance, channel ROI, and executive insights.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="World Cup 2026 Campaign Dashboard | Outcome">
+<meta property="og:description" content="Full campaign dashboard: $29.4M volume, 7,927 signups, 49.3% peak market share across 41 days. Week-by-week performance, channel ROI, and executive insights.">
+<meta property="og:url" content="https://outcome.labs.tg/world-cup/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://outcome.labs.tg/meta-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="World Cup 2026 Campaign Dashboard | Outcome">
+<meta name="twitter:description" content="Full campaign dashboard: $29.4M volume, 7,927 signups, 49.3% peak market share across 41 days. Week-by-week performance, channel ROI, and executive insights.">
+<meta name="twitter:image" content="https://outcome.labs.tg/meta-image.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("fonts/PPNeueCorp-Medium.otf") format("opentype");
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-NarrowUltrabold.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
-  font-stretch: condensed;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/Geist-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -29,7 +50,7 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 body {
   background: #0A0A0B;
   color: #F5F8FF;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
@@ -139,7 +160,7 @@ body {
 }
 .title-h1 {
   font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
-  font-stretch: condensed; text-transform: uppercase;
+  text-transform: uppercase;
   letter-spacing: -0.01em; font-size: 64px; line-height: 0.88;
   color: #F5F8FF;
 }
@@ -441,6 +462,47 @@ body {
 .content-embed-badge .vw { color: #45E85C; }
 /* (table removed — embed cards only) */
 
+/* ---------- UGC VIDEO CARDS ---------- */
+.ugc-video-card {
+  border-radius: 12px; overflow: hidden; background: #000;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.ugc-video-card iframe {
+  width: 100%; aspect-ratio: 9 / 16; border: none; display: block; background: #000;
+}
+.ugc-video-card-info {
+  padding: 12px 14px; background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ugc-video-card-left { display: flex; flex-direction: column; gap: 3px; }
+.ugc-video-creator { font-size: 13px; font-weight: 700; color: #F5F8FF; }
+.ugc-video-caption {
+  font-size: 10px; color: rgba(255,255,255,0.45);
+  max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ugc-video-platform {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.ugc-video-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.ugc-video-views {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-size: 15px; font-weight: 500; color: #45E85C;
+}
+.ugc-video-eng {
+  font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+
+/* ---------- COST METRICS ---------- */
+.cost-metrics-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+@media (max-width: 1200px) { .cost-metrics-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .cost-metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+
 /* ---------- INSIGHT GRID ---------- */
 .insight-grid {
   display: grid;
@@ -577,8 +639,8 @@ body {
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#3B82F6"></div>
       <div class="kpi-label" style="color:#3B82F6">Total Impressions</div>
-      <div class="kpi-value">15.8M</div>
-      <div class="kpi-sub">ALL CHANNELS</div>
+      <div class="kpi-value">25.7M</div>
+      <div class="kpi-sub">ALL CHANNELS INCL. UGC</div>
     </div>
   </div>
   <div class="kpi-grid">
@@ -724,6 +786,46 @@ body {
     </div>
   </div>
 
+  <!-- ========== SECTION 5B: BLENDED COST METRICS ========== -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#6F2EE4"></div> BLENDED COST METRICS</div>
+      <div class="card-meta">$143,359 TOTAL SPEND &middot; ALL CHANNELS</div>
+    </div>
+    <div class="cost-metrics-grid">
+      <div class="kpi-card">
+        <div class="kpi-bar" style="background:#6F2EE4"></div>
+        <div class="kpi-label" style="color:#9B7CFF">CPM</div>
+        <div class="kpi-value">$5.58</div>
+        <div class="kpi-sub">COST PER 1,000 IMPRESSIONS</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-bar" style="background:#3B82F6"></div>
+        <div class="kpi-label" style="color:#3B82F6">CP Click</div>
+        <div class="kpi-value">$2.74</div>
+        <div class="kpi-sub">COST PER MARKETING CLICK</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-bar" style="background:#1FCFA0"></div>
+        <div class="kpi-label" style="color:#1FCFA0">CP Signup</div>
+        <div class="kpi-value">$18.08</div>
+        <div class="kpi-sub">$143,359 &divide; 7,927</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-bar" style="background:#F58220"></div>
+        <div class="kpi-label" style="color:#F58220">CP Deposit</div>
+        <div class="kpi-value">$136.40</div>
+        <div class="kpi-sub">$143,359 &divide; 1,051</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-bar" style="background:#FF5C9E"></div>
+        <div class="kpi-label" style="color:#FF5C9E">CP Active Trader</div>
+        <div class="kpi-value">$29.87</div>
+        <div class="kpi-sub">$143,359 &divide; ~4,800</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== SECTION 6: BUDGET SUMMARY ========== -->
   <div class="card">
     <div class="card-header">
@@ -757,7 +859,7 @@ body {
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#FF5C9E"></div> TOP PERFORMING CONTENT</div>
-      <div class="card-meta">X POSTS + UGC &middot; BY IMPRESSIONS</div>
+      <div class="card-meta">UGC CREATOR VIDEOS + X POSTS &middot; BY VIEWS</div>
     </div>
     <div class="content-embed-grid" id="topContentEmbeds"></div>
   </div>
@@ -979,7 +1081,7 @@ body {
 // ===================== BUDGET SUMMARY TABLE =====================
 (function() {
   var budget = [
-    { name:'Vision UGC', spent:17500, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:false },
+    { name:'Vision UGC', spent:17500, posts:371, views:9900000, visitors:498, signups:15, depositors:0, over:false },
     { name:'Telegram WC Sponsor', spent:10000, posts:718, views:13900000, visitors:30115, signups:612, depositors:0, over:false },
     { name:'Telegram Ads', spent:5865, posts:113, views:597000, visitors:189, signups:25, depositors:0, over:true },
     { name:'X Organic', spent:10000, posts:101, views:1070000, visitors:1616, signups:123, depositors:20, over:false },
@@ -988,7 +1090,7 @@ body {
     { name:'Deposit Bonuses', spent:10000, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:false },
     { name:'Rewards', spent:69344, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:true }
   ];
-  var totals = { spent:143359, posts:980, views:15800000, visitors:69210, signups:7927, depositors:1051 };
+  var totals = { spent:143359, posts:1351, views:25700000, visitors:69210, signups:7927, depositors:1051 };
 
   function fmtD(n) { return '$' + n.toLocaleString('en-US'); }
   function fmtN(n) { if (n < 0) return '—'; return n.toLocaleString('en-US'); }
@@ -1025,8 +1127,8 @@ body {
 
   // "What We Got" KPI cards
   var got = [
-    { label:'Total Posts', value:'980+', sub:'ALL CHANNELS', color:'#3B82F6' },
-    { label:'Impressions', value:'15.8M', sub:'ALL CHANNELS', color:'#45E85C' },
+    { label:'Total Posts', value:'1,351+', sub:'ALL CHANNELS INCL. UGC', color:'#3B82F6' },
+    { label:'Impressions', value:'25.7M', sub:'ALL CHANNELS INCL. UGC', color:'#45E85C' },
     { label:'Marketing Clicks', value:'52.4K', sub:'DUB TRACKED', color:'#C4E84A' },
     { label:'Unique Visitors', value:'69,210', sub:'POSTHOG', color:'#6F2EE4' },
     { label:'Signups', value:'7,927', sub:'CAMPAIGN TOTAL', color:'#1FCFA0' },
@@ -1089,8 +1191,8 @@ body {
 
 // ===================== TOP PERFORMING CONTENT =====================
 (function() {
-  // type: 'x' (tweet id), 'tg' (telegram post path), 'ugc' (UGC video card)
-  var TOP = [
+  // type: 'x' (tweet id), 'tg' (telegram post path), 'ugc' (UGC creator video with embed)
+  var TOP_X = [
     { rank: 1,  title: 'Genesis Depositor Badge launch', date: 'Jul 9',  views: 291209, type: 'x',  ref: '2075248468759839079' },
     { rank: 2,  title: 'WC trade-to-earn announcement',  date: 'Jun 10', views: 198431, type: 'x',  ref: '2064793357071913268' },
     { rank: 3,  title: 'Hype 1d video',                  date: 'Jun 12', views: 94349,  type: 'x',  ref: '2065388580424613932' },
@@ -1100,25 +1202,85 @@ body {
     { rank: 7,  title: 'Fiat onramp launch',             date: 'Jun 18', views: 45223,  type: 'x',  ref: '2067608028292198409' },
     { rank: 8,  title: 'WC Final pre-game',              date: 'Jul 19', views: 41496,  type: 'x',  ref: '2078872549551972357' },
     { rank: 9,  title: '$25M traded milestone',          date: 'Jul 2',  views: 39011,  type: 'x',  ref: '2072681867053301963' },
-    { rank: 10, title: 'HIP-4 permissionless deployment', date: 'Jul 20', views: 25975, type: 'x',  ref: '2079067128070619640' },
-    { rank: 11, title: 'Vision UGC — GTA World Cup Edit', date: 'Jun 15', views: 18400, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
-    { rank: 12, title: 'Vision UGC — Predict & Win Promo', date: 'Jun 22', views: 14200, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
-    { rank: 13, title: 'Vision UGC — Badge Announcement', date: 'Jul 10', views: 12800, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
-    { rank: 14, title: 'Vision UGC — Final Day Hype', date: 'Jul 18', views: 9600, type: 'ugc', ref: '', channel: 'TikTok / YouTube Shorts', creator: 'Vision Creative' }
+    { rank: 10, title: 'HIP-4 permissionless deployment', date: 'Jul 20', views: 25975, type: 'x',  ref: '2079067128070619640' }
+  ];
+
+  // Top UGC creator videos from UGC Explorer — sorted by views descending
+  var TOP_UGC = [
+    { creator:'Letschatball', platform:'Facebook', url:'https://www.facebook.com/reel/874609058621642/', views:2000000, eng:22000, date:'Jul 16', caption:'SACK THOMAS HE SOLD THE GAME' },
+    { creator:'letschatball1', platform:'Instagram', url:'https://www.instagram.com/reel/DaqC2dWiEn2/', views:943553, eng:97245, date:'Jul 11', caption:'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+    { creator:'ceofooty', platform:'Instagram', url:'https://www.instagram.com/reel/DaqqtF1tcxr/', views:831941, eng:69260, date:'Jul 11', caption:'Im done' },
+    { creator:'ceofooty_', platform:'TikTok', url:'https://www.tiktok.com/@ceofooty_/video/7661375345395879188', views:471500, eng:37180, date:'Jul 11', caption:'Im done' },
+    { creator:'ceofooty_', platform:'TikTok', url:'https://www.tiktok.com/@ceofooty_/video/7656906198167325972', views:312400, eng:23990, date:'Jun 29', caption:'Call it off now' },
+    { creator:'ceofooty', platform:'Instagram', url:'https://www.instagram.com/reel/DaWCC6rTts8/', views:299722, eng:25128, date:'Jul 3', caption:'Make it make sense' },
+    { creator:'ceofooty', platform:'Instagram', url:'https://www.instagram.com/reel/DaXaZ9utD52/', views:295028, eng:31230, date:'Jul 4', caption:'Here we go again' },
+    { creator:'ceofooty_', platform:'TikTok', url:'https://www.tiktok.com/@ceofooty_/video/7659509405758590228', views:270000, eng:14790, date:'Jul 6', caption:'Its actually crazy' },
+    { creator:'ceofooty_', platform:'TikTok', url:'https://www.tiktok.com/@ceofooty_/video/7661334176733433109', views:228600, eng:19151, date:'Jul 11', caption:'It might be broken' },
+    { creator:'Letschatball', platform:'Facebook', url:'https://www.facebook.com/reel/27311240818504787/', views:215000, eng:10000, date:'Jul 11', caption:'FRANCE KYLIAN MBAPPE AND THE WORLD CUP IS A ROMANCE' },
+    { creator:'benny_ballss', platform:'Instagram', url:'https://www.instagram.com/reel/Dayzq_2u8aO/', views:198213, eng:17712, date:'Jul 15', caption:'France why do you always do this' },
+    { creator:'ceofooty_', platform:'TikTok', url:'https://www.tiktok.com/@ceofooty_/video/7662277033153547541', views:188400, eng:9804, date:'Jul 14', caption:'Zip it bro' }
   ];
 
   function fmt(n) { return n.toLocaleString('en-US'); }
 
-  // build embed cells
+  function getUgcEmbedUrl(platform, url) {
+    if (platform === 'TikTok') { var m = url.match(/video\/(\d+)/); return m ? 'https://www.tiktok.com/embed/v2/' + m[1] : null; }
+    if (platform === 'Instagram') { var m = url.match(/\/(reel|p)\/([^/]+)/); return m ? 'https://www.instagram.com/' + m[1] + '/' + m[2] + '/embed/' : null; }
+    if (platform === 'YouTube') { var m = url.match(/(?:shorts\/|watch\?v=|youtu\.be\/)([^&?\/]+)/); return m ? 'https://www.youtube.com/embed/' + m[1] : null; }
+    if (platform === 'Facebook') { return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false'; }
+    return null;
+  }
+
+  // Build X / TG embeds
   var grid = document.getElementById('topContentEmbeds');
-  TOP.forEach(function(p) {
+
+  // --- UGC SECTION FIRST ---
+  var ugcHeader = document.createElement('div');
+  ugcHeader.style.cssText = 'grid-column:1/-1;margin-bottom:4px';
+  ugcHeader.innerHTML = '<div style="display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#C4E84A"><div class="dot" style="background:#C4E84A"></div> TOP UGC CREATOR VIDEOS</div>' +
+    '<div style="font-size:10px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-top:6px">SORTED BY VIEWS &middot; 9.9M TOTAL UGC VIEWS &middot; 371 POSTS</div>';
+  grid.appendChild(ugcHeader);
+
+  TOP_UGC.forEach(function(u, i) {
+    var cell = document.createElement('div');
+    cell.className = 'content-embed-cell';
+    var embedUrl = getUgcEmbedUrl(u.platform, u.url);
+    var engRate = u.views > 0 ? ((u.eng / u.views) * 100).toFixed(1) : '0.0';
+    cell.innerHTML = '<div class="content-embed-badge"><span class="rk">' + (i+1) + '</span> ' +
+      '<span style="color:#C4E84A">UGC</span> ' +
+      u.platform + ' &middot; <span class="vw">' + fmt(u.views) + ' views</span></div>' +
+      '<div class="ugc-video-card">' +
+        (embedUrl ? '<iframe src="' + embedUrl + '" loading="lazy" allow="encrypted-media" allowfullscreen></iframe>' :
+        '<div style="aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:11px;text-transform:uppercase;letter-spacing:0.1em">Preview unavailable</div>') +
+        '<div class="ugc-video-card-info">' +
+          '<div class="ugc-video-card-left">' +
+            '<div class="ugc-video-creator">@' + u.creator + '</div>' +
+            '<div class="ugc-video-caption">' + u.caption + '</div>' +
+            '<div class="ugc-video-platform">' + u.platform + '</div>' +
+          '</div>' +
+          '<div class="ugc-video-card-right">' +
+            '<div class="ugc-video-views">' + fmt(u.views) + '</div>' +
+            '<div class="ugc-video-eng">' + fmt(u.eng) + ' eng &middot; ' + engRate + '%</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(cell);
+  });
+
+  // --- X / TG SECTION ---
+  var xHeader = document.createElement('div');
+  xHeader.style.cssText = 'grid-column:1/-1;margin-top:24px;margin-bottom:4px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07)';
+  xHeader.innerHTML = '<div style="display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#FF5C9E"><div class="dot" style="background:#FF5C9E"></div> TOP X &amp; TELEGRAM POSTS</div>' +
+    '<div style="font-size:10px;font-weight:500;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-top:6px">BY IMPRESSIONS &middot; 101 X POSTS</div>';
+  grid.appendChild(xHeader);
+
+  TOP_X.forEach(function(p) {
     var cell = document.createElement('div');
     cell.className = 'content-embed-cell';
     cell.id = 'topEmbed' + p.rank;
-    var typeLabel = p.type === 'ugc' ? 'UGC' : (p.type === 'tg' ? 'TG' : 'X');
+    var typeLabel = p.type === 'tg' ? 'TG' : 'X';
     cell.innerHTML = '<div class="content-embed-badge"><span class="rk">' + p.rank + '</span> ' +
-      '<span style="color:' + (p.type === 'ugc' ? '#C4E84A' : 'inherit') + '">' + typeLabel + '</span> ' +
-      p.title + ' &middot; <span class="vw">' + fmt(p.views) + ' views</span></div>';
+      typeLabel + ' ' + p.title + ' &middot; <span class="vw">' + fmt(p.views) + ' views</span></div>';
     if (p.type === 'x') {
       var bq = document.createElement('blockquote');
       bq.className = 'twitter-tweet';
@@ -1136,13 +1298,6 @@ body {
       s.setAttribute('data-width', '100%');
       s.setAttribute('data-dark', '1');
       cell.appendChild(s);
-    } else if (p.type === 'ugc') {
-      var card = document.createElement('div');
-      card.style.cssText = 'padding:20px;border-radius:10px;border:1px solid rgba(196,232,74,0.15);background:rgba(196,232,74,0.04)';
-      card.innerHTML = '<div style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C4E84A;margin-bottom:10px">UGC &middot; ' + (p.channel || '') + '</div>' +
-        '<div style="font-size:14px;font-weight:600;color:#F5F8FF;margin-bottom:6px">' + p.title.replace('Vision UGC — ','') + '</div>' +
-        '<div style="font-size:11px;color:rgba(255,255,255,0.5)">' + p.date + ' &middot; ' + (p.creator || 'UGC Creator') + ' &middot; ' + fmt(p.views) + ' views</div>';
-      cell.appendChild(card);
     }
     grid.appendChild(cell);
   });
