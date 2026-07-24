@@ -410,7 +410,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
   <!-- INTRO -->
   <div class="intro-card">
     <div class="intro-text">
-      A structured analysis of the full World Cup 2026 campaign data &mdash; <strong>$29.4M volume, 41 days, $143K spend, 19 channels</strong> &mdash; stress-tested from multiple angles: market dynamics, growth mechanics, brand strategy, creative performance, and statistical rigor. The 10 strategic learnings below represent the synthesized findings. Each includes supporting data, visualizations, and a concrete action item.
+      Full campaign data (<strong>$29.4M volume, 41 days, $143K spend, 19 channels</strong>) analyzed across market dynamics, growth mechanics, brand strategy, creative performance, and statistical rigor. 10 findings, each with supporting data, visualizations, and a concrete next step.
     </div>
   </div>
 
@@ -421,7 +421,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="rollup-header" onclick="toggleRollup('insight1')">
       <div class="rollup-number">01</div>
       <div class="rollup-text">
-        <div class="rollup-title">The Attribution Gap Is an Existential Measurement Failure</div>
+        <div class="rollup-title">The Attribution Gap Is Needs Shortening.</div>
         <div class="rollup-desc">82.9% of signups and 95.4% of active traders cannot be attributed to any channel. Every claim about channel performance is based on a fraction of actual data.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
@@ -444,12 +444,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          <strong>Case in point &mdash; CoConnect:</strong> UTM attribution showed CoConnect producing 122 signups at $163.93 each, making it appear the worst-performing paid channel. Wallet-level verification revealed <span class="highlight">657 depositors at $30.44/signup</span>. UTMs missed <span class="warn">81% of actual conversions</span>. Without the wallet cross-check, this campaign's post-mortem would have recommended cutting its best depositor-acquisition channel.
+          <strong>Case in point, CoConnect:</strong> UTM attribution showed CoConnect producing 122 signups at $163.93 each, making it appear the worst-performing paid channel. Wallet-level verification revealed <span class="highlight">657 depositors at $30.44/signup</span>. UTMs missed <span class="warn">81% of actual conversions</span>. The same is likely true across every channel.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Before spending another dollar on campaigns, implement persistent user-ID tracking that survives the authentication boundary. Evaluate PostHog identity resolution, first-party cookies, or referral-code-based attribution. Budget $15-25K for engineering. It will pay for itself by making the next campaign's $140K measurably efficient.</div>
+          <div class="rec-text">Implement persistent user-ID tracking that survives the authentication boundary. Evaluate Outcome User Signup Journey, PostHog identity resolution, first-party cookies, Deposit verification, referral-code-based attribution, additional attribution tools. Budget $15-25K. It will pay for itself by making the next campaign's $140K measurably efficient.</div>
         </div>
       </div>
     </div>
@@ -483,12 +483,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          This is the headline metric for the board. Market share percentages can be noisy when the denominator fluctuates, but the absolute story is unambiguous: <span class="highlight">volume grew from $17K/day to over $1M+/day</span>. That's a genuine product-market fit signal during live events.
+          Market share percentages are noisy when the Hyperliquid volume fluctuates, but the story is clear: <span class="highlight">volume grew from $17K/day to over $1M+/day</span>. Product-market fit during live events is proven. The open question is whether it holds once permissionless deployment arrives.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Build an "event playbook" deployable for any major sporting event (Champions League, NFL playoffs, Olympics). Include pre-built markets, rewards structure, and channel activation plan. Outcome's competitive advantage is speed-to-market on event-driven prediction markets &mdash; systematize it.</div>
+          <div class="rec-text">Build an "event playbook" based on what we did for WC deployable for any major sporting event (Champions League, NFL playoffs, Olympics). Include rewards structure, and channel activation plan. Outcome's competitive advantage is speed-to-market on event-driven prediction markets, we can now systematize the whole campaign.</div>
         </div>
       </div>
     </div>
@@ -499,8 +499,8 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="rollup-header" onclick="toggleRollup('insight3')">
       <div class="rollup-number">03</div>
       <div class="rollup-text">
-        <div class="rollup-title">The Genesis Badge Was Brilliant Activation, Broken Retention</div>
-        <div class="rollup-desc">744 depositors in 2 days (vs. avg 25/day) but worst retention cohort at 15.9% W1 vs. 46.5% for organic users. A Goodhart's Law demonstration: optimize for deposits, get deposits &mdash; not traders.</div>
+        <div class="rollup-title">The Genesis Badge Was A Brilliant Activation, With Low Retention</div>
+        <div class="rollup-desc">744 depositors in 2 days (vs. avg 25/day) but worst retention cohort at 15.9% W1 vs. 46.5% for organic users. We optimized for deposits, and got deposits.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
@@ -523,12 +523,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          The badge was strong offer design &mdash; but the retention data reveals a classic Goodhart's Law problem: <span class="warn">84% of badge depositors were one-and-done</span>. Badge claims totaled 2,325 with 314 Gold upgrades (13.5%). The rewards budget overran by 16% ($69,344 vs. $60,000), partly due to badge success.
+          Badges can drive user actions, when paired with strong distribution and strong product offer however <span class="warn">84% of badge depositors were one-and-done</span>. However, that's not to say they can't be reactivated again.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Redesign future badge mechanics to require trading activity, not just deposits. Proposed: Bronze = deposit $25+, Silver = 5+ trades across 3+ markets, Gold = maintain activity for 2+ weeks. This filters for intent and aligns the incentive with active trading.</div>
+          <div class="rec-text">Redesign future badge mechanics to require trading activity, not just deposits. Automate deposit bonuses if used, to give the user immediate spending power while the impulse exists. Layer badge variants on more desired activity: e.g. Bronze = deposit $15+, Silver = 5+ trades across 3+ markets, Gold = 1 trade per day for 2+ weeks. This filters for intent and aligns the incentive with active trading.</div>
         </div>
       </div>
     </div>
@@ -540,7 +540,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
       <div class="rollup-number">04</div>
       <div class="rollup-text">
         <div class="rollup-title">Telegram Sponsor Is the Most Capital-Efficient Paid Channel</div>
-        <div class="rollup-desc">$0.25 CPC, $16.92/signup, and 78.3% of all tracked link clicks on a $10K budget. No other paid channel came close on unit economics &mdash; but zero depositors attributed.</div>
+        <div class="rollup-desc">$0.25 CPC, $16.92/signup, and 78.3% of all tracked link clicks on a $10K budget. No other paid channel came close on unit economics, but zero depositors attributed.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
@@ -561,12 +561,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          Key caveat: <span class="warn">channel economics at $10K spend don't predict economics at $30K</span>. TG Sponsor targets a single Telegram football community that could saturate within 2 weeks at 3x spend. The counter-argument: test the ceiling before assuming it exists &mdash; run at $20K and monitor CPC weekly.
+          Expanding into more niches by sponsoring channels posting daily with active communities is a good strategy. TG Sponsor targeted a single Telegram football community. Need to expand and monitor performance.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Test at 2-3x budget ($20-30K) in the next campaign with weekly CPC monitoring. Set a CPC ceiling of $0.75 &mdash; if costs rise above that, the channel is saturating. Use referral codes (not just UTMs) to track downstream conversion to deposit and trade.</div>
+          <div class="rec-text">Test at 2-3x budget ($20-30K) in the next campaign with weekly CPC monitoring, with broader set of niche communities. Set a CPC ceiling, if costs rise above that, the channel is saturating. Onboard TG channel owners to our affiliate/referral program with sweetheart deals (additional % + monthly fee) to track downstream conversion to deposit and trade.</div>
         </div>
       </div>
     </div>
@@ -577,7 +577,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="rollup-header" onclick="toggleRollup('insight5')">
       <div class="rollup-number">05</div>
       <div class="rollup-text">
-        <div class="rollup-title">CoConnect Is the Best Depositor-Acquisition Channel &mdash; and UTM Data Hid It</div>
+        <div class="rollup-title">CoConnect Is the Best Depositor-Acquisition Channel, and UTM Data Hid It</div>
         <div class="rollup-desc">UTMs showed 122 signups at $163.93 each. Wallet-level proof: 657 depositors at $30.44/signup with 100% deposit rate. UTM tracking missed 81% of conversions.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
@@ -600,12 +600,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          This is both a vindication of CoConnect and the single most powerful proof point for Insight #1. The CoConnect correction proves the core attribution argument: <strong>UTM data missed 81% of CoConnect's signups. What else is it missing?</strong> Any initial recommendation to cut CoConnect would have been based on broken data &mdash; a cautionary example of why attribution must be fixed first.
+          The CoConnect correction is the strongest proof point for Insight #1: <strong>UTM data missed 81% of CoConnect's signups. What else is it missing?</strong> Without wallet-level verification, the post-mortem would have recommended cutting the best depositor-acquisition channel.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Maintain CoConnect at $20K+ for next campaign with three changes: (1) replace UTMs with wallet-level attribution, (2) restructure $15 bonus to require a first trade, (3) measure the 657 depositors' trading activity. If 15%+ trade, cost/trader = ~$303. If 30%+ trade, CoConnect is the most efficient full-funnel channel.</div>
+          <div class="rec-text">Maintain CoConnect as distribution for our major campaigns (e.g. permissionless deployment) at $20K+ for next campaign with three changes: (1) replace UTMs with wallet-level attribution, (2) restructure $15 bonus to be immediate after a first trade, (3) measure the 657 depositors' trading activity. If 15%+ trade, cost/trader = ~$303. If 30%+ trade, CoConnect is the most efficient full-funnel channel.</div>
         </div>
       </div>
     </div>
@@ -616,8 +616,8 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="rollup-header" onclick="toggleRollup('insight6')">
       <div class="rollup-number">06</div>
       <div class="rollup-text">
-        <div class="rollup-title">UGC Drives Awareness but Needs a New Creative Strategy to Drive Conversion</div>
-        <div class="rollup-desc">9.9M views across 371 posts but zero attributed conversions. Top 2 of 10 creators drove 63% of all views. Google Search grew 21x concurrently &mdash; but correlation is not causation.</div>
+        <div class="rollup-title">UGC Drives Brand Awareness and Organic Traffic</div>
+        <div class="rollup-desc">9.9M views across 371 posts but zero attributed conversions. Top 2 of 10 creators drove 63% of all views. Google Search grew 21x concurrently, but correlation may not be causation.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
@@ -638,12 +638,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          The question is whether to cut or redirect. The case for cutting: zero direct conversions and unproven indirect effects. The case for redirecting: the creative brief failed, not the channel &mdash; reaction videos entertained football fans without giving them a reason to try Outcome. <strong>The r=0.55 UGC-to-Search correlation is statistically unreliable</strong> &mdash; Google Search visitors followed a monotonic upward trend and any fluctuating variable would show moderate correlation. Resolution requires a controlled UGC dark period test.
+          Zero direct conversions, but UGC is a brand awareness play that builds recall, keeps us top of mind. There was r=0.55 correlation between UGC-to-Search traffic growth. Without strong organic search presence we risk losing alot of direct acquisition value for UGC, but we're still building brand recall at the most efficient rate sub $1 CPM.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Continue UGC at reduced budget ($10K) on 2-3 proven creators. Overhaul the brief: every piece must include a visible prediction market CTA, identity-based framing, and a trackable entry point (unique short link per creator). Run a 2-week UGC dark period mid-next-campaign to test search impact.</div>
+          <div class="rec-text">Expand UGC to new niches synced with our markets plan. Lock in 5-10 creators per niche (Politics, Finance, Crypto, Sports) for permissionless deployment, have them already building audiences around those niche's before we go live. Every piece must include a visible Outcome Logo watermark, then after permissionless deployment CTA and referral link in bio.</div>
         </div>
       </div>
     </div>
@@ -655,7 +655,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
       <div class="rollup-number">07</div>
       <div class="rollup-text">
         <div class="rollup-title">Google Search Is an Untapped Organic Growth Channel</div>
-        <div class="rollup-desc">21x growth in 30 days (15/day to 320/day) with zero spend. 242 pages on outcome.xyz are not indexed by Google &mdash; significant free traffic left on the table.</div>
+        <div class="rollup-desc">21x growth in 30 days (15/day to 320/day) with zero spend. 242 pages on outcome.xyz are not indexed by Google, significant free traffic left on the table.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
@@ -676,12 +676,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          At $0 cost, this is the closest thing to free growth available. The funnel from search (472 visitors &rarr; 12 signups &rarr; 2 depositors &rarr; 49 trades) shows higher quality than most paid channels. <span class="highlight">2.5% signup rate and 0.4% deposit rate</span> outperform blended campaign averages. With 242 pages unindexed, investment here has asymmetric upside.
+          $0 cost. Search funnel (472 visitors &rarr; 12 signups &rarr; 2 depositors &rarr; 49 trades) converts at higher quality than most paid channels: <span class="highlight">2.5% signup rate, 0.4% deposit rate</span>. 242 pages remain unindexed, low-effort, asymmetric upside.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Invest $5-10K in SEO: index all 242 pages, create landing pages for "[team name] World Cup odds" and "prediction market [event]" long-tail keywords, add structured data markup. Target: 1,000+ daily organic search visitors by next major event.</div>
+          <div class="rec-text">Invest $5-10K per month in an SEO Agency: Get all our pages indexed, create landing pages, build external links, create the SEO playbook to follow for how we resolve markets and turn every page into authority building asset. Target: Rank for our brand name and 1,000+ daily organic search visitors by next major event.</div>
         </div>
       </div>
     </div>
@@ -717,7 +717,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          There are four friction points before a single trade: wallet connection, bridging to Hyperliquid, depositing, and market selection. The Genesis Badge proved conversion CAN be driven &mdash; <span class="highlight">744 depositors in 2 days</span> &mdash; but the fiat onramp (Jun 18, 45K views) didn't measurably shift the baseline rate. Every percentage point improvement here is worth more than any channel optimization.
+          Four friction points before a single trade: wallet connection, bridging to Hyperliquid, depositing, market selection. The Genesis Badge proved conversion can spike (<span class="highlight">744 depositors in 2 days</span>) but the fiat onramp (Jun 18, 45K views) didn't measurably shift the baseline. Each percentage point gained here outweighs any channel optimization.
         </div>
 
         <div class="rec-box">
@@ -733,8 +733,8 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="rollup-header" onclick="toggleRollup('insight9')">
       <div class="rollup-number">09</div>
       <div class="rollup-text">
-        <div class="rollup-title">Event-Driven Volume Is Fragile Without a Retention Strategy</div>
-        <div class="rollup-desc">Volume tracked match significance perfectly &mdash; $9.3M in Week 3, then $40K on Jul 20 (99.6% drop). Without a retention strategy, Outcome resets to near-zero between events.</div>
+        <div class="rollup-title">Event-Driven Volume Is Fragile Without Retention Markets</div>
+        <div class="rollup-desc">Volume tracked match significance perfectly: $9.3M in Week 3, then $40K on Jul 20 (99.6% drop). Without markets that retain users we'll be feasting and then in famine.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
@@ -758,12 +758,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          The early organic cohort (Jun 7) retained at <span class="highlight">30.2% at Week 5</span>, proving some users DO stick. The badge cohort (Jul 5) at <span class="warn">15.9% at Week 1</span> proves most incentivized users don't. The hard question: <strong>until there's a non-zero baseline without events, this is a promotion &mdash; not a protocol.</strong>
+          The early organic cohort (Jun 7) retained at <span class="highlight">30.2% at Week 5</span>, proving some users DO stick. The badge cohort (Jul 5) at <span class="warn">15.9% at Week 1</span> proves most incentivized users don't. The hard question: <strong>until permissionless deployment we can't really say we have PMF. Everything depends on whether we can show similar numbers with a full stack of markets.</strong>
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Launch non-event market categories (politics, crypto prices, entertainment) in the 30 days post-campaign. Run a "most interesting market of the week" editorial feature. Set KPI: 100+ DAU and $50K+/week during non-event periods. If this baseline can't be established, the board needs to evaluate whether Outcome is a business or a promotional campaign.</div>
+          <div class="rec-text">Treat permissionless deployment as another campaign like the World cup, same playbook, expansion of channels, expansion of always on distribution and spending, close/daily reporting standards, product campaign and incentivization. Establish the baseline for what volume looks like when the worlds greatest event is not running.</div>
         </div>
       </div>
     </div>
@@ -775,17 +775,17 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
       <div class="rollup-number">10</div>
       <div class="rollup-text">
         <div class="rollup-title">The Optimal Channel Mix for Next Campaign</div>
-        <div class="rollup-desc">The data supports a $150K reallocation across 9 budget lines &mdash; led by $20K for attribution infrastructure, the highest-ROI investment available. Two channels produced strong measurable results; 17 did not.</div>
+        <div class="rollup-desc">The data supports a $200K reallocation across 9 budget lines, led by $20K for attribution infrastructure, the highest-ROI investment available. Three channels produced strong measurable results UGC, TG Sponsorship and CoConnect. All gave needed NEW distribution beyond crypto twitter.</div>
       </div>
       <div class="rollup-arrow"><svg viewBox="0 0 12 12"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
     </div>
     <div class="rollup-body">
       <div class="rollup-body-inner">
         <div class="metric-row">
-          <div class="metric-box"><div class="m-label">Proposed Budget</div><div class="m-value">$150K</div><div class="m-note">Next campaign</div></div>
-          <div class="metric-box"><div class="m-label">Attribution Infra</div><div class="m-value" style="color:#45E85C">$20K</div><div class="m-note">Highest ROI &middot; one-time</div></div>
-          <div class="metric-box"><div class="m-label">Proven Channels</div><div class="m-value">2</div><div class="m-note">TG Sponsor + CoConnect</div></div>
-          <div class="metric-box"><div class="m-label">Testing Budget</div><div class="m-value">$5K</div><div class="m-note">Dark periods, A/B tests</div></div>
+          <div class="metric-box"><div class="m-label">Proposed Budget</div><div class="m-value">$200K</div><div class="m-note">Permissionless deployment Campaign budget</div></div>
+          <div class="metric-box"><div class="m-label">Attribution Infra</div><div class="m-value" style="color:#45E85C">$15K</div><div class="m-note">Highest ROI &middot; one-time</div></div>
+          <div class="metric-box"><div class="m-label">SEO Agency</div><div class="m-value">5-10k p/m</div><div class="m-note">Supports UGC and Long term growth</div></div>
+          <div class="metric-box"><div class="m-label">Expand Proven Channels</div><div class="m-value">3</div><div class="m-note">UGC 30k + TG Sponsor 30k + CoConnect 10k</div></div>
         </div>
 
         <div class="chart-area">
@@ -797,12 +797,12 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
         </div>
 
         <div class="analysis-text">
-          <strong>Proposed $150K allocation:</strong> Attribution infrastructure $20K, CoConnect $20K (proven depositor channel), TG Sponsor $25K (test ceiling at 2.5x), Rewards $40K (restructured for trading), UGC $10K (2 proven creators), SEO $10K (242 unindexed pages), Deposit-conversion sprint $15K, Controlled testing $5K, Reserve $5K.
+          Refocus on UGC for awareness, Build SEO presence, Acquire TG channels as long term affiliates and finish off CoConnect activation during PD, Run a trading competition + deposit bonus for Polymarket traders (Same wallet address = deposit $25 get $15 offer) and test addressable ads.
         </div>
 
         <div class="rec-box">
           <div class="rec-label">Recommendation</div>
-          <div class="rec-text">Shift from "spray $143K across 19 channels" to "concentrate $150K on 9 budget lines with measurement." The first $20K on attribution infrastructure will pay for itself by making the remaining $130K measurably efficient. Weight depositor-conversion (not signup cost) as the primary efficiency metric.</div>
+          <div class="rec-text">Refocus on UGC for awareness, Build SEO presence, Acquire TG channels as long term affiliates and finish off CoConnect activation during PD, Run a trading competition + deposit bonus for Polymarket traders (Same wallet address = deposit $25 get $15 offer) and test addressable ads.</div>
         </div>
       </div>
     </div>
@@ -815,7 +815,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <div class="assumption-item">
       <span class="assumption-num">1</span>
       <span class="assumption-headline">Outcome can measure what it markets.</span>
-      <div class="assumption-body">The attribution gap must be closed. Without it, every dollar allocation is a guess. This is the load-bearing wall &mdash; if it doesn't hold, nothing else in this plan works.</div>
+      <div class="assumption-body">The attribution gap must be closed. Without it, every dollar allocation is a guess. This is the load-bearing wall. If it doesn't hold, nothing else in this plan works.</div>
     </div>
 
     <div class="assumption-item">

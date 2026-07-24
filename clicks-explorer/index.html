@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outcome.xyz - Clicks Explorer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 @font-face {
   font-family: "PP Neue Corp";
@@ -23,13 +20,20 @@
   font-stretch: condensed;
   font-display: swap;
 }
+@font-face {
+  font-family: "Geist";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/Geist-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
   background: #0A0A0B;
   color: #F5F8FF;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
@@ -74,7 +78,7 @@ body {
   color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
 }
 .title-h1 {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
+  font-family: 'PP Neue Corp', 'Geist', system-ui, sans-serif; font-weight: 800;
   font-stretch: condensed; text-transform: uppercase;
   letter-spacing: -0.01em; font-size: 56px; line-height: 0.88;
   color: #F5F8FF;
@@ -92,7 +96,7 @@ body {
 
 /* ---------- KPI CARDS ---------- */
 .kpi-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 14px; margin-bottom: 14px;
 }
 .kpi-card {
@@ -109,7 +113,7 @@ body {
   color: rgba(255,255,255,0.5);
 }
 .kpi-value {
-  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-family: 'PP Neue Corp', 'Geist', system-ui, sans-serif;
   font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
   line-height: 1; color: #F5F8FF;
 }
@@ -147,8 +151,12 @@ body {
   text-align: right; padding: 0 8px 14px 8px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   white-space: nowrap;
+  cursor: pointer; user-select: none;
 }
 .paid-table th:first-child { text-align: left; padding-left: 0; }
+.paid-table th:hover { color: rgba(255,255,255,0.7); }
+.paid-table th.sorted { color: #45E85C; }
+.paid-table th .sort-arrow { margin-left: 4px; font-size: 8px; }
 .paid-table td {
   padding: 16px 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
   font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7);
@@ -160,6 +168,10 @@ body {
 }
 .paid-table .channel-name {
   display: flex; align-items: center; gap: 10px;
+}
+.paid-table .channel-note {
+  font-size: 9px; font-weight: 400; color: rgba(255,255,255,0.35);
+  letter-spacing: 0.02em;
 }
 .paid-table .good { color: #45E85C; }
 .paid-table .warn { color: #F58220; }
@@ -197,6 +209,12 @@ body {
 .bar-fill { height: 100%; border-radius: 3px; }
 .bar-label { font-variant-numeric: tabular-nums; min-width: 60px; text-align: right; }
 
+/* ---------- CONTENT SOURCE TAG ---------- */
+.content-src {
+  font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.35);
+  margin-top: 2px; letter-spacing: 0.02em;
+}
+
 /* ---------- TOP LINKS ---------- */
 .top-link-row {
   display: flex; align-items: center; gap: 16px;
@@ -220,7 +238,7 @@ body {
   margin-top: 3px; letter-spacing: 0.02em;
 }
 .top-link-clicks {
-  font-family: 'PP Neue Corp', 'Inter', sans-serif;
+  font-family: 'PP Neue Corp', 'Geist', sans-serif;
   font-size: 20px; font-weight: 500; color: #F5F8FF;
   flex-shrink: 0; min-width: 80px; text-align: right;
 }
@@ -232,10 +250,10 @@ body {
 
 /* ---------- SEARCH / FILTER ---------- */
 .search-bar {
-  display: flex; gap: 12px; margin-bottom: 20px;
+  display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
 }
 .search-input {
-  flex: 1; height: 40px; padding: 0 16px; border-radius: 10px;
+  flex: 1; min-width: 200px; height: 40px; padding: 0 16px; border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.03);
   color: #F5F8FF; font-size: 13px; font-family: inherit;
@@ -268,7 +286,6 @@ body {
   text-transform: uppercase; color: rgba(255,255,255,0.3);
 }
 
-/* ---------- RESPONSIVE ---------- */
 /* ---------- WEEK NAV ---------- */
 .week-nav {
   display: flex; gap: 8px; padding: 12px 0; margin-bottom: 20px;
@@ -354,12 +371,12 @@ body {
     <div class="week-selector" id="weekSelector">
       <button class="week-selector-btn" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEKLY VIEW <span class="week-selector-arrow">&#9660;</span></button>
       <div class="week-selector-dropdown">
-        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10–16</span></a>
-        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17–23</span></a>
-        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24–30</span></a>
-        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1–7</span></a>
-        <a href="/world-cup/5">Week 5 <span class="ws-date">Jul 8–14</span></a>
-        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15–20</span></a>
+        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10-16</span></a>
+        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17-23</span></a>
+        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24-30</span></a>
+        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1-7</span></a>
+        <a href="/world-cup/5">Week 5 <span class="ws-date">Jul 8-14</span></a>
+        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15-20</span></a>
       </div>
     </div>
     <div class="date-badge">JUN 10 &ndash; JUL 23, 2026</div>
@@ -403,21 +420,15 @@ body {
       <div class="kpi-sub">UTM sources tracked</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-bar" style="background: linear-gradient(90deg, #3B82F6, #3B82F680);"></div>
-      <div class="kpi-label">Avg Clicks / Link</div>
-      <div class="kpi-value">76.2</div>
-      <div class="kpi-sub">Median much lower — top 3 dominate</div>
-    </div>
-    <div class="kpi-card">
       <div class="kpi-bar" style="background: linear-gradient(90deg, #F58220, #F5822080);"></div>
       <div class="kpi-label">Paid Channel Spend</div>
-      <div class="kpi-value">$53,365</div>
+      <div class="kpi-value">$63,365</div>
       <div class="kpi-sub">4 paid channels tracked</div>
     </div>
   </div>
 
   <!-- ============================================================ -->
-  <!-- PAID CHANNEL PERFORMANCE — HERO SECTION                      -->
+  <!-- PAID CHANNEL PERFORMANCE                                     -->
   <!-- ============================================================ -->
   <div class="card" style="border-color: rgba(69,232,92,0.15); margin-top: 8px;">
     <div class="card-header">
@@ -429,71 +440,67 @@ body {
     </div>
 
     <div style="overflow-x: auto;">
-    <table class="paid-table">
+    <table class="paid-table" id="paid-table">
       <thead>
         <tr>
-          <th style="min-width:160px;">Channel</th>
-          <th>Spend</th>
-          <th>Clicks</th>
-          <th>Signups</th>
-          <th>Depositors</th>
-          <th>Traders</th>
-          <th>CPC</th>
-          <th>Cost / Signup</th>
-          <th>Cost / Trader</th>
+          <th data-col="0" style="min-width:160px;">Channel <span class="sort-arrow"></span></th>
+          <th data-col="1">Spend <span class="sort-arrow"></span></th>
+          <th data-col="2">Clicks <span class="sort-arrow"></span></th>
+          <th data-col="3">Signups <span class="sort-arrow"></span></th>
+          <th data-col="4">Depositors <span class="sort-arrow"></span></th>
+          <th data-col="5">Traders <span class="sort-arrow"></span></th>
+          <th data-col="6">CPC <span class="sort-arrow"></span></th>
+          <th data-col="7">Cost / Signup <span class="sort-arrow"></span></th>
+          <th data-col="8">Cost / Trader <span class="sort-arrow"></span></th>
         </tr>
       </thead>
       <tbody>
-        <!-- TG Channel Sponsorship -->
         <tr>
           <td><div class="channel-name"><span class="dot" style="background:#3B82F6;"></span>TG Channel Sponsor</div></td>
-          <td>$10,000</td>
-          <td style="color:#F5F8FF; font-weight:700;">40,784</td>
-          <td>591</td>
-          <td>0</td>
-          <td>4</td>
-          <td class="good">$0.25</td>
-          <td class="good">$16.92</td>
-          <td class="warn">$2,500</td>
+          <td data-val="10000">$10,000</td>
+          <td data-val="40784" style="color:#F5F8FF; font-weight:700;">40,784</td>
+          <td data-val="591">591</td>
+          <td data-val="0">0</td>
+          <td data-val="4">4</td>
+          <td data-val="0.25" class="good">$0.25</td>
+          <td data-val="16.92" class="good">$16.92</td>
+          <td data-val="2500" class="warn">$2,500</td>
         </tr>
-
-        <!-- Vision UGC -->
         <tr>
           <td><div class="channel-name"><span class="dot" style="background:#A78BFA;"></span>Vision UGC</div></td>
-          <td>$17,500</td>
-          <td style="color:#FF5C9E;">38</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="bad">$460.53</td>
-          <td class="bad">N/A</td>
-          <td class="bad">N/A</td>
+          <td data-val="17500">$17,500</td>
+          <td data-val="38" style="color:#FF5C9E;">38</td>
+          <td data-val="0">0</td>
+          <td data-val="0">0</td>
+          <td data-val="0">0</td>
+          <td data-val="460.53" class="bad">$460.53</td>
+          <td data-val="999999" class="bad">N/A</td>
+          <td data-val="999999" class="bad">N/A</td>
         </tr>
-
-        <!-- Telegram Ads -->
         <tr>
           <td><div class="channel-name"><span class="dot" style="background:#F58220;"></span>Telegram Ads</div></td>
-          <td>$5,865</td>
-          <td>2,055</td>
-          <td>24</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="warn">$2.85</td>
-          <td class="bad">$244.38</td>
-          <td class="bad">N/A</td>
+          <td data-val="5865">$5,865</td>
+          <td data-val="2055">2,055</td>
+          <td data-val="24">24</td>
+          <td data-val="0">0</td>
+          <td data-val="0">0</td>
+          <td data-val="2.85" class="warn">$2.85</td>
+          <td data-val="244.38" class="bad">$244.38</td>
+          <td data-val="999999" class="bad">N/A</td>
         </tr>
-
-        <!-- CoConnect -->
         <tr>
-          <td><div class="channel-name"><span class="dot" style="background:#45E85C;"></span>CoConnect (Alphabot)</div></td>
-          <td>$20,000</td>
-          <td>2,464</td>
-          <td class="green">667</td>
-          <td class="green">667</td>
-          <td>10</td>
-          <td class="warn">$8.12</td>
-          <td>$29.99</td>
-          <td class="bad">$2,000</td>
+          <td>
+            <div class="channel-name"><span class="dot" style="background:#45E85C;"></span>CoConnect (Alphabot)</div>
+            <div class="channel-note">incl. $10K deposit bonus</div>
+          </td>
+          <td data-val="30000">$30,000</td>
+          <td data-val="2464">2,464</td>
+          <td data-val="667" class="green">667</td>
+          <td data-val="667" class="green">667</td>
+          <td data-val="10">10</td>
+          <td data-val="12.18" class="warn">$12.18</td>
+          <td data-val="44.98">$44.98</td>
+          <td data-val="3000" class="bad">$3,000</td>
         </tr>
       </tbody>
     </table>
@@ -517,9 +524,8 @@ body {
       <thead>
         <tr>
           <th data-sort="name">Source <span class="sort-arrow"></span></th>
-          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">&#9660;</span></th>
           <th data-sort="links">Links <span class="sort-arrow"></span></th>
-          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
           <th data-sort="share">Share <span class="sort-arrow"></span></th>
         </tr>
       </thead>
@@ -542,9 +548,8 @@ body {
       <thead>
         <tr>
           <th data-sort="name">Medium <span class="sort-arrow"></span></th>
-          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">&#9660;</span></th>
           <th data-sort="links">Links <span class="sort-arrow"></span></th>
-          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
           <th data-sort="share">Share <span class="sort-arrow"></span></th>
         </tr>
       </thead>
@@ -569,9 +574,10 @@ body {
     <div class="search-bar">
       <input type="text" class="search-input" id="content-search" placeholder="Search content IDs (e.g. coconnect, bio, posts, earncraft...)">
       <button class="filter-btn" data-filter="all" onclick="filterContent('all', this)">All</button>
-      <button class="filter-btn" data-filter="cc-" onclick="filterContent('cc-', this)">CoConnect</button>
-      <button class="filter-btn" data-filter="tg-" onclick="filterContent('tg-', this)">TG Ads</button>
-      <button class="filter-btn" data-filter="posts" onclick="filterContent('posts', this)">Sponsor</button>
+      <button class="filter-btn" data-filter="coconnect" onclick="filterContent('coconnect', this)">CoConnect</button>
+      <button class="filter-btn" data-filter="tgads" onclick="filterContent('tgads', this)">TG Ads</button>
+      <button class="filter-btn" data-filter="sponsor" onclick="filterContent('sponsor', this)">Sponsor</button>
+      <button class="filter-btn" data-filter="xorganic" onclick="filterContent('xorganic', this)">X Organic</button>
     </div>
 
     <div class="result-count" id="content-results"></div>
@@ -580,9 +586,8 @@ body {
       <thead>
         <tr>
           <th data-sort="name">Content ID <span class="sort-arrow"></span></th>
-          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">▼</span></th>
+          <th data-sort="clicks" class="sorted">Clicks <span class="sort-arrow">&#9660;</span></th>
           <th data-sort="links">Links <span class="sort-arrow"></span></th>
-          <th data-sort="avg">Avg / Link <span class="sort-arrow"></span></th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -600,7 +605,7 @@ body {
         <span class="dot" style="background: #45E85C;"></span>
         Top 20 Links by Clicks
       </div>
-      <div class="card-meta">RANKED BY CLICK VOLUME</div>
+      <div class="card-meta">LOG SCALE &middot; RANKED BY CLICK VOLUME</div>
     </div>
     <div id="top-links"></div>
   </div>
@@ -677,6 +682,84 @@ const contentData = [
   ["SouthKorea-Czechia",3,1]
 ];
 
+// Source/medium metadata for each content ID
+const contentMeta = {
+  // TG Channel Sponsorship
+  "posts-wk2": ["telegram","referral"], "posts": ["telegram","referral"],
+  "channel2": ["telegram","referral"], "announcement": ["telegram","referral"],
+  "final-market": ["telegram","referral"],
+  // Twitter / X Organic
+  "bio": ["twitter","social"], "gd-launch": ["twitter","social"],
+  "link_in_bio": ["twitter","social"], "reply guy": ["twitter","social"],
+  // CoConnect
+  "coconnect": ["alphabot.app","referral"],
+  // TG Ads (paid_social from telegram)
+  "earncraft-new": ["telegram","paid_social"], "earn-tips": ["telegram","paid_social"],
+  "money-networks": ["telegram","paid_social"], "V41L4xDlhek0MTZk": ["telegram","paid_social"],
+  "RQFqgS6VWh1hNzZk": ["telegram","paid_social"], "reJuqicdrwg5N2E1": ["telegram","paid_social"],
+  "uzxvsvgsdsy1999": ["telegram","paid_social"],
+  "thesupercrypto": ["telegram","paid_social"], "binancefreebox-1": ["telegram","paid_social"],
+  "cryptotradingg-1": ["telegram","paid_social"], "binanceredpacket-code": ["telegram","paid_social"],
+  "binanceredpacket": ["telegram","paid_social"], "1taptrading": ["telegram","paid_social"],
+  "Sky_sports_football_updates": ["telegram","paid_social"],
+  "HYPE-1D": ["telegram","paid_social"], "David_Ornstein": ["telegram","paid_social"],
+  "ironholdcrypto": ["telegram","paid_social"], "neuralzone": ["telegram","paid_social"],
+  "oneshieldplusteam": ["telegram","paid_social"], "betting-mikekawakubettz": ["telegram","paid_social"],
+  "irismovies2": ["telegram","paid_social"], "best-ai-tools": ["telegram","paid_social"],
+  "sleepagotchi": ["telegram","paid_social"], "tnc-alpha": ["telegram","paid_social"],
+  "realmadridinfos-2": ["telegram","paid_social"], "realmadridinfos": ["telegram","paid_social"],
+  "Realmadrid_world": ["telegram","paid_social"], "SPORT_433ET": ["telegram","paid_social"],
+  "premier_leagueTG": ["telegram","paid_social"], "World_Cup_2026_us": ["telegram","paid_social"],
+  "ibettingxx": ["telegram","paid_social"], "UefaChampion_League": ["telegram","paid_social"],
+  "BurqaaIspoortii": ["telegram","paid_social"], "ChelseaFcWorldWide_001": ["telegram","paid_social"],
+  "TransferNews_Live": ["telegram","paid_social"], "skysports_news01": ["telegram","paid_social"],
+  "Espn_Football_News_uk": ["telegram","paid_social"], "RealMadrid_aficcionados": ["telegram","paid_social"],
+  "arsenal_london": ["telegram","paid_social"], "uefa_champ_league": ["telegram","paid_social"],
+  "abrenwin": ["telegram","paid_social"], "Premier_League_Update": ["telegram","paid_social"],
+  "Manchester_Utdfc": ["telegram","paid_social"], "TheBetInvestorHOS": ["telegram","paid_social"],
+  "lucra-dao": ["telegram","paid_social"],
+  // TG Social (organic TG posts)
+  "portugalvsspain": ["telegram","social"], "round-32": ["telegram","social"],
+  "halftime": ["telegram","social"], "semifinals WC": ["telegram","social"],
+  "matchday 6": ["telegram","social"], "matchday 16": ["telegram","social"],
+  "england-congo": ["telegram","social"], "final-preview": ["telegram","social"],
+  "mexico-southafrica": ["telegram","social"], "premier": ["telegram","social"],
+  "manchester": ["telegram","social"], "worldcup-knockouts": ["telegram","social"],
+  "portugalspain": ["telegram","social"], "SouthKorea-Czechia": ["telegram","social"],
+  "Rewards day 9": ["telegram","social"], "reward-announcement": ["telegram","social"],
+  "cash-onramp": ["telegram","social"], "loyal-hub": ["telegram","social"],
+  "web3-lab": ["telegram","social"],
+  // Other
+  "banner-1": ["shortmob","display"], "kian": ["tiktok","referral"],
+  "oddschecker": ["odds-checker","referral"], "(none)": ["(direct)","(none)"]
+};
+
+function getMeta(name) {
+  if (contentMeta[name]) return contentMeta[name];
+  if (name.startsWith('cc-')) return ["alphabot.app","referral"];
+  if (name.startsWith('tg-') || name.startsWith('tga-') || name.startsWith('tgf-')) return ["telegram","paid_social"];
+  return ["telegram","social"];
+}
+
+// Category matching for filters
+function matchesCategory(name, category) {
+  const [src, med] = getMeta(name);
+  switch (category) {
+    case 'coconnect':
+      return name === 'coconnect' || name.startsWith('cc-') || src === 'alphabot.app';
+    case 'tgads':
+      return name.startsWith('tg-') || name.startsWith('tga-') || name.startsWith('tgf-') ||
+             (src === 'telegram' && med === 'paid_social');
+    case 'sponsor':
+      return ['posts','posts-wk2','channel2','announcement','final-market'].includes(name) ||
+             (src === 'telegram' && med === 'referral' && name !== '(none)');
+    case 'xorganic':
+      return src === 'twitter' && med === 'social';
+    default:
+      return true;
+  }
+}
+
 const top20Links = [
   {key:"yz2N0WP", clicks:26811, src:"telegram", med:"referral", content:"posts-wk2", camp:"worldcup2026_sponsorship"},
   {key:"JEBXGzZ", clicks:10075, src:"telegram", med:"referral", content:"posts", camp:"worldcup2026_sponsorship"},
@@ -732,7 +815,6 @@ function renderBreakdownTable(tableId, data, colorMap, totalClicks) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   const maxClicks = data[0][1];
   tbody.innerHTML = data.map(([name, clicks, links]) => {
-    const avg = (clicks / links).toFixed(1);
     const share = ((clicks / totalClicks) * 100).toFixed(1);
     const barPct = (clicks / maxClicks * 100).toFixed(1);
     const color = colorMap[name] || '#6B7280';
@@ -745,19 +827,17 @@ function renderBreakdownTable(tableId, data, colorMap, totalClicks) {
         </div>
       </td>
       <td>${links}</td>
-      <td>${avg}</td>
       <td class="green">${share}%</td>
     </tr>`;
   }).join('');
 }
 
-function renderContentTable(filterText, prefixFilter) {
+function renderContentTable(filterText, categoryFilter) {
   const tbody = document.querySelector('#content-table tbody');
   let filtered = contentData;
 
-  if (prefixFilter && prefixFilter !== 'all') {
-    filtered = filtered.filter(([name]) => name.toLowerCase().startsWith(prefixFilter.toLowerCase()) ||
-      (prefixFilter === 'posts' && (name === 'posts' || name === 'posts-wk2' || name === 'channel2')));
+  if (categoryFilter && categoryFilter !== 'all') {
+    filtered = filtered.filter(([name]) => matchesCategory(name, categoryFilter));
   }
   if (filterText) {
     filtered = filtered.filter(([name]) => name.toLowerCase().includes(filterText.toLowerCase()));
@@ -770,10 +850,13 @@ function renderContentTable(filterText, prefixFilter) {
     `${filtered.length} CONTENT IDS`;
 
   tbody.innerHTML = filtered.map(([name, clicks, links]) => {
-    const avg = (clicks / links).toFixed(1);
     const barPct = (clicks / maxClicks * 100).toFixed(1);
+    const [src, med] = getMeta(name);
     return `<tr>
-      <td>${name}</td>
+      <td>
+        <div>${name}</div>
+        <div class="content-src">${src} / ${med}</div>
+      </td>
       <td>
         <div class="bar-cell">
           <div class="bar-track"><div class="bar-fill" style="width:${barPct}%; background:#F58220;"></div></div>
@@ -781,16 +864,15 @@ function renderContentTable(filterText, prefixFilter) {
         </div>
       </td>
       <td>${links}</td>
-      <td>${avg}</td>
     </tr>`;
   }).join('');
 }
 
 function renderTopLinks() {
   const container = document.getElementById('top-links');
-  const maxClicks = top20Links[0].clicks;
+  const maxLog = Math.log(top20Links[0].clicks + 1);
   container.innerHTML = top20Links.map((l, i) => {
-    const barPct = (l.clicks / maxClicks * 100).toFixed(1);
+    const barPct = (Math.log(l.clicks + 1) / maxLog * 100).toFixed(1);
     const color = sourceColors[l.src] || '#6B7280';
     const rankClass = i < 3 ? ' gold' : '';
     return `<div class="top-link-row">
@@ -808,7 +890,7 @@ function renderTopLinks() {
 }
 
 // ============================================================
-// SORTING
+// SORTING — BREAKDOWN TABLES
 // ============================================================
 
 function setupSorting(tableId, data, colorMap) {
@@ -842,7 +924,6 @@ function setupSorting(tableId, data, colorMap) {
           case 'name': va = a[0]; vb = b[0]; break;
           case 'clicks': va = a[1]; vb = b[1]; break;
           case 'links': va = a[2]; vb = b[2]; break;
-          case 'avg': va = a[1]/a[2]; vb = b[1]/b[2]; break;
           case 'share': va = a[1]; vb = b[1]; break;
         }
         if (sortKey === 'name') {
@@ -866,16 +947,70 @@ function setupSorting(tableId, data, colorMap) {
 }
 
 // ============================================================
+// SORTING — PAID TABLE
+// ============================================================
+
+function setupPaidTableSorting() {
+  const table = document.getElementById('paid-table');
+  const headers = table.querySelectorAll('th');
+  let currentSort = -1;
+  let currentDir = 'desc';
+
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const col = parseInt(th.dataset.col);
+      if (isNaN(col)) return;
+
+      if (currentSort === col) {
+        currentDir = currentDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        currentSort = col;
+        currentDir = col === 0 ? 'asc' : 'desc';
+      }
+
+      headers.forEach(h => {
+        h.classList.remove('sorted');
+        const arrow = h.querySelector('.sort-arrow');
+        if (arrow) arrow.textContent = '';
+      });
+      th.classList.add('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = currentDir === 'desc' ? '▼' : '▲';
+
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      rows.sort((a, b) => {
+        const cellA = a.cells[col];
+        const cellB = b.cells[col];
+
+        if (col === 0) {
+          const textA = cellA.textContent.trim();
+          const textB = cellB.textContent.trim();
+          return currentDir === 'asc' ? textA.localeCompare(textB) : textB.localeCompare(textA);
+        }
+
+        const valA = parseFloat(cellA.dataset.val) || 0;
+        const valB = parseFloat(cellB.dataset.val) || 0;
+        return currentDir === 'desc' ? valB - valA : valA - valB;
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+}
+
+// ============================================================
 // CONTENT FILTER
 // ============================================================
 
 let currentContentFilter = 'all';
 
-function filterContent(prefix, btn) {
-  currentContentFilter = prefix;
+function filterContent(category, btn) {
+  currentContentFilter = category;
   document.querySelectorAll('.search-bar .filter-btn').forEach(b => b.classList.remove('active'));
-  if (prefix !== 'all') btn.classList.add('active');
-  renderContentTable(document.getElementById('content-search').value, prefix);
+  if (category !== 'all') btn.classList.add('active');
+  renderContentTable(document.getElementById('content-search').value, category);
 }
 
 // ============================================================
@@ -890,6 +1025,7 @@ renderTopLinks();
 setupSorting('source-table', sourceData, sourceColors);
 setupSorting('medium-table', mediumData, mediumColors);
 setupSorting('content-table', contentData, {});
+setupPaidTableSorting();
 
 document.getElementById('content-search').addEventListener('input', (e) => {
   renderContentTable(e.target.value, currentContentFilter);

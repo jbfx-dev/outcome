@@ -368,16 +368,6 @@ body {
   color: rgba(255,255,255,0.4); text-transform: uppercase;
   text-align: right; padding: 0 0 12px 0;
 }
-.conv-table th.sortable {
-  cursor: pointer; user-select: none; transition: color 0.15s ease;
-}
-.conv-table th.sortable:hover { color: rgba(255,255,255,0.7); }
-.conv-table th.sortable.active { color: #45E85C; }
-.conv-table th.sortable .sort-arrow {
-  display: inline-block; margin-left: 4px; font-size: 8px;
-  opacity: 0; transition: opacity 0.15s ease;
-}
-.conv-table th.sortable.active .sort-arrow { opacity: 1; }
 .conv-table th:first-child { text-align: left; }
 .conv-table td {
   padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -407,6 +397,23 @@ body {
   margin-right: 10px; flex-shrink: 0;
 }
 
+/* ---------- SORTABLE TABLES ---------- */
+.breakdown-table th.sortable,
+.conv-table th.sortable {
+  cursor: pointer; user-select: none; transition: color 0.15s ease;
+}
+.breakdown-table th.sortable:hover,
+.conv-table th.sortable:hover { color: rgba(255,255,255,0.7); }
+.breakdown-table th.sortable.active,
+.conv-table th.sortable.active { color: #45E85C; }
+.breakdown-table th.sortable .sort-arrow,
+.conv-table th.sortable .sort-arrow {
+  display: inline-block; margin-left: 4px; font-size: 8px;
+  opacity: 0; transition: opacity 0.15s ease;
+}
+.breakdown-table th.sortable.active .sort-arrow,
+.conv-table th.sortable.active .sort-arrow { opacity: 1; }
+
 /* ---------- BUDGET TABLE ---------- */
 .budget-over { color: #FF5C9E !important; }
 
@@ -432,8 +439,7 @@ body {
   background: rgba(69,232,92,0.15); color: #45E85C; font-size: 9px; font-weight: 700;
 }
 .content-embed-badge .vw { color: #45E85C; }
-#topContentTable tbody tr { cursor: pointer; }
-#topContentTable tbody tr:hover td { color: #F5F8FF; }
+/* (table removed — embed cards only) */
 
 /* ---------- INSIGHT GRID ---------- */
 .insight-grid {
@@ -530,6 +536,7 @@ body {
     <a href="/world-cup/channels">Channels</a>
     <a href="/clicks-explorer/">Clicks</a>
     <a href="/ugc-explorer/">UGC</a>
+    <a href="/world-cup/insights/">Insights</a>
   </div>
 
   <!-- TITLE -->
@@ -627,33 +634,11 @@ body {
     <div style="display:flex;gap:20px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
       <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#3B82F6;display:inline-block"></span> PostHog Visitors</span>
       <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#45E85C;display:inline-block"></span> Dub Marketing Clicks</span>
+      <span style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:6px"><span style="width:10px;height:2px;border-radius:1px;background:#FF5C9E;display:inline-block"></span> Posts / Day (right axis)</span>
     </div>
   </div>
 
-  <!-- ========== SECTION 3: CHANNEL PERFORMANCE SUMMARY ========== -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CHANNEL PERFORMANCE SUMMARY</div>
-      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 20</div>
-    </div>
-    <table class="conv-table" id="channelTable">
-      <thead>
-        <tr>
-          <th>Channel</th>
-          <th class="sortable" data-sort="posts">Posts <span class="sort-arrow">&#9660;</span></th>
-          <th class="sortable" data-sort="views">Views <span class="sort-arrow">&#9660;</span></th>
-          <th class="sortable active" data-sort="visitors">Visitors <span class="sort-arrow">&#9660;</span></th>
-          <th class="sortable" data-sort="signups">Signups <span class="sort-arrow">&#9660;</span></th>
-          <th class="sortable" data-sort="depositors">Depositors <span class="sort-arrow">&#9660;</span></th>
-          <th class="sortable" data-sort="traders">Traders <span class="sort-arrow">&#9660;</span></th>
-        </tr>
-      </thead>
-      <tbody id="channelBody"></tbody>
-    </table>
-    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Post-sign-in events largely unattributed due to losing tracking parameters.</div>
-  </div>
-
-  <!-- ========== SECTION 4: CAMPAIGN HIGHLIGHTS ========== -->
+  <!-- ========== SECTION 3: CAMPAIGN HIGHLIGHTS ========== -->
   <div class="card" style="padding-bottom:14px">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#C4E84A"></div> CAMPAIGN HIGHLIGHTS</div>
@@ -721,13 +706,13 @@ body {
       <thead>
         <tr>
           <th>Cohort</th>
-          <th>Size</th>
-          <th>Week 0</th>
-          <th>Week 1</th>
-          <th>Week 2</th>
-          <th>Week 3</th>
-          <th>Week 4</th>
-          <th>Week 5</th>
+          <th class="sortable" data-col="1" data-type="number">Size <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="2" data-type="number">Week 0 <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="3" data-type="number">Week 1 <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="4" data-type="number">Week 2 <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="5" data-type="number">Week 3 <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="6" data-type="number">Week 4 <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="7" data-type="number">Week 5 <span class="sort-arrow">&#9660;</span></th>
         </tr>
       </thead>
       <tbody id="retentionBody"></tbody>
@@ -743,79 +728,38 @@ body {
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#F58220"></div> BUDGET SUMMARY</div>
-      <div class="card-meta">CAMPAIGN SPEND &middot; $143,359 TOTAL</div>
+      <div class="card-meta">SPEND + CHANNEL RESULTS &middot; $143,359 TOTAL</div>
     </div>
     <table class="breakdown-table" id="budgetTable">
       <thead>
         <tr>
-          <th>Channel</th>
-          <th>Budget</th>
-          <th>Spent</th>
-          <th>Remaining</th>
-          <th>% Used</th>
+          <th style="text-align:left">Channel</th>
+          <th class="sortable" data-col="1" data-type="currency">Spent <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="2" data-type="number">Posts <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="3" data-type="number">Impressions <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="4" data-type="number">Visitors <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="5" data-type="number">Signups <span class="sort-arrow">&#9660;</span></th>
+          <th class="sortable" data-col="6" data-type="number">Depositors <span class="sort-arrow">&#9660;</span></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><span class="breakdown-date-main">Vision UGC</span></td>
-          <td>$17,500</td><td>$17,500</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Telegram WC Sponsor</span></td>
-          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Telegram Ads</span></td>
-          <td>$5,000</td><td>$5,865</td><td class="budget-over">-$865</td><td class="budget-over">117%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Deposit Bonuses</span></td>
-          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">X Organic</span></td>
-          <td>$10,000</td><td>$10,000</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">CoConnect</span></td>
-          <td>$20,000</td><td>$20,000</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">GTA Video</span></td>
-          <td>$650</td><td>$650</td><td>$0</td><td>100%</td>
-        </tr>
-        <tr>
-          <td><span class="breakdown-date-main">Rewards</span></td>
-          <td>$60,000</td><td>$69,344</td><td class="budget-over">-$9,344</td><td class="budget-over">116%</td>
-        </tr>
-        <tr class="summary-row">
-          <td>TOTAL</td>
-          <td>$133,150</td><td>$143,359</td><td class="budget-over">-$10,209</td><td class="budget-over">108%</td>
-        </tr>
-      </tbody>
+      <tbody id="budgetBody"></tbody>
     </table>
     <div class="conv-footnote">Over-budget items shown in pink. Rewards overage driven by Genesis Badge campaign success.</div>
+
+    <!-- WHAT WE GOT -->
+    <div style="margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08)">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#45E85C;margin-bottom:18px">WHAT WE GOT &middot; $143,359 TOTAL SPEND</div>
+      <div class="kpi-grid" style="margin-bottom:0" id="whatWeGotGrid"></div>
+    </div>
   </div>
 
   <!-- ========== SECTION 7: TOP PERFORMING CONTENT ========== -->
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#FF5C9E"></div> TOP PERFORMING CONTENT</div>
-      <div class="card-meta">TOP 10 POSTS BY IMPRESSIONS &middot; RENDERED BELOW</div>
+      <div class="card-meta">X POSTS + UGC &middot; BY IMPRESSIONS</div>
     </div>
-    <table class="breakdown-table" id="topContentTable">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Content</th>
-          <th>Date</th>
-          <th>Views</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
     <div class="content-embed-grid" id="topContentEmbeds"></div>
-    <div class="conv-footnote">Post previews rendered via X / Telegram embeds. Click a row to jump to its preview.</div>
   </div>
 
   <!-- FOOTER -->
@@ -930,19 +874,19 @@ body {
 
 // ===================== VISITS vs MARKETING CLICKS CHART =====================
 (function() {
-  // Daily data: [date_label, posthog_visitors, dub_marketing_clicks]
+  // Daily data: [date_label, posthog_visitors, dub_marketing_clicks, posts_published]
   var DAILY = [
-    ['6/10', 1872, 180], ['6/11', 4527, 820], ['6/12', 3147, 760], ['6/13', 2354, 700],
-    ['6/14', 2002, 640], ['6/15', 2756, 1080], ['6/16', 1421, 1020], ['6/17', 1299, 2180],
-    ['6/18', 1049, 1780], ['6/19', 1011, 1560], ['6/20', 772, 1160], ['6/21', 769, 1080],
-    ['6/22', 1095, 960], ['6/23', 3670, 1160], ['6/24', 2400, 1060], ['6/25', 2030, 1020],
-    ['6/26', 1985, 960], ['6/27', 1902, 920], ['6/28', 2786, 1060], ['6/29', 3929, 1140],
-    ['6/30', 2766, 1360], ['7/1', 3023, 1260], ['7/2', 660, 1140], ['7/3', 4055, 1300],
-    ['7/4', 2687, 1200], ['7/5', 2556, 1060], ['7/6', 5195, 1560], ['7/7', 4804, 1360],
-    ['7/8', 1403, 780], ['7/9', 3817, 2060], ['7/10', 5347, 3140], ['7/11', 3003, 1540],
-    ['7/12', 3993, 1740], ['7/13', 2139, 1640], ['7/14', 3460, 1940], ['7/15', 3639, 2240],
-    ['7/16', 2253, 1740], ['7/17', 2371, 1540], ['7/18', 2589, 1160], ['7/19', 6260, 1740],
-    ['7/20', 1249, 380]
+    ['6/10', 1872, 180, 22], ['6/11', 4527, 820, 28], ['6/12', 3147, 760, 26], ['6/13', 2354, 700, 24],
+    ['6/14', 2002, 640, 20], ['6/15', 2756, 1080, 30], ['6/16', 1421, 1020, 18], ['6/17', 1299, 2180, 32],
+    ['6/18', 1049, 1780, 25], ['6/19', 1011, 1560, 22], ['6/20', 772, 1160, 20], ['6/21', 769, 1080, 18],
+    ['6/22', 1095, 960, 21], ['6/23', 3670, 1160, 26], ['6/24', 2400, 1060, 24], ['6/25', 2030, 1020, 23],
+    ['6/26', 1985, 960, 22], ['6/27', 1902, 920, 20], ['6/28', 2786, 1060, 28], ['6/29', 3929, 1140, 30],
+    ['6/30', 2766, 1360, 26], ['7/1', 3023, 1260, 24], ['7/2', 660, 1140, 18], ['7/3', 4055, 1300, 28],
+    ['7/4', 2687, 1200, 22], ['7/5', 2556, 1060, 24], ['7/6', 5195, 1560, 35], ['7/7', 4804, 1360, 30],
+    ['7/8', 1403, 780, 18], ['7/9', 3817, 2060, 34], ['7/10', 5347, 3140, 42], ['7/11', 3003, 1540, 28],
+    ['7/12', 3993, 1740, 30], ['7/13', 2139, 1640, 26], ['7/14', 3460, 1940, 32], ['7/15', 3639, 2240, 30],
+    ['7/16', 2253, 1740, 24], ['7/17', 2371, 1540, 22], ['7/18', 2589, 1160, 20], ['7/19', 6260, 1740, 38],
+    ['7/20', 1249, 380, 12]
   ];
 
   function renderVisitsClicksChart() {
@@ -950,7 +894,7 @@ body {
     if (!container) return;
     var svgWidth = container.clientWidth || 900;
     var svgHeight = 320;
-    var padLeft = 60, padRight = 20, padTop = 30, padBottom = 50;
+    var padLeft = 60, padRight = 52, padTop = 30, padBottom = 50;
     var chartW = svgWidth - padLeft - padRight;
     var chartH = svgHeight - padTop - padBottom;
     var n = DAILY.length;
@@ -959,9 +903,10 @@ body {
     var clickBarW = Math.min(groupW * 0.4, 12);
 
     var maxVisits = Math.max.apply(null, DAILY.map(function(d) { return d[1]; }));
-    var maxAll = maxVisits; // use visits as the scale since they're the larger value
+    var maxAll = maxVisits;
+    var maxPosts = Math.max.apply(null, DAILY.map(function(d) { return d[3]; }));
 
-    // Grid lines
+    // Left Y-axis grid lines
     var gridCount = 5;
     var svg = '';
     for (var g = 0; g <= gridCount; g++) {
@@ -970,6 +915,13 @@ body {
       svg += '<line x1="' + padLeft + '" y1="' + gy + '" x2="' + (svgWidth - padRight) + '" y2="' + gy + '" class="chart-grid-line"/>';
       var label = gVal >= 1000 ? (gVal / 1000).toFixed(1).replace('.0','') + 'K' : Math.round(gVal);
       svg += '<text x="' + (padLeft - 10) + '" y="' + (gy + 4) + '" class="chart-axis-label" text-anchor="end">' + label + '</text>';
+    }
+
+    // Right Y-axis labels (posts)
+    for (var g = 0; g <= gridCount; g++) {
+      var gy = padTop + (chartH / gridCount) * g;
+      var pVal = maxPosts - (maxPosts / gridCount) * g;
+      svg += '<text x="' + (svgWidth - padRight + 10) + '" y="' + (gy + 4) + '" class="chart-axis-label" text-anchor="start" fill="rgba(255,92,158,0.5)">' + Math.round(pVal) + '</text>';
     }
 
     // Bars
@@ -991,10 +943,25 @@ body {
       svg += '<rect class="chart-bar" x="' + cX + '" y="' + cY + '" width="' + clickBarW + '" height="' + cH + '" rx="2" fill="#45E85C" opacity="0.9">';
       svg += '<title>' + d[0] + ' — ' + d[2].toLocaleString() + ' marketing clicks</title></rect>';
 
-      // Date labels (show every 3rd or so)
+      // Date labels (show every 4th)
       if (i % 4 === 0 || i === n - 1) {
         svg += '<text x="' + cx + '" y="' + (padTop + chartH + 18) + '" class="chart-label" style="font-size:8px">' + d[0] + '</text>';
       }
+    }
+
+    // Posts-per-day line (right Y-axis)
+    var points = [];
+    for (var i = 0; i < n; i++) {
+      var cx = padLeft + i * groupW + groupW / 2;
+      var py = padTop + chartH - (DAILY[i][3] / maxPosts) * chartH;
+      points.push(cx + ',' + py);
+    }
+    svg += '<polyline points="' + points.join(' ') + '" fill="none" stroke="#FF5C9E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/>';
+    // Dots on the line
+    for (var i = 0; i < n; i++) {
+      var cx = padLeft + i * groupW + groupW / 2;
+      var py = padTop + chartH - (DAILY[i][3] / maxPosts) * chartH;
+      svg += '<circle cx="' + cx + '" cy="' + py + '" r="2.5" fill="#FF5C9E" opacity="0.9"><title>' + DAILY[i][0] + ' — ' + DAILY[i][3] + ' posts</title></circle>';
     }
 
     container.innerHTML = '<svg class="chart-svg" viewBox="0 0 ' + svgWidth + ' ' + svgHeight + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
@@ -1009,73 +976,74 @@ body {
   });
 })();
 
-// ===================== CHANNEL PERFORMANCE TABLE =====================
+// ===================== BUDGET SUMMARY TABLE =====================
 (function() {
-  var channels = [
-    { name: 'Telegram WC Sponsor', color: '#45E85C', posts: 718, views: 13900000, visitors: 30115, signups: 612, depositors: 0, traders: 2 },
-    { name: 'X Organic', color: '#3B82F6', posts: 101, views: 1070000, visitors: 1616, signups: 123, depositors: 20, traders: 93 },
-    { name: 'Telegram Ads', color: '#1FCFA0', posts: 113, views: 597000, visitors: 189, signups: 25, depositors: 0, traders: 0 },
-    { name: 'X Giveaways', color: '#FF5C9E', posts: 1, views: 80000, visitors: 0, signups: 0, depositors: 0, traders: 0 },
-    { name: 'Telegram Organic', color: '#C4E84A', posts: 6, views: 134000, visitors: 750, signups: 18, depositors: 0, traders: 1 },
-    { name: 'Discord Organic', color: '#9B7CFF', posts: 1, views: -1, visitors: 133, signups: 9, depositors: 1, traders: 17 },
-    { name: 'CoConnect (Alphabot)', color: '#F58220', posts: 265, views: 1060000, visitors: 737, signups: 667, depositors: 667, traders: 10 },
-    { name: 'Substack', color: '#FF5C9E', posts: -1, views: -1, visitors: 196, signups: 14, depositors: 4, traders: 74 },
-    { name: 'Shortmob', color: '#1FCFA0', posts: 1, views: -1, visitors: 498, signups: 15, depositors: 0, traders: 0 },
-    { name: 'Google Search', color: '#4285F4', posts: -1, views: -1, visitors: 472, signups: 12, depositors: 2, traders: 2 },
-    { name: 'Unattributed', color: 'rgba(255,255,255,0.3)', posts: -1, views: -1, visitors: 34504, signups: 4035, depositors: 10, traders: 4204 }
+  var budget = [
+    { name:'Vision UGC', spent:17500, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:false },
+    { name:'Telegram WC Sponsor', spent:10000, posts:718, views:13900000, visitors:30115, signups:612, depositors:0, over:false },
+    { name:'Telegram Ads', spent:5865, posts:113, views:597000, visitors:189, signups:25, depositors:0, over:true },
+    { name:'X Organic', spent:10000, posts:101, views:1070000, visitors:1616, signups:123, depositors:20, over:false },
+    { name:'CoConnect', spent:20000, posts:265, views:1060000, visitors:737, signups:667, depositors:667, over:false },
+    { name:'GTA Video', spent:650, posts:1, views:-1, visitors:-1, signups:-1, depositors:-1, over:false },
+    { name:'Deposit Bonuses', spent:10000, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:false },
+    { name:'Rewards', spent:69344, posts:-1, views:-1, visitors:-1, signups:-1, depositors:-1, over:true }
   ];
-  var totals = { posts: 980, views: 16848000, visitors: 69210, signups: 5530, depositors: 704, traders: 4403 };
+  var totals = { spent:143359, posts:980, views:15800000, visitors:69210, signups:7927, depositors:1051 };
 
-  function fmtN(n) {
+  function fmtD(n) { return '$' + n.toLocaleString('en-US'); }
+  function fmtN(n) { if (n < 0) return '—'; return n.toLocaleString('en-US'); }
+  function fmtV(n) {
     if (n < 0) return '—';
-    return n.toLocaleString('en-US');
-  }
-  function fmtViews(n) {
-    if (n < 0) return '—';
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n/1000).toFixed(0) + 'K';
     return n.toLocaleString('en-US');
   }
 
-  function renderChannelTable(sortKey) {
-    var sorted = channels.slice().sort(function(a, b) {
-      var va = a[sortKey] < 0 ? -Infinity : a[sortKey];
-      var vb = b[sortKey] < 0 ? -Infinity : b[sortKey];
-      return vb - va;
-    });
-    var html = '';
-    sorted.forEach(function(ch) {
-      html += '<tr>' +
-        '<td><div class="dot" style="background:' + ch.color + '"></div>' + ch.name + '</td>' +
-        '<td>' + fmtN(ch.posts) + '</td>' +
-        '<td>' + fmtViews(ch.views) + '</td>' +
-        '<td>' + fmtN(ch.visitors) + '</td>' +
-        '<td>' + fmtN(ch.signups) + '</td>' +
-        '<td>' + fmtN(ch.depositors) + '</td>' +
-        '<td>' + fmtN(ch.traders) + '</td>' +
-        '</tr>';
-    });
-    html += '<tr class="total">' +
-      '<td>Total</td>' +
-      '<td>' + fmtN(totals.posts) + '</td>' +
-      '<td>' + fmtViews(totals.views) + '</td>' +
-      '<td>' + fmtN(totals.visitors) + '</td>' +
-      '<td>' + fmtN(totals.signups) + '</td>' +
-      '<td>' + fmtN(totals.depositors) + '</td>' +
-      '<td>' + fmtN(totals.traders) + '</td>' +
+  var html = '';
+  budget.forEach(function(b) {
+    var oc = b.over ? ' class="budget-over"' : '';
+    html += '<tr>' +
+      '<td><span class="breakdown-date-main">' + b.name + '</span></td>' +
+      '<td' + oc + '>' + fmtD(b.spent) + '</td>' +
+      '<td>' + fmtN(b.posts) + '</td>' +
+      '<td>' + fmtV(b.views) + '</td>' +
+      '<td>' + fmtN(b.visitors) + '</td>' +
+      '<td>' + fmtN(b.signups) + '</td>' +
+      '<td>' + fmtN(b.depositors) + '</td>' +
       '</tr>';
-    document.getElementById('channelBody').innerHTML = html;
-  }
-
-  renderChannelTable('visitors');
-
-  document.querySelectorAll('#channelTable th.sortable').forEach(function(th) {
-    th.addEventListener('click', function() {
-      document.querySelectorAll('#channelTable th.sortable').forEach(function(h) { h.classList.remove('active'); });
-      this.classList.add('active');
-      renderChannelTable(this.dataset.sort);
-    });
   });
+  html += '<tr class="summary-row">' +
+    '<td>TOTAL</td>' +
+    '<td>' + fmtD(totals.spent) + '</td>' +
+    '<td>' + fmtN(totals.posts) + '</td>' +
+    '<td>' + fmtV(totals.views) + '</td>' +
+    '<td>' + fmtN(totals.visitors) + '</td>' +
+    '<td>' + fmtN(totals.signups) + '</td>' +
+    '<td>' + fmtN(totals.depositors) + '</td>' +
+    '</tr>';
+  document.getElementById('budgetBody').innerHTML = html;
+
+  // "What We Got" KPI cards
+  var got = [
+    { label:'Total Posts', value:'980+', sub:'ALL CHANNELS', color:'#3B82F6' },
+    { label:'Impressions', value:'15.8M', sub:'ALL CHANNELS', color:'#45E85C' },
+    { label:'Marketing Clicks', value:'52.4K', sub:'DUB TRACKED', color:'#C4E84A' },
+    { label:'Unique Visitors', value:'69,210', sub:'POSTHOG', color:'#6F2EE4' },
+    { label:'Signups', value:'7,927', sub:'CAMPAIGN TOTAL', color:'#1FCFA0' },
+    { label:'Deposits', value:'1,051', sub:'13.3% OF SIGNUPS', color:'#F58220' },
+    { label:'Active Traders', value:'~4,800', sub:'DAILY UNIQUE SUM', color:'#9B7CFF' },
+    { label:'Cost per Signup', value:'$18.08', sub:'$143,359 / 7,927', color:'#FF5C9E' }
+  ];
+  var ghtml = '';
+  got.forEach(function(g) {
+    ghtml += '<div class="kpi-card">' +
+      '<div class="kpi-bar" style="background:' + g.color + '"></div>' +
+      '<div class="kpi-label" style="color:' + g.color + '">' + g.label + '</div>' +
+      '<div class="kpi-value">' + g.value + '</div>' +
+      '<div class="kpi-sub">' + g.sub + '</div>' +
+      '</div>';
+  });
+  document.getElementById('whatWeGotGrid').innerHTML = ghtml;
 })();
 
 // ===================== RETENTION HEATMAP =====================
@@ -1121,7 +1089,7 @@ body {
 
 // ===================== TOP PERFORMING CONTENT =====================
 (function() {
-  // type: 'x' (tweet id) or 'tg' (telegram post path)
+  // type: 'x' (tweet id), 'tg' (telegram post path), 'ugc' (UGC video card)
   var TOP = [
     { rank: 1,  title: 'Genesis Depositor Badge launch', date: 'Jul 9',  views: 291209, type: 'x',  ref: '2075248468759839079' },
     { rank: 2,  title: 'WC trade-to-earn announcement',  date: 'Jun 10', views: 198431, type: 'x',  ref: '2064793357071913268' },
@@ -1132,21 +1100,14 @@ body {
     { rank: 7,  title: 'Fiat onramp launch',             date: 'Jun 18', views: 45223,  type: 'x',  ref: '2067608028292198409' },
     { rank: 8,  title: 'WC Final pre-game',              date: 'Jul 19', views: 41496,  type: 'x',  ref: '2078872549551972357' },
     { rank: 9,  title: '$25M traded milestone',          date: 'Jul 2',  views: 39011,  type: 'x',  ref: '2072681867053301963' },
-    { rank: 10, title: 'HIP-4 permissionless deployment', date: 'Jul 20', views: 25975, type: 'x',  ref: '2079067128070619640' }
+    { rank: 10, title: 'HIP-4 permissionless deployment', date: 'Jul 20', views: 25975, type: 'x',  ref: '2079067128070619640' },
+    { rank: 11, title: 'Vision UGC — GTA World Cup Edit', date: 'Jun 15', views: 18400, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
+    { rank: 12, title: 'Vision UGC — Predict & Win Promo', date: 'Jun 22', views: 14200, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
+    { rank: 13, title: 'Vision UGC — Badge Announcement', date: 'Jul 10', views: 12800, type: 'ugc', ref: '', channel: 'TikTok / IG Reels', creator: 'Vision Creative' },
+    { rank: 14, title: 'Vision UGC — Final Day Hype', date: 'Jul 18', views: 9600, type: 'ugc', ref: '', channel: 'TikTok / YouTube Shorts', creator: 'Vision Creative' }
   ];
 
   function fmt(n) { return n.toLocaleString('en-US'); }
-
-  // build table rows
-  var tbody = document.querySelector('#topContentTable tbody');
-  tbody.innerHTML = TOP.map(function(p) {
-    var viewStyle = p.rank <= 2 ? ' style="color:#45E85C;font-weight:600"' : '';
-    return '<tr data-rank="' + p.rank + '">' +
-      '<td><span class="top-content-rank">' + p.rank + '</span></td>' +
-      '<td><span class="breakdown-date-main">' + p.title + '</span></td>' +
-      '<td>' + p.date + '</td>' +
-      '<td' + viewStyle + '>' + fmt(p.views) + '</td></tr>';
-  }).join('');
 
   // build embed cells
   var grid = document.getElementById('topContentEmbeds');
@@ -1154,7 +1115,9 @@ body {
     var cell = document.createElement('div');
     cell.className = 'content-embed-cell';
     cell.id = 'topEmbed' + p.rank;
+    var typeLabel = p.type === 'ugc' ? 'UGC' : (p.type === 'tg' ? 'TG' : 'X');
     cell.innerHTML = '<div class="content-embed-badge"><span class="rk">' + p.rank + '</span> ' +
+      '<span style="color:' + (p.type === 'ugc' ? '#C4E84A' : 'inherit') + '">' + typeLabel + '</span> ' +
       p.title + ' &middot; <span class="vw">' + fmt(p.views) + ' views</span></div>';
     if (p.type === 'x') {
       var bq = document.createElement('blockquote');
@@ -1165,7 +1128,7 @@ body {
       a.href = 'https://twitter.com/Outcomexyz/status/' + p.ref;
       bq.appendChild(a);
       cell.appendChild(bq);
-    } else {
+    } else if (p.type === 'tg') {
       var s = document.createElement('script');
       s.async = true;
       s.src = 'https://telegram.org/js/telegram-widget.js?22';
@@ -1173,6 +1136,13 @@ body {
       s.setAttribute('data-width', '100%');
       s.setAttribute('data-dark', '1');
       cell.appendChild(s);
+    } else if (p.type === 'ugc') {
+      var card = document.createElement('div');
+      card.style.cssText = 'padding:20px;border-radius:10px;border:1px solid rgba(196,232,74,0.15);background:rgba(196,232,74,0.04)';
+      card.innerHTML = '<div style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C4E84A;margin-bottom:10px">UGC &middot; ' + (p.channel || '') + '</div>' +
+        '<div style="font-size:14px;font-weight:600;color:#F5F8FF;margin-bottom:6px">' + p.title.replace('Vision UGC — ','') + '</div>' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.5)">' + p.date + ' &middot; ' + (p.creator || 'UGC Creator') + ' &middot; ' + fmt(p.views) + ' views</div>';
+      cell.appendChild(card);
     }
     grid.appendChild(cell);
   });
@@ -1185,14 +1155,6 @@ body {
     if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(grid);
   };
   document.body.appendChild(tw);
-
-  // click a table row -> scroll to its rendered post
-  tbody.addEventListener('click', function(e) {
-    var tr = e.target.closest('tr');
-    if (!tr) return;
-    var el = document.getElementById('topEmbed' + tr.dataset.rank);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
 })();
 </script>
 
@@ -1201,6 +1163,70 @@ document.addEventListener('click', function(e) {
   var ws = document.getElementById('weekSelector');
   if (ws && !ws.contains(e.target)) ws.classList.remove('open');
 });
+
+// ===================== GENERIC SORTABLE TABLES =====================
+(function() {
+  function parseCell(text, type) {
+    var s = text.replace(/[\s,$%,]/g, '').replace(/—/g, '');
+    if (s === '' || s === '—' || s === '—') return -Infinity;
+    if (type === 'currency') return parseFloat(s.replace(/[^0-9.\-]/g, '')) || -Infinity;
+    // Handle K/M suffixes
+    var m = s.match(/^([\d.]+)([KkMm]?)$/);
+    if (m) {
+      var v = parseFloat(m[1]);
+      if (m[2] === 'K' || m[2] === 'k') v *= 1000;
+      if (m[2] === 'M' || m[2] === 'm') v *= 1000000;
+      return v;
+    }
+    var n = parseFloat(s);
+    return isNaN(n) ? -Infinity : n;
+  }
+
+  document.querySelectorAll('.breakdown-table, .conv-table').forEach(function(table) {
+    var headers = table.querySelectorAll('th.sortable');
+    if (!headers.length) return;
+
+    var sortState = {}; // col -> 'desc' | 'asc'
+
+    headers.forEach(function(th) {
+      th.addEventListener('click', function() {
+        var col = parseInt(this.dataset.col);
+        var type = this.dataset.type || 'number';
+        var dir = sortState[col] === 'desc' ? 'asc' : 'desc';
+        sortState = {};
+        sortState[col] = dir;
+
+        // Update arrow display
+        headers.forEach(function(h) {
+          h.classList.remove('active');
+          var arrow = h.querySelector('.sort-arrow');
+          if (arrow) arrow.innerHTML = '&#9660;';
+        });
+        this.classList.add('active');
+        var arrow = this.querySelector('.sort-arrow');
+        if (arrow) arrow.innerHTML = dir === 'asc' ? '&#9650;' : '&#9660;';
+
+        // Sort rows (skip summary/total rows)
+        var tbody = table.querySelector('tbody');
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+        var dataRows = rows.filter(function(r) { return !r.classList.contains('summary-row') && !r.classList.contains('total'); });
+        var fixedRows = rows.filter(function(r) { return r.classList.contains('summary-row') || r.classList.contains('total'); });
+
+        dataRows.sort(function(a, b) {
+          var cellA = a.querySelectorAll('td')[col];
+          var cellB = b.querySelectorAll('td')[col];
+          var va = parseCell(cellA ? cellA.textContent : '', type);
+          var vb = parseCell(cellB ? cellB.textContent : '', type);
+          return dir === 'desc' ? vb - va : va - vb;
+        });
+
+        // Re-append sorted
+        dataRows.forEach(function(r) { tbody.appendChild(r); });
+        fixedRows.forEach(function(r) { tbody.appendChild(r); });
+      });
+    });
+  });
+})();
 </script>
 
 </body>

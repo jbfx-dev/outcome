@@ -112,7 +112,11 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
 .breakdown-table th {
   font-size: 9px; font-weight: 500; letter-spacing: 0.1em; color: rgba(255,255,255,0.4);
   text-transform: uppercase; text-align: right; padding: 0 0 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer; user-select: none; white-space: nowrap; transition: color 0.15s;
 }
+.breakdown-table th:hover { color: rgba(255,255,255,0.7); }
+.breakdown-table th.sorted { color: #45E85C; }
+.breakdown-table th .sort-arrow { margin-left: 4px; font-size: 8px; }
 .breakdown-table th:first-child { text-align: left; }
 .breakdown-table td {
   padding: 13px 0 13px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -243,6 +247,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <a href="/world-cup/channels" class="active">Channels</a>
     <a href="/clicks-explorer/">Clicks</a>
     <a href="/ugc-explorer/">UGC</a>
+    <a href="/world-cup/insights/">Insights</a>
   </div>
 
   <div class="title-area">
@@ -265,7 +270,7 @@ body { background: #0A0A0B; color: #F5F8FF; font-family: 'Inter', system-ui, -ap
     <table class="breakdown-table">
       <thead>
         <tr>
-          <th>Channel</th><th>Spend</th><th>Posts</th><th>Views</th><th>Visitors</th><th>Signups</th><th>Cost / Signup</th><th>Depositors</th><th>Traders</th>
+          <th>Channel <span class="sort-arrow"></span></th><th>Spend <span class="sort-arrow"></span></th><th>Posts <span class="sort-arrow"></span></th><th>Views <span class="sort-arrow"></span></th><th>Visitors <span class="sort-arrow"></span></th><th>Signups <span class="sort-arrow"></span></th><th>Cost / Signup <span class="sort-arrow"></span></th><th>Depositors <span class="sort-arrow"></span></th><th>Traders <span class="sort-arrow"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -1042,6 +1047,57 @@ function selectDay(i){
 
 // default: open the WC Final day
 selectDay(39);
+
+// ---------- SORTABLE TABLES ----------
+function parseNumeric(text) {
+  var s = text.replace(/,/g, '').trim();
+  if (s === '—' || s === '' || s === '*') return -1;
+  // handle $X.XXK, $X.XXM, $XX,XXX
+  s = s.replace(/^\$/, '').replace(/\*$/, '');
+  if (s.endsWith('M')) return parseFloat(s) * 1000000;
+  if (s.endsWith('K')) return parseFloat(s) * 1000;
+  return parseFloat(s) || -1;
+}
+
+function setupTableSort(table) {
+  var headers = table.querySelectorAll('thead th');
+  var tbody = table.querySelector('tbody');
+  var currentCol = -1;
+  var currentDir = 'desc';
+
+  headers.forEach(function(th, colIdx) {
+    th.addEventListener('click', function() {
+      if (currentCol === colIdx) {
+        currentDir = currentDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        currentCol = colIdx;
+        currentDir = colIdx === 0 ? 'asc' : 'desc';
+      }
+      headers.forEach(function(h) { h.classList.remove('sorted'); h.querySelector('.sort-arrow').innerHTML = ''; });
+      th.classList.add('sorted');
+      th.querySelector('.sort-arrow').innerHTML = currentDir === 'desc' ? '&#9660;' : '&#9650;';
+
+      var rows = Array.from(tbody.querySelectorAll('tr:not(.summary-row)'));
+      var summaryRow = tbody.querySelector('tr.summary-row');
+
+      rows.sort(function(a, b) {
+        var aText = a.cells[colIdx].textContent.trim();
+        var bText = b.cells[colIdx].textContent.trim();
+        if (colIdx === 0) {
+          return currentDir === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
+        }
+        var aVal = parseNumeric(aText);
+        var bVal = parseNumeric(bText);
+        return currentDir === 'desc' ? bVal - aVal : aVal - bVal;
+      });
+
+      rows.forEach(function(r) { tbody.appendChild(r); });
+      if (summaryRow) tbody.appendChild(summaryRow);
+    });
+  });
+}
+
+document.querySelectorAll('.breakdown-table').forEach(setupTableSort);
 
 </script>
 
