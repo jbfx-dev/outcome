@@ -1,11 +1,57 @@
 {
+  "functions": {
+    "api/card.py": {
+      "includeFiles": "api/_kit/**",
+      "maxDuration": 60
+    },
+    "api/positions.js": {
+      "maxDuration": 30
+    },
+    "api/trader.js": {
+      "maxDuration": 20
+    }
+  },
   "redirects": [
-    { "source": "/", "destination": "/world-cup", "permanent": false },
-    { "source": "/index.html", "destination": "/world-cup", "permanent": true },
-    { "source": "/overall.html", "destination": "/world-cup", "permanent": true },
-    { "source": "/week-1.html", "destination": "/world-cup/1", "permanent": true },
-    { "source": "/week-2.html", "destination": "/world-cup/2", "permanent": true },
-    { "source": "/week-3.html", "destination": "/world-cup/3", "permanent": true },
-    { "source": "/week-4.html", "destination": "/world-cup/4", "permanent": true }
+    {
+      "source": "/",
+      "destination": "/world-cup",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "destination": "/world-cup",
+      "permanent": true
+    },
+    {
+      "source": "/overall.html",
+      "destination": "/world-cup",
+      "permanent": true
+    },
+    {
+      "source": "/week-1.html",
+      "destination": "/world-cup/1",
+      "permanent": true
+    },
+    {
+      "source": "/week-2.html",
+      "destination": "/world-cup/2",
+      "permanent": true
+    },
+    {
+      "source": "/week-3.html",
+      "destination": "/world-cup/3",
+      "permanent": true
+    },
+    {
+      "source": "/week-4.html",
+      "destination": "/world-cup/4",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/leaderboard/t/:username",
+      "destination": "/leaderboard/index.html"
+    }
   ]
 }
