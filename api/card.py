@@ -153,9 +153,31 @@ def card_fields(position, username):
     }
 
 
+# Avatars are only ever fetched from X's image CDN. The URL can reach us from
+# the browser in address mode, so it is a caller-controlled fetch target and
+# must be host-allowlisted - otherwise the renderer becomes an SSRF probe into
+# anything the function can reach.
+AVATAR_HOSTS = {"pbs.twimg.com", "abs.twimg.com"}
+
+
+def safe_avatar_url(url):
+    """Return the URL only if it is an https X-CDN image, else None."""
+    raw = str(url or "").strip()
+    if not raw.startswith("https://"):
+        return None
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return None
+    if parsed.scheme != "https" or parsed.hostname not in AVATAR_HOSTS:
+        return None
+    return raw
+
+
 def fetch_avatar(url):
     """Cache avatars on the instance; a missing one is not fatal to the card."""
-    if not url or not url.startswith("https://"):
+    url = safe_avatar_url(url)
+    if not url:
         return None
     os.makedirs(AVATARS, exist_ok=True)
     path = os.path.join(AVATARS, hashlib.sha1(url.encode()).hexdigest() + ".img")
@@ -208,6 +230,11 @@ def build(query, headers):
             if val:
                 params[key] = val
         payload, position = find_by_address(base, params)
+        # /api/position speaks only to Hyperliquid, so it has no profile image.
+        # The page already holds one from its own (unblocked) profile lookup;
+        # accept it, host-allowlisted. Purely decorative - it cannot alter a figure.
+        payload = dict(payload)
+        payload["avatar"] = safe_avatar_url((query.get("avatar") or [""])[0])
     else:
         payload, position = find_position(base, username, coin, closed_at)
 
@@ -221,7 +248,7 @@ def build(query, headers):
         (address or "").lower(),
         coin.lstrip("#"),
         position.get("closedAt") or 0,
-        data["theme"] + "|" + data["title"],
+        data["theme"] + "|" + data["title"] + "|" + (payload.get("avatar") or ""),
     )
     os.makedirs(CACHE, exist_ok=True)
     out = os.path.join(CACHE, hashlib.sha1(key.encode()).hexdigest() + ".png")

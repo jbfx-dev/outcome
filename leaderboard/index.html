@@ -461,6 +461,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     window: 'all',
     username: null,
     address: null,
+    avatar: null,
     all: [],            // every position we can see, newest first
     positions: [],      // `all` filtered to the selected window
     truncated: false,
@@ -725,6 +726,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     var token = ++state.token.trader;
     state.username = username;
     state.address = null;
+    state.avatar = null;
     state.all = [];
     state.positions = [];
     state.truncated = false;
@@ -900,6 +902,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
         state.all = data.positions || [];
         state.truncated = Boolean(data.truncated);
         if (data.address) state.address = data.address;
+        if (data.avatar) state.avatar = data.avatar;
         renderPositions();
       })
       .catch(function (e) {
@@ -968,6 +971,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
       q += '&address=' + encodeURIComponent(state.address) +
         '&title=' + encodeURIComponent(p.title) +
         '&side=' + encodeURIComponent(p.sideLabel);
+      // The renderer cannot look the profile image up itself in this mode; we
+      // already have it. Host-allowlisted server-side, and decorative only.
+      if (state.avatar) q += '&avatar=' + encodeURIComponent(state.avatar);
     }
     if (state.theme) q += '&theme=' + encodeURIComponent(state.theme);
     if (opts && opts.download) q += '&download=1';
