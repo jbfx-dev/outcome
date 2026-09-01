@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcome Leaderboard &amp; PnL Share Cards</title>
+<meta name="description" content="Top Outcome traders, their full position history, and one-click PnL share cards for creators.">
+<meta property="og:title" content="Outcome Leaderboard &amp; PnL Share Cards">
+<meta property="og:description" content="Top Outcome traders, their full position history, and one-click PnL share cards for creators.">
+<meta property="og:url" content="https://outcome.labs.tg/leaderboard/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://outcome.labs.tg/meta-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Outcome Leaderboard &amp; PnL Share Cards">
+<meta name="twitter:description" content="Top Outcome traders, their full position history, and one-click PnL share cards for creators.">
+<meta name="twitter:image" content="https://outcome.labs.tg/meta-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800; font-style: normal; font-stretch: condensed; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  background: #0A0A0B; color: #F5F8FF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+:root {
+  --up: #45E85C;
+  --down: #FF5C5C;
+  --line: rgba(255,255,255,0.08);
+  --dim: rgba(255,255,255,0.45);
+  --dimmer: rgba(255,255,255,0.28);
+  --panel: #131316;
+}
+a { color: inherit; }
+button { font-family: inherit; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; border-bottom: 1px solid var(--line);
+  background: rgba(10,10,11,0.74);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  color: var(--dim); text-transform: uppercase; white-space: nowrap;
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.live-badge {
+  height: 30px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid rgba(69,232,92,0.4);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  color: var(--up); text-transform: uppercase;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--up);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ---------- LAYOUT ---------- */
+.content { max-width: 1180px; margin: 0 auto; padding: 40px 40px 80px; }
+.page-title {
+  font-family: "PP Neue Corp", 'Inter', sans-serif;
+  font-weight: 800; font-stretch: condensed;
+  font-size: 46px; line-height: 1.02; letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.page-sub { margin-top: 10px; font-size: 14px; color: var(--dim); max-width: 62ch; line-height: 1.6; }
+
+/* ---------- CONTROLS ---------- */
+.controls {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin: 30px 0 18px;
+}
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tab {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 9px 16px; border-radius: 8px; cursor: pointer; background: transparent;
+  color: var(--dim); border: 1px solid var(--line); transition: all 0.15s ease;
+}
+.tab:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.16); }
+.tab[aria-selected="true"] {
+  color: #F5F8FF; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15);
+}
+.paste { display: flex; gap: 8px; align-items: center; }
+.paste input {
+  height: 38px; width: 300px; max-width: 54vw; padding: 0 14px;
+  border-radius: 10px; border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03); color: #F5F8FF; font-size: 13px;
+}
+.paste input::placeholder { color: var(--dimmer); }
+.paste input:focus { outline: none; border-color: rgba(69,232,92,0.45); }
+.btn {
+  height: 38px; padding: 0 16px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: #F5F8FF;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+  transition: all 0.15s ease; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary {
+  background: var(--up); border-color: var(--up); color: #06210C; font-weight: 700;
+}
+.btn-primary:hover:not(:disabled) { background: #5cf070; border-color: #5cf070; }
+.paste-error { font-size: 12px; color: var(--down); margin-top: 8px; }
+
+/* ---------- TABLE ---------- */
+.card-surface {
+  border: 1px solid var(--line); border-radius: 14px;
+  background: rgba(255,255,255,0.02); overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dimmer);
+  padding: 14px 18px; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+tbody td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr.clickable { cursor: pointer; transition: background 0.12s ease; }
+tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rank { color: var(--dimmer); font-weight: 600; width: 54px; font-variant-numeric: tabular-nums; }
+.rank-1 { color: #FFD166; }
+.trader { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.avatar {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+}
+.avatar-fallback {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55);
+}
+.uname { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verified { width: 13px; height: 13px; flex-shrink: 0; color: #1D9BF0; }
+.pos { color: var(--up); }
+.neg { color: var(--down); }
+.muted { color: var(--dim); }
+
+/* ---------- TRADER HEADER ---------- */
+.back {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12px;
+  color: var(--dim); text-decoration: none; margin-bottom: 22px;
+  padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line);
+  transition: all 0.15s ease;
+}
+.back:hover { color: #F5F8FF; border-color: rgba(255,255,255,0.2); }
+.thead { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.thead .avatar { width: 64px; height: 64px; }
+.thead .avatar-fallback { font-size: 24px; }
+.thead-name {
+  font-family: "PP Neue Corp", 'Inter', sans-serif; font-weight: 800; font-stretch: condensed;
+  font-size: 38px; line-height: 1.05; text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.thead-meta { font-size: 12px; color: var(--dim); margin-top: 4px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 12px; margin: 26px 0 8px; }
+.stat { border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; background: rgba(255,255,255,0.02); }
+.stat-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dimmer);
+}
+.stat-value { font-size: 24px; font-weight: 700; margin-top: 7px; font-variant-numeric: tabular-nums; }
+.stat-sub { font-size: 11px; color: var(--dim); margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+/* ---------- POSITIONS ---------- */
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; margin: 36px 0 14px;
+}
+.section-title { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+.section-note { font-size: 12px; color: var(--dim); }
+.mkt-title { font-weight: 500; line-height: 1.35; }
+.mkt-sub { font-size: 11px; color: var(--dimmer); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.pill {
+  display: inline-block; padding: 3px 9px; border-radius: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.05);
+}
+.pill-up { color: var(--up); border-color: rgba(69,232,92,0.3); background: rgba(69,232,92,0.1); }
+.pill-down { color: var(--down); border-color: rgba(255,92,92,0.3); background: rgba(255,92,92,0.1); }
+.pill-open { color: #FFB84D; border-color: rgba(255,184,77,0.3); background: rgba(255,184,77,0.1); }
+.btn-card {
+  height: 32px; padding: 0 13px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: #F5F8FF;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.btn-card:hover:not(:disabled) { background: rgba(69,232,92,0.12); border-color: rgba(69,232,92,0.4); color: var(--up); }
+.btn-card:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ---------- STATES ---------- */
+.skel { background: rgba(255,255,255,0.06); border-radius: 6px; height: 12px; animation: shimmer 1.3s ease-in-out infinite; }
+@keyframes shimmer { 0%,100% { opacity: 0.45; } 50% { opacity: 0.9; } }
+.empty { padding: 54px 20px; text-align: center; color: var(--dim); font-size: 14px; }
+.empty strong { display: block; color: #F5F8FF; font-size: 15px; margin-bottom: 7px; font-weight: 600; }
+.error-box {
+  border: 1px solid rgba(255,92,92,0.3); background: rgba(255,92,92,0.07);
+  border-radius: 12px; padding: 18px 20px; font-size: 14px; color: #FFC9C9;
+}
+
+/* ---------- MODAL ---------- */
+.modal-bg {
+  position: fixed; inset: 0; z-index: 60; background: rgba(4,4,6,0.82);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.modal[hidden] { display: none; }
+.modal-box {
+  background: var(--panel); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px; width: min(880px, 100%); max-height: 90vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+}
+.modal-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--line);
+}
+.modal-title { font-size: 16px; font-weight: 700; line-height: 1.35; }
+.modal-sub { font-size: 12px; color: var(--dim); margin-top: 5px; }
+.modal-close {
+  background: transparent; border: 1px solid var(--line); color: var(--dim);
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 17px;
+  flex-shrink: 0; line-height: 1; transition: all 0.15s ease;
+}
+.modal-close:hover { color: #F5F8FF; border-color: rgba(255,255,255,0.25); }
+.modal-body {
+  padding: 24px; overflow: auto; display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 26px; align-items: start;
+}
+.preview {
+  width: 100%; aspect-ratio: 1780 / 2188; border-radius: 12px; overflow: hidden;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.preview img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.preview-status { font-size: 12px; color: var(--dim); text-align: center; padding: 20px; }
+.field { margin-bottom: 18px; }
+.field-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dimmer); margin-bottom: 8px;
+}
+.theme-opts { display: flex; gap: 7px; flex-wrap: wrap; }
+.readout { display: grid; grid-template-columns: 1fr auto; gap: 7px 14px; font-size: 13px; }
+.readout dt { color: var(--dim); }
+.readout dd { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.modal-actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
+.toast {
+  position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+  background: #1A1A1D; border: 1px solid rgba(255,255,255,0.15);
+  padding: 12px 20px; border-radius: 10px; font-size: 13px; z-index: 90;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.toast[hidden] { display: none; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 860px) {
+  .modal-body { grid-template-columns: 1fr; }
+  .preview { max-width: 280px; margin: 0 auto; }
+}
+@media (max-width: 720px) {
+  .nav { padding: 0 18px; }
+  .nav-subtitle, .nav-divider, .live-badge { display: none; }
+  .content { padding: 26px 16px 60px; }
+  .page-title { font-size: 32px; }
+  .thead-name { font-size: 28px; }
+  .paste input { width: 100%; max-width: none; }
+  .paste { width: 100%; }
+  .hide-sm { display: none; }
+  thead th, tbody td { padding: 12px 12px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
+      <path d="M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z"/>
+      <path d="M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z"/>
+      <path d="M563.684 339.077C493.476 339.077 454 289.961 454 231.619C454 173.776 493.476 124.659 563.684 124.659C633.892 124.659 673.369 173.776 673.369 231.619C673.369 289.961 633.892 339.077 563.684 339.077ZM490.228 231.619C490.228 271.76 512.465 307.164 563.684 307.164C614.904 307.164 637.14 271.76 637.14 231.619C637.14 192.226 614.904 156.573 563.684 156.573C512.465 156.573 490.228 192.226 490.228 231.619Z"/>
+      <path d="M831.867 336.584V307.912C819.375 326.611 799.637 339.077 771.404 339.077C731.178 339.077 704.694 312.151 704.694 267.771V174.524H738.673V263.283C738.673 293.451 753.414 309.907 782.897 309.907C824.122 309.907 831.867 278.243 831.867 261.289V174.524H865.847V336.584H831.867Z"/>
+      <path d="M1029.93 174.524V203.695H971.711V280.237C971.711 300.682 975.209 307.413 989.451 307.413H1029.93V336.584H983.704C947.726 336.584 938.481 318.633 938.481 286.221V203.695H889.76V174.524H913.496C936.482 174.524 943.228 160.063 942.979 127.152H976.209C976.209 152.334 971.462 171.283 959.719 174.524H1029.93Z"/>
+      <path d="M1186.73 237.852C1185.23 220.898 1170.74 201.451 1137.26 201.451C1099.28 201.451 1084.04 223.89 1084.04 255.554V256.302C1084.04 287.218 1099.28 309.657 1137.51 309.657C1172.99 309.657 1185.23 290.21 1186.98 273.007L1187.73 266.275H1222.21L1221.46 273.007C1217.71 305.917 1191.98 339.077 1136.76 339.077C1078.04 339.077 1049.31 304.92 1049.31 255.554V255.055C1049.31 206.188 1078.04 172.031 1136.76 172.031C1191.48 172.031 1218.46 204.692 1221.46 237.852L1222.21 245.082H1187.73L1186.73 237.852Z"/>
+      <path d="M1331.91 339.077C1274.45 339.077 1246.21 304.92 1246.21 255.554C1246.21 206.188 1274.45 172.031 1331.91 172.031C1389.63 172.031 1417.61 206.188 1417.61 255.554C1417.61 304.92 1389.63 339.077 1331.91 339.077ZM1280.94 255.554C1280.94 287.218 1294.69 309.657 1331.91 309.657C1369.39 309.657 1383.13 287.218 1383.13 255.554C1383.13 223.89 1369.39 201.451 1331.91 201.451C1294.69 201.451 1280.94 223.89 1280.94 255.554Z"/>
+      <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
+      <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
+    </svg>
+    <span class="nav-divider">|</span>
+    <span class="nav-subtitle">Leaderboard &amp; PnL Cards</span>
+  </div>
+  <div class="nav-right">
+    <span class="live-badge"><span class="live-dot"></span>Live</span>
+  </div>
+</nav>
+
+<main class="content">
+  <!-- ============ LEADERBOARD VIEW ============ -->
+  <section id="view-leaderboard">
+    <h1 class="page-title">Top traders</h1>
+    <p class="page-sub">
+      Live from Outcome. Open any trader to see their full position rollup and pull a
+      ready-to-post PnL share card for any resolved trade.
+    </p>
+
+    <div class="controls">
+      <div class="tabs" role="tablist" aria-label="Leaderboard window" id="lb-tabs">
+        <button class="tab" role="tab" data-duration="24h" aria-selected="true">Daily</button>
+        <button class="tab" role="tab" data-duration="168h" aria-selected="false">Weekly</button>
+        <button class="tab" role="tab" data-duration="720h" aria-selected="false">30 days</button>
+        <button class="tab" role="tab" data-duration="all" aria-selected="false">All time</button>
+      </div>
+      <form class="paste" id="paste-form">
+        <input id="paste-input" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Paste an outcome.xyz profile link or username"
+               aria-label="Outcome profile link or username">
+        <button class="btn" type="submit">Go</button>
+      </form>
+    </div>
+    <div id="paste-error" class="paste-error" hidden></div>
+
+    <div class="card-surface">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">#</th>
+            <th>Trader</th>
+            <th class="num">PnL</th>
+            <th class="num hide-sm">PnL %</th>
+            <th class="num hide-sm">Volume</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </div>
+    <p class="section-note" id="lb-note" style="margin-top:12px"></p>
+  </section>
+
+  <!-- ============ TRADER VIEW ============ -->
+  <section id="view-trader" hidden>
+    <a class="back" href="/leaderboard/" id="back-link">&larr; All traders</a>
+    <div id="trader-head"></div>
+    <div id="trader-stats"></div>
+
+    <div class="section-head">
+      <div>
+        <div class="section-title">Positions</div>
+        <div class="section-note" id="pos-note"></div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Position window" id="pos-tabs">
+        <button class="tab" role="tab" data-window="24h" aria-selected="false">24h</button>
+        <button class="tab" role="tab" data-window="168h" aria-selected="false">7d</button>
+        <button class="tab" role="tab" data-window="720h" aria-selected="false">30d</button>
+        <button class="tab" role="tab" data-window="all" aria-selected="true">All</button>
+      </div>
+    </div>
+
+    <div class="card-surface">
+      <table>
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>Side</th>
+            <th class="num hide-sm">Shares</th>
+            <th class="num hide-sm">Bought</th>
+            <th class="num hide-sm">Earned</th>
+            <th class="num">PnL</th>
+            <th class="num">Card</th>
+          </tr>
+        </thead>
+        <tbody id="pos-body"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- ============ CARD MODAL ============ -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="modal-title"></div>
+          <div class="modal-sub" id="modal-sub"></div>
+        </div>
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview" id="preview">
+          <div class="preview-status">Rendering card&hellip;</div>
+        </div>
+        <div>
+          <div class="field">
+            <div class="field-label">Theme</div>
+            <div class="theme-opts" id="theme-opts">
+              <button class="tab" data-theme="" aria-selected="true">Auto</button>
+              <button class="tab" data-theme="default" aria-selected="false">Default</button>
+              <button class="tab" data-theme="hype" aria-selected="false">Hype</button>
+              <button class="tab" data-theme="btc" aria-selected="false">BTC</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">On the card</div>
+            <dl class="readout" id="readout"></dl>
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="btn-download">Download PNG</button>
+            <button class="btn" id="btn-copy">Copy image</button>
+            <button class="btn" id="btn-link">Copy link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script>
+(function () {
+  'use strict';
+
+  var API = '/api';
+  var $ = function (id) { return document.getElementById(id); };
+
+  var state = {
+    duration: '24h',
+    window: 'all',
+    username: null,
+    all: [],            // every position we can see, newest first
+    positions: [],      // `all` filtered to the selected window
+    truncated: false,
+    active: null,      // position open in the modal
+    theme: '',         // '' = auto (server picks from the market)
+    objectUrl: null,   // blob URL for the rendered preview
+    // One token per concern, not one shared counter: the trader header, the
+    // positions table and the card preview are all in flight at once, and a
+    // single counter would let each new request silently discard the others.
+    token: { board: 0, trader: 0, positions: 0, preview: 0 }
+  };
+
+  // ------------------------------------------------------------ formatting --
+  function money(n, dp) {
+    var v = Number(n) || 0;
+    var abs = Math.abs(v);
+    if (dp === undefined) dp = abs >= 1000 ? 0 : 2;
+    return (v < 0 ? '-$' : '$') + abs.toLocaleString('en-US', {
+      minimumFractionDigits: dp, maximumFractionDigits: dp
+    });
+  }
+  function signed(n) { return (Number(n) > 0 ? '+' : '') + money(n); }
+  function pct(n) {
+    var v = Number(n) || 0;
+    return (v > 0 ? '+' : '') + v.toFixed(1) + '%';
+  }
+  function cls(n) { return Number(n) > 0 ? 'pos' : (Number(n) < 0 ? 'neg' : 'muted'); }
+  function shares(n) {
+    return (Number(n) || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+  function when(ms) {
+    if (!ms) return '';
+    return new Date(Number(ms)).toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var CHECK = '<svg class="verified" viewBox="0 0 24 24" fill="currentColor" aria-label="Verified">' +
+    '<path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81C14.67 2.63 13.43 1.75 12 1.75s-2.67.88-3.34 2.19c-1.39-.46-2.9-.2-3.91.81s-1.27 2.52-.81 3.91C2.63 9.33 1.75 10.57 1.75 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/></svg>';
+
+  function avatarHtml(url, name, klass) {
+    var initial = esc(String(name || '?').charAt(0).toUpperCase());
+    if (url) {
+      return '<img class="avatar ' + (klass || '') + '" src="' + esc(url) + '" alt="" loading="lazy" ' +
+        'onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),' +
+        '{className:\'avatar avatar-fallback ' + (klass || '') + '\',textContent:' +
+        JSON.stringify(initial) + '}))">';
+    }
+    return '<div class="avatar avatar-fallback ' + (klass || '') + '">' + initial + '</div>';
+  }
+
+  function get(path) {
+    return fetch(API + path, { headers: { Accept: 'application/json' } }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok || !j.ok) {
+          var e = new Error((j && j.error) || 'request_failed');
+          e.payload = j;
+          throw e;
+        }
+        return j;
+      });
+    });
+  }
+
+  function skeletonRows(cols, n) {
+    var out = '';
+    for (var i = 0; i < n; i++) {
+      out += '<tr>';
+      for (var c = 0; c < cols; c++) {
+        out += '<td><div class="skel" style="width:' + (38 + ((i * 7 + c * 23) % 50)) + '%"></div></td>';
+      }
+      out += '</tr>';
+    }
+    return out;
+  }
+
+  var toastTimer;
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.hidden = true; }, 2600);
+  }
+
+  // ------------------------------------------------------------ leaderboard --
+  function loadLeaderboard() {
+    var token = ++state.token.board;
+    var body = $('lb-body');
+    body.innerHTML = skeletonRows(5, 10);
+    $('lb-note').textContent = '';
+
+    get('/leaderboard?duration=' + encodeURIComponent(state.duration) + '&limit=50')
+      .then(function (data) {
+        if (token !== state.token.board) return;
+        if (!data.rows.length) {
+          body.innerHTML = '<tr><td colspan="5"><div class="empty">' +
+            '<strong>No traders yet</strong>Nothing has settled in this window.</div></td></tr>';
+          return;
+        }
+        body.innerHTML = data.rows.map(function (r) {
+          var name = r.anonymous ? 'Anonymous' : r.username;
+          return '<tr' + (r.anonymous
+              ? ''
+              : ' class="clickable" data-username="' + esc(r.username) + '" tabindex="0"') + '>' +
+            '<td class="rank' + (r.rank === 1 ? ' rank-1' : '') + '">' + r.rank + '</td>' +
+            '<td><div class="trader">' + avatarHtml(r.avatar, name) +
+              '<span class="uname' + (r.anonymous ? ' muted' : '') + '">' + esc(name) + '</span>' +
+              (r.verified ? CHECK : '') + '</div></td>' +
+            '<td class="num ' + cls(r.pnl) + '">' + signed(r.pnl) + '</td>' +
+            '<td class="num hide-sm ' + cls(r.pnlPct) + '">' + pct(r.pnlPct) + '</td>' +
+            '<td class="num muted">' + money(r.volume, 0) + '</td>' +
+          '</tr>';
+        }).join('');
+        $('lb-note').textContent = data.updatedAt
+          ? 'Updated ' + new Date(data.updatedAt).toLocaleTimeString() + ' · ' + data.total + ' traders ranked'
+          : data.total + ' traders ranked';
+      })
+      .catch(function () {
+        if (token !== state.token.board) return;
+        body.innerHTML = '<tr><td colspan="5"><div class="empty">' +
+          '<strong>Could not load the leaderboard</strong>Outcome\'s API did not respond. Try again shortly.</div></td></tr>';
+      });
+  }
+
+  // ----------------------------------------------------------- trader view --
+  function loadTrader(username) {
+    var token = ++state.token.trader;
+    state.username = username;
+    state.all = [];
+    state.positions = [];
+    state.truncated = false;
+
+    $('view-leaderboard').hidden = true;
+    $('view-trader').hidden = false;
+    document.title = username + ' · Outcome PnL Cards';
+
+    $('trader-head').innerHTML = '<div class="thead">' + avatarHtml(null, username) +
+      '<div><div class="thead-name">' + esc(username) + '</div>' +
+      '<div class="thead-meta">Loading profile&hellip;</div></div></div>';
+    $('trader-stats').innerHTML = '';
+    $('pos-body').innerHTML = skeletonRows(7, 8);
+
+    get('/trader?username=' + encodeURIComponent(username))
+      .then(function (t) {
+        if (token !== state.token.trader) return;
+        renderTraderHead(t);
+      })
+      .catch(function (e) {
+        if (token !== state.token.trader) return;
+        var missing = e.message === 'no_such_trader';
+        $('trader-head').innerHTML = '<div class="error-box">' +
+          (missing
+            ? 'No Outcome trader called <strong>' + esc(username) + '</strong>.'
+            : 'Could not load this profile right now.') + '</div>';
+        $('pos-body').innerHTML = '';
+      });
+
+    loadPositions();
+  }
+
+  var WINDOW_HOURS = { '24h': 24, '168h': 168, '720h': 720, all: null };
+
+  // Window a position by when it resolved; an open one by its latest activity.
+  function inWindow(p, win) {
+    var hours = WINDOW_HOURS[win];
+    if (hours == null) return true;
+    return (p.closedAt || p.openedAt) >= Date.now() - hours * 3600000;
+  }
+
+  function summarise(rows) {
+    var resolved = rows.filter(function (p) { return p.resolved; });
+    var wins = resolved.filter(function (p) { return p.outcome === 'win'; }).length;
+    var sum = function (k) {
+      return resolved.reduce(function (a, p) { return a + (Number(p[k]) || 0); }, 0);
+    };
+    return {
+      positions: resolved.length,
+      wins: wins,
+      losses: resolved.length - wins,
+      winRate: resolved.length ? Math.round((wins / resolved.length) * 1000) / 10 : 0,
+      pnl: sum('pnl'),
+      bought: sum('bought'),
+      earned: sum('earned')
+    };
+  }
+
+  function renderTraderHead(t) {
+    $('trader-head').innerHTML = '<div class="thead">' +
+      avatarHtml(t.avatar, t.username) +
+      '<div><div class="thead-name">' + esc(t.username) +
+        (t.verified ? CHECK : '') + '</div>' +
+      '<div class="thead-meta">' +
+        (t.createdAt ? 'Joined ' + when(t.createdAt) + ' · ' : '') +
+        'Lifetime volume ' + money(t.volume, 0) +
+        ' · Lifetime PnL <span class="' + cls(t.lifetimePnl) + '">' +
+        signed(t.lifetimePnl) + '</span>' +
+      '</div></div></div>';
+  }
+
+  var LABEL = { '24h': 'Last 24 hours', '168h': 'Last 7 days', '720h': 'Last 30 days', all: 'All available history' };
+
+  function stat(label, value, klass, sub) {
+    return '<div class="stat"><div class="stat-label">' + label + '</div>' +
+      '<div class="stat-value ' + (klass || '') + '">' + value + '</div>' +
+      (sub ? '<div class="stat-sub">' + sub + '</div>' : '') + '</div>';
+  }
+
+  // Fetched once per trader with window=all, then filtered in the browser: the
+  // window tabs become instant, and every window is measured against the same
+  // set of positions rather than four separately-cached upstream reads.
+  function loadPositions() {
+    var token = ++state.token.positions;
+    var body = $('pos-body');
+    body.innerHTML = skeletonRows(7, 8);
+    $('pos-note').textContent = 'Rebuilding positions from trade history…';
+
+    get('/positions?username=' + encodeURIComponent(state.username) +
+        '&window=all&include=all')
+      .then(function (data) {
+        if (token !== state.token.positions) return;
+        state.all = data.positions || [];
+        state.truncated = Boolean(data.truncated);
+        renderPositions();
+      })
+      .catch(function (e) {
+        if (token !== state.token.positions) return;
+        body.innerHTML = '';
+        $('pos-note').textContent = '';
+        if (e.message !== 'no_such_trader') {
+          body.innerHTML = '<tr><td colspan="7"><div class="empty">' +
+            '<strong>Could not load positions</strong>The trade history API did not respond.</div></td></tr>';
+        }
+      });
+  }
+
+  function renderPositions() {
+    state.positions = state.all.filter(function (p) { return inWindow(p, state.window); });
+
+    var s = summarise(state.positions);
+    $('trader-stats').innerHTML = '<div class="stats">' +
+      stat('Realised PnL', signed(s.pnl), cls(s.pnl), LABEL[state.window]) +
+      stat('Positions', String(s.positions), '', s.wins + 'W / ' + s.losses + 'L') +
+      stat('Win rate', s.winRate + '%', (s.winRate >= 50 ? 'pos' : '')) +
+      stat('Staked', money(s.bought, 0), 'muted', 'Earned ' + money(s.earned, 0)) +
+      '</div>';
+
+    $('pos-note').textContent = state.truncated
+      ? 'Most recent 2,000 trades — older history is not available from Hyperliquid.'
+      : 'Resolved positions can be turned into a share card.';
+
+    if (!state.positions.length) {
+      $('pos-body').innerHTML = '<tr><td colspan="7"><div class="empty">' +
+        '<strong>No positions in this window</strong>Try a wider window.</div></td></tr>';
+      return;
+    }
+
+    $('pos-body').innerHTML = state.positions.map(function (p, i) {
+      var sidePill = 'pill ' + (p.outcome === 'win' && p.resolved ? 'pill-up'
+        : (p.resolved ? 'pill-down' : 'pill-open'));
+      var date = p.resolved ? when(p.closedAt) : 'Open';
+      return '<tr>' +
+        '<td><div class="mkt-title">' + esc(p.title) + '</div>' +
+          '<div class="mkt-sub">' + date +
+            (p.settled ? ' · settled' : (p.merged ? ' · merged' : '')) + '</div></td>' +
+        '<td><span class="' + sidePill + '">' + esc(p.sideLabel) + '</span></td>' +
+        '<td class="num hide-sm muted">' + shares(p.shares) + '</td>' +
+        '<td class="num hide-sm muted">' + money(p.bought) + '</td>' +
+        '<td class="num hide-sm muted">' + (p.resolved ? money(p.earned) : '—') + '</td>' +
+        '<td class="num ' + (p.resolved ? cls(p.pnl) : 'muted') + '">' +
+          (p.resolved ? signed(p.pnl) : '—') + '</td>' +
+        '<td class="num"><button class="btn-card" data-index="' + i + '"' +
+          (p.cardReady ? '' : ' disabled title="' +
+            (p.resolved ? 'Market metadata unavailable' : 'Position is still open') + '"') +
+          '>Card</button></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  // ------------------------------------------------------------ card modal --
+  function cardUrl(p, opts) {
+    var q = '/api/card?username=' + encodeURIComponent(state.username) +
+      '&coin=' + encodeURIComponent(p.coin) +
+      '&closedAt=' + encodeURIComponent(p.closedAt || '');
+    if (state.theme) q += '&theme=' + encodeURIComponent(state.theme);
+    if (opts && opts.download) q += '&download=1';
+    return q;
+  }
+
+  function openModal(index) {
+    var p = state.positions[index];
+    if (!p || !p.cardReady) return;
+    state.active = p;
+    state.theme = '';
+    syncThemeButtons();
+
+    $('modal-title').textContent = p.title;
+    $('modal-sub').textContent = p.sideLabel + ' · ' + when(p.closedAt) +
+      ' · ' + (p.outcome === 'win' ? 'Win' : 'Loss');
+    $('readout').innerHTML =
+      row('Shares', shares(p.shares)) +
+      row('Avg. price', (p.avgEntry * 100).toFixed(2) + '¢') +
+      row('Bought', money(p.bought)) +
+      row('Earned', money(p.earned)) +
+      row('Realised PnL', signed(p.pnl));
+
+    $('modal').hidden = false;
+    document.body.style.overflow = 'hidden';
+    renderPreview();
+  }
+
+  function row(k, v) { return '<dt>' + k + '</dt><dd>' + v + '</dd>'; }
+
+  function renderPreview() {
+    var p = state.active;
+    if (!p) return;
+    var token = ++state.token.preview;
+    var host = $('preview');
+    host.innerHTML = '<div class="preview-status">Rendering card&hellip;</div>';
+    releaseObjectUrl();
+
+    fetch(cardUrl(p))
+      .then(function (r) {
+        if (!r.ok) throw new Error('render_failed');
+        return r.blob();
+      })
+      .then(function (blob) {
+        if (token !== state.token.preview) return;
+        state.objectUrl = URL.createObjectURL(blob);
+        var img = new Image();
+        img.alt = p.title + ' share card';
+        img.src = state.objectUrl;
+        host.innerHTML = '';
+        host.appendChild(img);
+      })
+      .catch(function () {
+        if (token !== state.token.preview) return;
+        host.innerHTML = '<div class="preview-status">Card could not be rendered.<br>' +
+          'This position may no longer be available upstream.</div>';
+      });
+  }
+
+  function releaseObjectUrl() {
+    if (state.objectUrl) {
+      URL.revokeObjectURL(state.objectUrl);
+      state.objectUrl = null;
+    }
+  }
+
+  function closeModal() {
+    $('modal').hidden = true;
+    document.body.style.overflow = '';
+    state.active = null;
+    releaseObjectUrl();
+    $('preview').innerHTML = '';
+  }
+
+  function syncThemeButtons() {
+    Array.prototype.forEach.call($('theme-opts').children, function (b) {
+      b.setAttribute('aria-selected', String(b.dataset.theme === state.theme));
+    });
+  }
+
+  // --------------------------------------------------------------- routing --
+  function path(username) { return username ? '/leaderboard/t/' + encodeURIComponent(username) : '/leaderboard/'; }
+
+  function navigate(username, replace) {
+    var url = path(username);
+    if (replace) history.replaceState({ username: username }, '', url);
+    else history.pushState({ username: username }, '', url);
+    render(username);
+  }
+
+  function render(username) {
+    closeModal();
+    if (username) {
+      loadTrader(username);
+    } else {
+      state.username = null;
+      $('view-trader').hidden = true;
+      $('view-leaderboard').hidden = false;
+      document.title = 'Outcome Leaderboard & PnL Share Cards';
+      loadLeaderboard();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function usernameFromLocation() {
+    var m = /^\/leaderboard\/t\/([^/?#]+)/.exec(location.pathname);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  // ----------------------------------------------------------------- wiring --
+  $('lb-tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-duration]');
+    if (!b) return;
+    state.duration = b.dataset.duration;
+    Array.prototype.forEach.call(this.children, function (c) {
+      c.setAttribute('aria-selected', String(c === b));
+    });
+    loadLeaderboard();
+  });
+
+  $('pos-tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-window]');
+    if (!b) return;
+    state.window = b.dataset.window;
+    Array.prototype.forEach.call(this.children, function (c) {
+      c.setAttribute('aria-selected', String(c === b));
+    });
+    if (state.all.length) renderPositions();
+  });
+
+  $('lb-body').addEventListener('click', function (e) {
+    var tr = e.target.closest('tr[data-username]');
+    if (tr) navigate(tr.dataset.username);
+  });
+  $('lb-body').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var tr = e.target.closest('tr[data-username]');
+    if (tr) { e.preventDefault(); navigate(tr.dataset.username); }
+  });
+
+  $('pos-body').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-index]');
+    if (b && !b.disabled) openModal(Number(b.dataset.index));
+  });
+
+  $('back-link').addEventListener('click', function (e) {
+    e.preventDefault();
+    navigate(null);
+  });
+
+  $('paste-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('paste-error');
+    var raw = $('paste-input').value.trim();
+    err.hidden = true;
+    if (!raw) return;
+    get('/resolve?url=' + encodeURIComponent(raw))
+      .then(function (r) {
+        $('paste-input').value = '';
+        navigate(r.username);
+      })
+      .catch(function (e2) {
+        err.textContent = e2.message === 'no_such_trader'
+          ? 'No Outcome trader found for that link.'
+          : 'Paste an outcome.xyz/profile/<username> link, or just the username.';
+        err.hidden = false;
+      });
+  });
+
+  $('theme-opts').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-theme]');
+    if (!b) return;
+    state.theme = b.dataset.theme;
+    syncThemeButtons();
+    renderPreview();
+  });
+
+  $('btn-download').addEventListener('click', function () {
+    if (!state.active) return;
+    var a = document.createElement('a');
+    a.href = cardUrl(state.active, { download: true });
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  $('btn-copy').addEventListener('click', function () {
+    if (!state.objectUrl || !navigator.clipboard || !window.ClipboardItem) {
+      return toast('Your browser cannot copy images — use Download instead.');
+    }
+    fetch(state.objectUrl)
+      .then(function (r) { return r.blob(); })
+      .then(function (blob) {
+        return navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      })
+      .then(function () { toast('Card copied to clipboard'); })
+      .catch(function () { toast('Copy failed — use Download instead.'); });
+  });
+
+  $('btn-link').addEventListener('click', function () {
+    if (!state.active) return;
+    var url = location.origin + cardUrl(state.active);
+    var done = function () { toast('Card link copied'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { toast(url); });
+    else toast(url);
+  });
+
+  $('modal-close').addEventListener('click', closeModal);
+  $('modal-bg').addEventListener('click', function (e) {
+    if (e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !$('modal').hidden) closeModal();
+  });
+
+  window.addEventListener('popstate', function () { render(usernameFromLocation()); });
+
+  render(usernameFromLocation());
+})();
+</script>
+</body>
+</html>
