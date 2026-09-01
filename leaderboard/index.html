@@ -210,6 +210,20 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 .btn-card:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* ---------- STATES ---------- */
+/* Shared loading treatment. The GIF is one asset referenced from one place
+   (LOADER_SRC in the script); if it is missing the caption still stands on its
+   own, so the page degrades to plain text rather than a broken image. */
+.loader { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 30px 20px; }
+.loader img {
+  width: 150px; height: 150px; object-fit: contain; display: block;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45));
+}
+.loader-text {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--dim); text-align: center;
+}
+.loader-sm img { width: 104px; height: 104px; }
+@media (prefers-reduced-motion: reduce) { .loader img { display: none; } }
 .skel { background: rgba(255,255,255,0.06); border-radius: 6px; height: 12px; animation: shimmer 1.3s ease-in-out infinite; }
 @keyframes shimmer { 0%,100% { opacity: 0.45; } 50% { opacity: 0.9; } }
 .empty { padding: 54px 20px; text-align: center; color: var(--dim); font-size: 14px; }
@@ -406,9 +420,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
         <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="preview" id="preview">
-          <div class="preview-status">Rendering card&hellip;</div>
-        </div>
+        <div class="preview" id="preview"></div>
         <div>
           <div class="field">
             <div class="field-label">Theme</div>
@@ -526,6 +538,22 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     }
     return out;
   }
+
+  // Swap this path to change the loading animation everywhere.
+  var LOADER_SRC = '/leaderboard/loading.gif';
+  var loaderOk = true;
+
+  function loader(caption, small) {
+    var img = loaderOk
+      ? '<img src="' + LOADER_SRC + '" alt="" aria-hidden="true" ' +
+        'onerror="this.remove();window.__loaderMissing&&window.__loaderMissing()">'
+      : '';
+    return '<div class="loader' + (small ? ' loader-sm' : '') + '">' + img +
+      '<div class="loader-text">' + caption + '</div></div>';
+  }
+
+  // One failed load is enough: stop asking for it on subsequent renders.
+  window.__loaderMissing = function () { loaderOk = false; };
 
   var toastTimer;
   function toast(msg) {
@@ -645,9 +673,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
         (t.verified ? CHECK : '') + '</div>' +
       '<div class="thead-meta">' +
         (t.createdAt ? 'Joined ' + when(t.createdAt) + ' · ' : '') +
-        'Lifetime volume ' + money(t.volume, 0) +
-        ' · Lifetime PnL <span class="' + cls(t.lifetimePnl) + '">' +
-        signed(t.lifetimePnl) + '</span>' +
+        '30d volume ' + money(t.volume30d, 0) +
+        ' · 30d PnL <span class="' + cls(t.pnl30d) + '">' +
+        signed(t.pnl30d) + '</span>' +
       '</div></div></div>';
   }
 
@@ -665,8 +693,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
   function loadPositions() {
     var token = ++state.token.positions;
     var body = $('pos-body');
-    body.innerHTML = skeletonRows(7, 8);
-    $('pos-note').textContent = 'Rebuilding positions from trade history…';
+    body.innerHTML = '<tr><td colspan="7">' +
+      loader('Rebuilding positions from trade history') + '</td></tr>';
+    $('pos-note').textContent = '';
 
     get('/positions?username=' + encodeURIComponent(state.username) +
         '&window=all&include=all')
@@ -769,7 +798,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     if (!p) return;
     var token = ++state.token.preview;
     var host = $('preview');
-    host.innerHTML = '<div class="preview-status">Rendering card&hellip;</div>';
+    host.innerHTML = loader('Rendering card', true);
     releaseObjectUrl();
 
     fetch(cardUrl(p))

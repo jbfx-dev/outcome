@@ -13,7 +13,7 @@ from Outcome while the actual trades come from Hyperliquid.
 |---|---|
 | Ranked traders | `POST o1.outcome.xyz/api/v1/leaderboard` (`24h`/`168h`/`720h`/`all`) |
 | username → address | `POST o1.outcome.xyz/api/v1/profile/lookup` |
-| Lifetime PnL / volume | `POST o1.outcome.xyz/api/v1/portfolio/lookup` |
+| 30-day PnL / volume | `POST o1.outcome.xyz/api/v1/portfolio/lookup` |
 | Market names, sides, settlement | `POST o1.outcome.xyz/api/v1/markets/lookup` |
 | Trades | `POST api.hyperliquid.xyz/info` (`userFills`, `userFillsByTime`) |
 
@@ -63,7 +63,7 @@ titles.
 | Route | Purpose |
 |---|---|
 | `GET /api/leaderboard?duration=24h\|168h\|720h\|all&limit=&offset=` | Ranked traders |
-| `GET /api/trader?username=` | Profile + lifetime volume/PnL + daily `pnlHistory` |
+| `GET /api/trader?username=` | Profile + 30-day volume/PnL + daily `pnlHistory` |
 | `GET /api/positions?username=&window=&include=resolved\|all` | Rebuilt positions + summary |
 | `GET /api/resolve?url=` | Pasted profile link or username → username |
 | `GET /api/card?username=&coin=&closedAt=&theme=&download=1` | Rendered PNG |
@@ -104,7 +104,12 @@ that maps `/api/<name>` to `api/<name>.js` works; `api/card.py` needs
   history", which the UI states rather than hides.
 - Leaderboard rows for traders who never set a username come back with
   `username: null` and no address, so they are shown ranked but not clickable.
-- `pnlHistory` is sampled daily at 00:00 UTC and can be up to 24h stale, so it
-  backs lifetime figures only. Windowed PnL is summed from real position closes,
-  which is why the trader header and the stat row can differ by a few dollars.
+- Outcome's portfolio endpoint returns **30-day** figures, not lifetime ones —
+  `pnlHistory` is 30 daily samples rebased to 0, and `vlm` matches. Verified
+  against the leaderboard: `zk_nft9293` reports 30d PnL $0 / `vlm` $75 against
+  all-time PnL $15.5k / volume $2.85M. They are labelled "30d" for that reason;
+  calling either "lifetime" would show $0 for a trader who has made a fortune.
+- `pnlHistory` is sampled at 00:00 UTC and can be up to 24h stale, so it never
+  backs a rolling window. Windowed PnL is summed from real position closes,
+  which is why the header and the stat row can differ by a few dollars.
 - Open positions are listed but cannot produce a card — there is no final price.

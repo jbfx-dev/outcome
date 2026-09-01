@@ -1,12 +1,18 @@
 // GET /api/trader?username=<name>
-// Profile + lifetime portfolio figures.
+// Profile + Outcome's own portfolio figures.
 //
-// pnlHistory is [ts_ms, cumulative_pnl] sampled once a day at 00:00 UTC, and the
-// newest point can be up to 24h stale. That is fine for a lifetime total but it
-// cannot express a rolling 24h window - differencing it against a "now - 24h"
-// cutoff reports whatever happened before midnight, which for an active trader
-// is off by thousands. Windowed PnL therefore comes from /api/positions, which
-// sums real closes; this route deliberately exposes lifetime figures only.
+// Both portfolio numbers are 30-DAY windows, not lifetime totals - verified
+// against the leaderboard: traders idle for a month report pnlHistory 0 and
+// vlm ~0 while their all-time PnL is five or six figures (zk_nft9293: 30d 0 /
+// all-time $15.5k, vlm $75 / all-time volume $2.85M). Labelling either as
+// "lifetime" would show $0 for a trader who has made a fortune, so they are
+// named for the window they actually cover.
+//
+// pnlHistory is [ts_ms, cumulative_pnl] sampled daily at 00:00 UTC and rebased
+// to 0 at the window start, so the newest point can be up to 24h stale. It
+// cannot express a rolling 24h window either - differencing it against a
+// "now - 24h" cutoff reports whatever happened before midnight. Windowed PnL
+// therefore comes from /api/positions, which sums real closes.
 
 const L = require('./_lib/outcome.js');
 
@@ -34,10 +40,10 @@ module.exports = async (req, res) => {
         verified: Boolean(p.x_verified),
         badges: p.equippedBadges || [],
         createdAt: p.created_at ?? null,
-        volume: Number(pf.vlm) || 0,
-        // Daily cumulative samples at 00:00 UTC, oldest first.
+        volume30d: Number(pf.vlm) || 0,
+        // Daily cumulative samples at 00:00 UTC, oldest first, rebased to 0.
         pnlHistory: history,
-        lifetimePnl: history.length
+        pnl30d: history.length
           ? round(history[history.length - 1][1] - history[0][1])
           : 0,
         pnlAsOf: history.length ? history[history.length - 1][0] : null,
