@@ -1,16 +1,24 @@
 """Render an Outcome PnL share card as a PNG.
 
-GET /api/card?username=<name>&coin=%23123900[&closedAt=<ms>][&theme=default|hype|btc]
+GET /api/card?address=0x..&coin=%23123900[&username=][&closedAt=][&theme=][&title=][&side=]
+GET /api/card?username=<name>&coin=%23123900[&closedAt=][&theme=]
 
-The card's numbers are re-derived server-side from the trader's own fill history
-rather than taken from the query string. That is deliberate: these cards carry
-Outcome branding, so an endpoint that rendered whatever figures a caller passed
-would be a forgery tool. Only `theme` is caller-overridable, because it changes
-artwork and nothing factual.
+Every financial figure on the card is re-derived server-side from the trader's
+own Hyperliquid fills, never taken from the query string. That is deliberate:
+these cards carry Outcome branding, so an endpoint that rendered whatever
+amounts a caller passed would be a forgery tool.
 
-Derivation is not reimplemented here - it is fetched from /api/positions, which
-is the single source of truth shared with the UI. That call is CDN-cached, so
-the common path is one edge hit plus ~0.3s of Pillow work.
+Two addressing modes, because Cloudflare currently blocks our egress from
+Outcome's API while Hyperliquid stays reachable:
+
+  address= (preferred) -> /api/position, which needs only Hyperliquid for the
+      money. Market title and side may be supplied by the caller but are used
+      only when Outcome's API is unreachable, and are cosmetic either way.
+  username= (original) -> /api/positions, which needs Outcome's API to resolve
+      the name. Used when that API is reachable.
+
+Derivation is never reimplemented here; both modes call the Node routes that
+back the UI, so a card always agrees with the table that produced it.
 """
 
 import hashlib
@@ -33,6 +41,7 @@ AVATARS = os.path.join(tempfile.gettempdir(), "outcome-avatars")
 THEMES = {"default", "hype", "btc"}
 COIN_RE = re.compile(r"^#\d+$")
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_.-]{1,40}$")
+ADDRESS_RE = re.compile(r"^0x[0-9a-fA-F]{40}$")
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
@@ -61,6 +70,24 @@ def _get_json(url, timeout=25):
     )
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
+
+
+def find_by_address(base, params):
+    """Rebuild one position from Hyperliquid fills alone (no Outcome API)."""
+    url = "%s/api/position?%s" % (base, urllib.parse.urlencode(params))
+    try:
+        payload = _get_json(url)
+    except urllib.error.HTTPError as e:
+        raise CardError("no_such_position" if e.code == 404 else "position_failed", e.code)
+    except Exception:
+        raise CardError("position_failed", 502)
+
+    if not payload.get("ok"):
+        raise CardError(payload.get("error") or "position_failed", 502)
+    position = payload.get("position") or {}
+    if not position.get("cardReady"):
+        raise CardError("position_not_card_ready", 409)
+    return payload, position
 
 
 def find_position(base, username, coin, closed_at):
@@ -154,30 +181,47 @@ def slugify(text, limit=48):
 
 def build(query, headers):
     username = (query.get("username") or [""])[0].strip()
+    address = (query.get("address") or [""])[0].strip()
     coin = (query.get("coin") or [""])[0].strip()
     closed_at = (query.get("closedAt") or [""])[0].strip()
     theme_override = (query.get("theme") or [""])[0].strip().lower()
 
-    if not USERNAME_RE.match(username):
-        raise CardError("bad_username")
     if not COIN_RE.match(coin):
         raise CardError("bad_coin")
     if theme_override and theme_override not in THEMES:
         raise CardError("bad_theme")
+    if username and not USERNAME_RE.match(username):
+        raise CardError("bad_username")
+    if not address and not username:
+        raise CardError("bad_username")
+    if address and not ADDRESS_RE.match(address):
+        raise CardError("bad_address")
 
     base = _self_base(headers)
-    payload, position = find_position(base, username, coin, closed_at)
+
+    if address:
+        params = {"address": address, "coin": coin}
+        if closed_at:
+            params["closedAt"] = closed_at
+        for key in ("title", "side", "theme"):
+            val = (query.get(key) or [""])[0].strip()
+            if val:
+                params[key] = val
+        payload, position = find_by_address(base, params)
+    else:
+        payload, position = find_position(base, username, coin, closed_at)
 
     display = payload.get("username") or username
     data = card_fields(position, display)
     if theme_override:
         data["theme"] = theme_override
 
-    key = "%s-%s-%s-%s" % (
+    key = "%s-%s-%s-%s-%s" % (
         display.lower(),
+        (address or "").lower(),
         coin.lstrip("#"),
         position.get("closedAt") or 0,
-        data["theme"],
+        data["theme"] + "|" + data["title"],
     )
     os.makedirs(CACHE, exist_ok=True)
     out = os.path.join(CACHE, hashlib.sha1(key.encode()).hexdigest() + ".png")

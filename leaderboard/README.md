@@ -17,9 +17,30 @@ from Outcome while the actual trades come from Hyperliquid.
 | Market names, sides, settlement | `POST o1.outcome.xyz/api/v1/markets/lookup` |
 | Trades | `POST api.hyperliquid.xyz/info` (`userFills`, `userFillsByTime`) |
 
-Neither upstream sends permissive CORS headers, and Outcome's API returns 403
-without a browser `User-Agent`, so **every call goes through `api/`** — the page
-never talks to an upstream directly.
+### Two paths, because Cloudflare blocks our egress
+
+Outcome's API sits behind Cloudflare, which serves its "Attention Required!"
+block page (403) to Vercel's AWS egress. This is an ASN reputation decision, not
+a request-shape problem: from a residential IP the same call returns 200 with
+*any* header set (verified across eight permutations — UA, Origin, Referer,
+`Sec-Fetch-*`), and from Vercel it returns 403 with all of them. Hyperliquid is
+unaffected and reachable from both.
+
+Both upstreams do send `access-control-allow-origin: *`, so the browser is
+allowed to call them directly. The page therefore tries the proxy first and
+falls back to a direct call only when the proxy reports it was blocked,
+remembering that per session with a 5-minute re-probe.
+
+**This is self-healing by design.** When the WAF rule is added, the proxy stops
+returning `upstream_403`, an open tab re-probes within five minutes, and every
+call reverts to the server-side path with its caching and shared rate-limit
+budget — no deploy, no code change. Nothing needs to be undone.
+
+The derivation logic that both paths share lives in `leaderboard/derive.js`,
+loaded by Node *and* the browser. Keeping it in one file is the point: if the
+two paths derived differently, a card could disagree with the table row that
+opened it. Verified identical — `drogo` rebuilds to $7,847 realised, 31
+positions, 25W/6L, 80.6% win rate on both.
 
 ### Coin ↔ market
 
@@ -66,15 +87,27 @@ titles.
 | `GET /api/trader?username=` | Profile + 30-day volume/PnL + daily `pnlHistory` |
 | `GET /api/positions?username=&window=&include=resolved\|all` | Rebuilt positions + summary |
 | `GET /api/resolve?url=` | Pasted profile link or username → username |
-| `GET /api/card?username=&coin=&closedAt=&theme=&download=1` | Rendered PNG |
+| `GET /api/position?address=&coin=` | One position, rebuilt from Hyperliquid alone |
+| `GET /api/card?address=\|username=&coin=&…` | Rendered PNG |
+| `GET /api/diag` | **Temporary** — probes upstream reachability. Delete once the WAF rule lands. |
 
 ### Why the card endpoint re-derives its own numbers
 
-`/api/card` takes a trader and a coin, then fetches `/api/positions` and derives
-the figures itself. It deliberately does **not** accept amounts from the query
-string: these cards carry Outcome branding, and an endpoint that rendered
-whatever numbers a caller passed would be a forgery tool. `theme` is the only
-caller-overridable field, because it changes artwork and nothing factual.
+These cards carry Outcome branding, so an endpoint that rendered whatever
+amounts a caller passed would be a forgery tool. **Every financial figure is
+always rebuilt server-side** from the address's own Hyperliquid fills — shares,
+entry, exit, staked, earned, win/loss. There is no query parameter that can
+change any of them, in either addressing mode.
+
+`address=` mode exists so this survives the Cloudflare block: Hyperliquid is
+reachable from Vercel even when Outcome's API is not, and Hyperliquid is where
+the money comes from. Only the market's display title and side label may be
+supplied by the caller, and only as a fallback — when Outcome's API is
+reachable the server looks them up itself and ignores what was passed. The worst
+a forged request achieves is mislabelling which market a real trade was in; it
+can never invent the money. Verified: with the API stubbed out, caller-supplied
+`title=I MADE A MILLION` is accepted as a label while shares/bought/earned stay
+at the true 9,040 / $5,246.32 / $9,040.
 
 Cards for resolved positions are immutable, so they are cached on disk by
 `(trader, coin, closedAt, theme)` and served with a long `Cache-Control`.

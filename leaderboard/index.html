@@ -447,17 +447,20 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 </div>
 
 <div class="toast" id="toast" hidden></div>
+<script src="/leaderboard/derive.js"></script>
 <script>
 (function () {
   'use strict';
 
   var API = '/api';
+  var D = window.OutcomeDerive;
   var $ = function (id) { return document.getElementById(id); };
 
   var state = {
     duration: '24h',
     window: 'all',
     username: null,
+    address: null,
     all: [],            // every position we can see, newest first
     positions: [],      // `all` filtered to the selected window
     truncated: false,
@@ -514,16 +517,108 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     return '<div class="avatar avatar-fallback ' + (klass || '') + '">' + initial + '</div>';
   }
 
+  // ------------------------------------------------------------ transport --
+  // Outcome's API sits behind Cloudflare, which blocks our serverless egress
+  // (AWS ASN) with a WAF challenge while allowing ordinary residential
+  // browsers. Hyperliquid is reachable from both.
+  //
+  // So every call goes through our proxy first, and only if the proxy reports
+  // it was blocked upstream does the browser fetch Outcome directly - which it
+  // may, because o1 returns access-control-allow-origin: *. The decision is
+  // remembered per session to avoid paying the failed round-trip repeatedly.
+  //
+  // This is self-healing on purpose: the moment the WAF rule is added, the
+  // proxy stops returning upstream_403 and every call silently reverts to the
+  // server-side path, with its caching and shared rate-limit budget. No deploy.
+
+  var O1 = 'https://o1.outcome.xyz';
+  var HL = 'https://api.hyperliquid.xyz';
+  var BLOCKED_KEY = 'outcome:proxyBlocked';
+
+  // The block is remembered with a timestamp rather than a bare flag, so a tab
+  // left open re-probes the proxy every few minutes. That is what makes the
+  // recovery automatic: when the WAF rule lands, an open session picks the
+  // server-side path back up on its own instead of staying degraded until
+  // someone reloads.
+  var REPROBE_MS = 5 * 60 * 1000;
+
+  function proxyBlocked() {
+    try {
+      var at = Number(sessionStorage.getItem(BLOCKED_KEY));
+      if (!at) return false;
+      if (Date.now() - at > REPROBE_MS) {
+        sessionStorage.removeItem(BLOCKED_KEY);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return false; // private mode: detect per call instead
+    }
+  }
+
+  function markProxyBlocked(v) {
+    try {
+      if (v) sessionStorage.setItem(BLOCKED_KEY, String(Date.now()));
+      else sessionStorage.removeItem(BLOCKED_KEY);
+    } catch (e) { /* nothing to remember; per-call detection still works */ }
+  }
+
+  // Anything that means "our server could not reach Outcome" - a Cloudflare WAF
+  // block, an HTML block page where JSON was expected, DNS/TLS failure, a
+  // timeout, or a gateway error. All are equally a reason to try the browser's
+  // own connection instead. A 4xx that is genuinely about the request (a bad
+  // username, an unknown trader) is NOT included: retrying it directly would
+  // fail the same way.
+  var BLOCKED = /^upstream_(40[36]|429|5\d\d|unreachable|unparseable|error)$/;
+
+  function isBlocked(err) {
+    return Boolean(err && BLOCKED.test(err.message || ''));
+  }
+
   function get(path) {
     return fetch(API + path, { headers: { Accept: 'application/json' } }).then(function (r) {
       return r.json().then(function (j) {
         if (!r.ok || !j.ok) {
           var e = new Error((j && j.error) || 'request_failed');
           e.payload = j;
+          e.status = r.status;
           throw e;
         }
+        markProxyBlocked(false);
         return j;
       });
+    });
+  }
+
+  // POST straight to an upstream from the visitor's own browser.
+  function direct(base, path, body) {
+    return fetch(base + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      if (!r.ok) throw new Error('upstream_' + r.status);
+      return r.json();
+    });
+  }
+
+  function o1(path, body) {
+    return direct(O1, path, body).then(function (j) {
+      if (!j || j.success !== true) {
+        throw new Error((j && j.error && j.error.code) === 'NOT_FOUND' ? 'no_such_trader' : 'upstream_error');
+      }
+      return j.data;
+    });
+  }
+
+  // Run the proxy path unless we already know it is blocked, else the direct
+  // one. `viaProxy` returns the API payload; `viaDirect` builds the same shape.
+  function load(viaProxy, viaDirect) {
+    if (proxyBlocked()) return viaDirect();
+    return viaProxy().catch(function (err) {
+      if (!isBlocked(err)) throw err;
+      markProxyBlocked(true);
+      return viaDirect();
     });
   }
 
@@ -571,7 +666,28 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     body.innerHTML = skeletonRows(5, 10);
     $('lb-note').textContent = '';
 
-    get('/leaderboard?duration=' + encodeURIComponent(state.duration) + '&limit=50')
+    load(
+      function () { return get('/leaderboard?duration=' + encodeURIComponent(state.duration) + '&limit=50'); },
+      function () {
+        return o1('/api/v1/leaderboard', {
+          duration: state.duration, filter_by: 'pnl', order_by: 'desc', offset: 0, limit: 50
+        }).then(function (d) {
+          return {
+            total: d.total, updatedAt: d.last_updated_at,
+            rows: (d.rows || []).map(function (r) {
+              return {
+                rank: r.position,
+                username: r.username || null,
+                anonymous: !r.username,
+                avatar: D.avatarUrl(r.avatar),
+                verified: Boolean(r.x_verified),
+                pnl: Number(r.pnl), pnlPct: Number(r.pnl_pct), volume: Number(r.volume)
+              };
+            })
+          };
+        });
+      }
+    )
       .then(function (data) {
         if (token !== state.token.board) return;
         if (!data.rows.length) {
@@ -608,6 +724,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
   function loadTrader(username) {
     var token = ++state.token.trader;
     state.username = username;
+    state.address = null;
     state.all = [];
     state.positions = [];
     state.truncated = false;
@@ -622,7 +739,30 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     $('trader-stats').innerHTML = '';
     $('pos-body').innerHTML = skeletonRows(7, 8);
 
-    get('/trader?username=' + encodeURIComponent(username))
+    load(
+      function () { return get('/trader?username=' + encodeURIComponent(username)); },
+      function () {
+        return o1('/api/v1/profile/lookup', { username: username }).then(function (p) {
+          return o1('/api/v1/portfolio/lookup', { address: p.address }).then(function (pf) {
+            var history = (pf.pnlHistory || [])
+              .map(function (x) { return [Number(x[0]), Number(x[1])]; })
+              .filter(function (x) { return isFinite(x[0]) && isFinite(x[1]); })
+              .sort(function (a, b) { return a[0] - b[0]; });
+            return {
+              username: p.username || username,
+              address: p.address,
+              avatar: D.avatarUrl(p.avatar),
+              verified: Boolean(p.x_verified),
+              createdAt: p.created_at || null,
+              volume30d: Number(pf.vlm) || 0,
+              pnlHistory: history,
+              pnl30d: history.length
+                ? D.round(history[history.length - 1][1] - history[0][1], 2) : 0
+            };
+          });
+        });
+      }
+    )
       .then(function (t) {
         if (token !== state.token.trader) return;
         renderTraderHead(t);
@@ -687,6 +827,57 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
       (sub ? '<div class="stat-sub">' + sub + '</div>' : '') + '</div>';
   }
 
+  // Direct-path equivalent of /api/positions: resolve the address, pull fills
+  // from Hyperliquid, look up market metadata, then derive with the SAME module
+  // the server uses (leaderboard/derive.js), so both paths produce identical
+  // numbers and a card can never disagree with the row that opened it.
+  function directPositions(username) {
+    return o1('/api/v1/profile/lookup', { username: username }).then(function (p) {
+      return direct(HL, '/info', { type: 'userFills', user: p.address })
+        .then(function (fills) {
+          var built = D.buildPositions(Array.isArray(fills) ? fills : []);
+          var ids = [];
+          built.forEach(function (x) {
+            if (ids.indexOf(x.outcomeId) === -1) ids.push(x.outcomeId);
+          });
+          return lookupMarkets(ids).then(function (entries) {
+            var rows = built
+              .map(function (x) { return D.decorate(x, entries[x.outcomeId]); })
+              .sort(function (a, b) {
+                return (b.closedAt || b.openedAt) - (a.closedAt || a.openedAt);
+              });
+            return {
+              username: p.username || username,
+              address: p.address,
+              avatar: D.avatarUrl(p.avatar),
+              truncated: Array.isArray(fills) && fills.length >= 2000,
+              positions: rows
+            };
+          });
+        });
+    });
+  }
+
+  // Batched so one heavy trader does not fire dozens of requests; a failed
+  // batch degrades to "Unknown market" rather than failing the page.
+  function lookupMarkets(ids) {
+    var batches = [];
+    for (var i = 0; i < ids.length; i += 50) batches.push(ids.slice(i, i + 50));
+    var entries = {};
+    return batches.reduce(function (chain, batch) {
+      return chain.then(function () {
+        return o1('/api/v1/markets/lookup', { outcome_ids: batch })
+          .then(function (d) {
+            var found = (d && d.markets) || {};
+            batch.forEach(function (id) { entries[id] = found[String(id)] || null; });
+          })
+          .catch(function () {
+            batch.forEach(function (id) { entries[id] = null; });
+          });
+      });
+    }, Promise.resolve()).then(function () { return entries; });
+  }
+
   // Fetched once per trader with window=all, then filtered in the browser: the
   // window tabs become instant, and every window is measured against the same
   // set of positions rather than four separately-cached upstream reads.
@@ -697,12 +888,18 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
       loader('Rebuilding positions from trade history') + '</td></tr>';
     $('pos-note').textContent = '';
 
-    get('/positions?username=' + encodeURIComponent(state.username) +
-        '&window=all&include=all')
+    load(
+      function () {
+        return get('/positions?username=' + encodeURIComponent(state.username) +
+                   '&window=all&include=all');
+      },
+      function () { return directPositions(state.username); }
+    )
       .then(function (data) {
         if (token !== state.token.positions) return;
         state.all = data.positions || [];
         state.truncated = Boolean(data.truncated);
+        if (data.address) state.address = data.address;
         renderPositions();
       })
       .catch(function (e) {
@@ -760,10 +957,18 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
   }
 
   // ------------------------------------------------------------ card modal --
+  // Address mode keeps every financial figure server-derived from Hyperliquid
+  // even while Outcome's API is blocked; title and side ride along only as a
+  // fallback for when the server cannot look the market up itself.
   function cardUrl(p, opts) {
-    var q = '/api/card?username=' + encodeURIComponent(state.username) +
-      '&coin=' + encodeURIComponent(p.coin) +
-      '&closedAt=' + encodeURIComponent(p.closedAt || '');
+    var q = '/api/card?coin=' + encodeURIComponent(p.coin) +
+      '&closedAt=' + encodeURIComponent(p.closedAt || '') +
+      '&username=' + encodeURIComponent(state.username);
+    if (state.address) {
+      q += '&address=' + encodeURIComponent(state.address) +
+        '&title=' + encodeURIComponent(p.title) +
+        '&side=' + encodeURIComponent(p.sideLabel);
+    }
     if (state.theme) q += '&theme=' + encodeURIComponent(state.theme);
     if (opts && opts.download) q += '&download=1';
     return q;
@@ -919,7 +1124,16 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     var raw = $('paste-input').value.trim();
     err.hidden = true;
     if (!raw) return;
-    get('/resolve?url=' + encodeURIComponent(raw))
+    var parsed = D.parseProfileUrl(raw);
+    load(
+      function () { return get('/resolve?url=' + encodeURIComponent(raw)); },
+      function () {
+        if (!parsed) throw new Error('bad_input');
+        return o1('/api/v1/profile/lookup', { username: parsed }).then(function (p) {
+          return { username: p.username || parsed, address: p.address };
+        });
+      }
+    )
       .then(function (r) {
         $('paste-input').value = '';
         navigate(r.username);
