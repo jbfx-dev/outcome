@@ -60,10 +60,24 @@ module.exports = async (req, res) => {
     out.hyperliquid = { error: String(e && e.message) };
   }
 
+  // Confirm the headers we think we send actually leave the function - some
+  // runtimes silently override User-Agent.
+  try {
+    const r = await fetch('https://postman-echo.com/post', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': UA },
+      body: '{}',
+    });
+    const j = await r.json();
+    out.headersActuallySent = j.headers;
+  } catch (e) { out.headersActuallySent = String(e && e.message); }
+
   try {
     const ip = await (await fetch('https://api.ipify.org?format=json')).json();
     out.egressIp = ip.ip;
   } catch { out.egressIp = 'unknown'; }
+
+  out.region = process.env.VERCEL_REGION || null;
 
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
