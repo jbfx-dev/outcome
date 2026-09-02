@@ -10,6 +10,7 @@ the Google Sheet is the system of record and this page never writes to it.
 | File | Role |
 |---|---|
 | `index.html` | The whole page. Self-contained, hand-rolled SVG charts, no chart library. |
+| `../../api/pd.js` | The one deployed function. Dispatches to the four handlers in `api/_pd/`. |
 | `pd.js` | Pure derivation logic, no I/O. Loaded by the browser **and** by `api/pd/*`. |
 | `pd.test.js` | Unit tests. `node dashboards/pd/pd.test.js` — no dependencies, exits non-zero on failure. |
 
@@ -29,6 +30,15 @@ Do not reference `process`, `fetch`, `window` or `document` in it.
 Everything is proxied because none of these upstreams can be called from a
 browser: `stats.outcome.xyz` sends no CORS headers, and neither does
 `publish.twitter.com`.
+
+**All four routes are one serverless function.** Vercel counts every
+non-underscore file under `api/` against the plan's function limit, and the
+site is at it. So the handlers live in `api/_pd/` — underscore, therefore not
+deployed individually — and `api/pd.js` dispatches to them. A rewrite maps
+`/api/pd/:route` to `/api/pd?_r=:route`, so the URLs above are unchanged; the
+dispatcher also falls back to reading the route off the path if the rewrite is
+ever bypassed. Adding a fifth PD route means adding a key to `ROUTES`, not a
+file to `api/`.
 
 ### The sheets
 
