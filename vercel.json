@@ -10,19 +10,9 @@
     "api/trader.js": {
       "maxDuration": 20
     },
-    "api/pd/sheet.js": {
+    "api/pd.js": {
       "includeFiles": "dashboards/pd/pd.js",
       "maxDuration": 20
-    },
-    "api/pd/volume.js": {
-      "includeFiles": "dashboards/pd/pd.js",
-      "maxDuration": 20
-    },
-    "api/pd/hourly.js": {
-      "maxDuration": 20
-    },
-    "api/pd/oembed.js": {
-      "maxDuration": 15
     }
   },
   "redirects": [
@@ -98,6 +88,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/pd/:route",
+      "destination": "/api/pd?_r=:route"
+    },
     {
       "source": "/leaderboard/t/:username",
       "destination": "/leaderboard/index.html"
