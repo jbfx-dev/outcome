@@ -7,24 +7,17 @@
 <style>
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  src: url("/fonts/PPNeueCorp-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  src: url("/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
   font-weight: 800;
   font-style: normal;
   font-stretch: condensed;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Geist";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/Geist-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -33,7 +26,7 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 body {
   background: #0A0A0B;
   color: #F5F8FF;
-  font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
@@ -78,7 +71,7 @@ body {
   color: #45E85C; margin-bottom: 16px; text-transform: uppercase;
 }
 .title-h1 {
-  font-family: 'PP Neue Corp', 'Geist', system-ui, sans-serif; font-weight: 800;
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
   font-stretch: condensed; text-transform: uppercase;
   letter-spacing: -0.01em; font-size: 56px; line-height: 0.88;
   color: #F5F8FF;
@@ -113,7 +106,7 @@ body {
   color: rgba(255,255,255,0.5);
 }
 .kpi-value {
-  font-family: 'PP Neue Corp', 'Geist', system-ui, sans-serif;
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
   font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
   line-height: 1; color: #F5F8FF;
 }
@@ -238,7 +231,7 @@ body {
   margin-top: 3px; letter-spacing: 0.02em;
 }
 .top-link-clicks {
-  font-family: 'PP Neue Corp', 'Geist', sans-serif;
+  font-family: 'PP Neue Corp', 'Inter', sans-serif;
   font-size: 20px; font-weight: 500; color: #F5F8FF;
   flex-shrink: 0; min-width: 80px; text-align: right;
 }
@@ -371,12 +364,12 @@ body {
     <div class="week-selector" id="weekSelector">
       <button class="week-selector-btn" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEKLY VIEW <span class="week-selector-arrow">&#9660;</span></button>
       <div class="week-selector-dropdown">
-        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10-16</span></a>
-        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17-23</span></a>
-        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24-30</span></a>
-        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1-7</span></a>
-        <a href="/world-cup/5">Week 5 <span class="ws-date">Jul 8-14</span></a>
-        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15-20</span></a>
+        <a href="/dashboards/wc/1">Week 1 <span class="ws-date">Jun 10-16</span></a>
+        <a href="/dashboards/wc/2">Week 2 <span class="ws-date">Jun 17-23</span></a>
+        <a href="/dashboards/wc/3">Week 3 <span class="ws-date">Jun 24-30</span></a>
+        <a href="/dashboards/wc/4">Week 4 <span class="ws-date">Jul 1-7</span></a>
+        <a href="/dashboards/wc/5">Week 5 <span class="ws-date">Jul 8-14</span></a>
+        <a href="/dashboards/wc/6">Week 6 <span class="ws-date">Jul 15-20</span></a>
       </div>
     </div>
     <div class="date-badge">JUN 10 &ndash; JUL 23, 2026</div>
@@ -387,10 +380,10 @@ body {
 
   <!-- WEEK NAV -->
   <div class="week-nav">
-    <a href="/world-cup/">Overall</a>
-    <a href="/world-cup/channels">Channels</a>
-    <a href="/clicks-explorer/" class="active">Clicks</a>
-    <a href="/ugc-explorer/">UGC</a>
+    <a href="/dashboards/wc/">Overall</a>
+    <a href="/dashboards/wc/channels">Channels</a>
+    <a href="/dashboards/wc/clicks-explorer/" class="active">Clicks</a>
+    <a href="/dashboards/wc/ugc-explorer/">UGC</a>
   </div>
 
   <!-- TITLE -->
