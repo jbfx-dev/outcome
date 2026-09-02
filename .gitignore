@@ -1,0 +1,8 @@
+# macOS Finder metadata: per-folder view state, no value in the repo.
+.DS_Store
+**/.DS_Store
+
+# Editor / OS noise
+.AppleDouble
+.LSOverride
+Thumbs.db
