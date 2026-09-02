@@ -62,8 +62,8 @@
       "permanent": true
     },
     {
-      "source": "/world-cup/:path*",
-      "destination": "/dashboards/wc/:path*",
+      "source": "/world-cup/:path(.*)",
+      "destination": "/dashboards/wc/:path",
       "permanent": true
     },
     {
@@ -72,8 +72,8 @@
       "permanent": true
     },
     {
-      "source": "/clicks-explorer/:path*",
-      "destination": "/dashboards/wc/clicks-explorer/:path*",
+      "source": "/clicks-explorer/:path(.*)",
+      "destination": "/dashboards/wc/clicks-explorer/:path",
       "permanent": true
     },
     {
@@ -82,8 +82,8 @@
       "permanent": true
     },
     {
-      "source": "/ugc-explorer/:path*",
-      "destination": "/dashboards/wc/ugc-explorer/:path*",
+      "source": "/ugc-explorer/:path(.*)",
+      "destination": "/dashboards/wc/ugc-explorer/:path",
       "permanent": true
     }
   ],
@@ -95,6 +95,17 @@
     {
       "source": "/leaderboard/t/:username",
       "destination": "/leaderboard/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive, nosnippet, noimageindex"
+        }
+      ]
     }
   ]
 }
