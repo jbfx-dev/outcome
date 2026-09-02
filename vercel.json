@@ -9,42 +9,91 @@
     },
     "api/trader.js": {
       "maxDuration": 20
+    },
+    "api/pd/sheet.js": {
+      "includeFiles": "dashboards/pd/pd.js",
+      "maxDuration": 20
+    },
+    "api/pd/volume.js": {
+      "includeFiles": "dashboards/pd/pd.js",
+      "maxDuration": 20
+    },
+    "api/pd/hourly.js": {
+      "maxDuration": 20
+    },
+    "api/pd/oembed.js": {
+      "maxDuration": 15
     }
   },
   "redirects": [
     {
       "source": "/",
-      "destination": "/world-cup",
+      "destination": "/dashboards/pd",
       "permanent": false
     },
     {
       "source": "/index.html",
-      "destination": "/world-cup",
-      "permanent": true
+      "destination": "/dashboards/pd",
+      "permanent": false
     },
     {
       "source": "/overall.html",
-      "destination": "/world-cup",
+      "destination": "/dashboards/wc",
       "permanent": true
     },
     {
       "source": "/week-1.html",
-      "destination": "/world-cup/1",
+      "destination": "/dashboards/wc/1",
       "permanent": true
     },
     {
       "source": "/week-2.html",
-      "destination": "/world-cup/2",
+      "destination": "/dashboards/wc/2",
       "permanent": true
     },
     {
       "source": "/week-3.html",
-      "destination": "/world-cup/3",
+      "destination": "/dashboards/wc/3",
       "permanent": true
     },
     {
       "source": "/week-4.html",
-      "destination": "/world-cup/4",
+      "destination": "/dashboards/wc/4",
+      "permanent": true
+    },
+    {
+      "source": "/pd",
+      "destination": "/dashboards/pd",
+      "permanent": false
+    },
+    {
+      "source": "/world-cup",
+      "destination": "/dashboards/wc",
+      "permanent": true
+    },
+    {
+      "source": "/world-cup/:path*",
+      "destination": "/dashboards/wc/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/clicks-explorer",
+      "destination": "/dashboards/wc/clicks-explorer",
+      "permanent": true
+    },
+    {
+      "source": "/clicks-explorer/:path*",
+      "destination": "/dashboards/wc/clicks-explorer/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/ugc-explorer",
+      "destination": "/dashboards/wc/ugc-explorer",
+      "permanent": true
+    },
+    {
+      "source": "/ugc-explorer/:path*",
+      "destination": "/dashboards/wc/ugc-explorer/:path*",
       "permanent": true
     }
   ],

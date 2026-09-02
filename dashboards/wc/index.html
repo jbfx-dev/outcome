@@ -9,7 +9,7 @@
 <!-- Open Graph -->
 <meta property="og:title" content="World Cup 2026 Campaign Dashboard | Outcome">
 <meta property="og:description" content="Full campaign dashboard: $29.4M volume, 7,927 signups, 49.3% peak market share across 41 days. Week-by-week performance, channel ROI, and executive insights.">
-<meta property="og:url" content="https://outcome.labs.tg/world-cup/">
+<meta property="og:url" content="https://outcome.labs.tg/dashboards/wc/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://outcome.labs.tg/meta-image.png">
 
@@ -25,22 +25,15 @@
 <style>
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  src: url("/fonts/PPNeueCorp-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/PPNeueCorp-NarrowUltrabold.woff2") format("woff2");
+  src: url("/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
   font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Geist";
-  src: url("https://jbfx-dev.github.io/outcome/fonts/Geist-Regular.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -50,7 +43,7 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 body {
   background: #0A0A0B;
   color: #F5F8FF;
-  font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
@@ -578,12 +571,12 @@ body {
     <div class="week-selector" id="weekSelector">
       <button class="week-selector-btn" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEKLY VIEW <span class="week-selector-arrow">&#9660;</span></button>
       <div class="week-selector-dropdown">
-        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10–16</span></a>
-        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17–23</span></a>
-        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24–30</span></a>
-        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1–7</span></a>
-        <a href="/world-cup/5">Week 5 <span class="ws-date">Jul 8–14</span></a>
-        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15–20</span></a>
+        <a href="/dashboards/wc/1">Week 1 <span class="ws-date">Jun 10–16</span></a>
+        <a href="/dashboards/wc/2">Week 2 <span class="ws-date">Jun 17–23</span></a>
+        <a href="/dashboards/wc/3">Week 3 <span class="ws-date">Jun 24–30</span></a>
+        <a href="/dashboards/wc/4">Week 4 <span class="ws-date">Jul 1–7</span></a>
+        <a href="/dashboards/wc/5">Week 5 <span class="ws-date">Jul 8–14</span></a>
+        <a href="/dashboards/wc/6">Week 6 <span class="ws-date">Jul 15–20</span></a>
       </div>
     </div>
     <div class="date-badge">JUN 10 &ndash; JUL 20, 2026</div>
@@ -594,11 +587,11 @@ body {
 
   <!-- WEEK NAV -->
   <div class="week-nav">
-    <a href="/world-cup/" class="active">Overall</a>
-    <a href="/world-cup/channels">Channels</a>
-    <a href="/clicks-explorer/">Clicks</a>
-    <a href="/ugc-explorer/">UGC</a>
-    <a href="/world-cup/insights/">Insights</a>
+    <a href="/dashboards/wc/" class="active">Overall</a>
+    <a href="/dashboards/wc/channels">Channels</a>
+    <a href="/dashboards/wc/clicks-explorer/">Clicks</a>
+    <a href="/dashboards/wc/ugc-explorer/">UGC</a>
+    <a href="/dashboards/wc/insights/">Insights</a>
   </div>
 
   <!-- TITLE -->

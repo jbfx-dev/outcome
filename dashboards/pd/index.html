@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Permissionless Deployment Live | Outcome</title>
+<meta name="description" content="Live tracker for the Permissionless Deployment launch: real-time HIP-4 market share, volume pacing, funnel and content performance.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Permissionless Deployment Live | Outcome">
+<meta property="og:description" content="Live tracker for the Permissionless Deployment launch: real-time HIP-4 market share, volume pacing, funnel and content performance.">
+<meta property="og:url" content="https://outcome.labs.tg/dashboards/pd/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://outcome.labs.tg/meta-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Permissionless Deployment Live | Outcome">
+<meta name="twitter:description" content="Live tracker for the Permissionless Deployment launch: real-time HIP-4 market share, volume pacing, funnel and content performance.">
+<meta name="twitter:image" content="https://outcome.labs.tg/meta-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Served from this repo rather than jbfx-dev.github.io: the Ultrabold and
+   Geist files 404 there, so the older pages silently fall back to Inter. */
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("/fonts/PPNeueCorp-Medium.otf") format("opentype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Neue Corp";
+  src: url("/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  background: #0A0A0B;
+  color: #F5F8FF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- NAV ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,10,11,0.74);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-logo { height: 20px; width: auto; flex-shrink: 0; }
+.nav-divider { color: rgba(255,255,255,0.25); font-weight: 300; font-size: 17px; }
+.nav-subtitle {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.live-badge {
+  height: 30px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid rgba(69,232,92,0.4);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  color: #45E85C; text-transform: uppercase;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #45E85C;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+.live-badge.stale { border-color: rgba(245,130,32,0.4); color: #F58220; }
+.live-badge.stale .live-dot { background: #F58220; animation: none; }
+.date-badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+.nav-link {
+  height: 38px; padding: 0 14px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+  transition: all 0.15s ease;
+}
+.nav-link:hover { border-color: rgba(255,255,255,0.25); color: #F5F8FF; }
+
+/* ---------- CONTENT ---------- */
+.content { max-width: 1480px; margin: 0 auto; padding: 44px 40px 64px; }
+
+.title-row {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px; margin-bottom: 30px; flex-wrap: wrap;
+}
+.title-h1 {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif; font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em; font-size: 54px; line-height: 0.9;
+  color: #F5F8FF;
+}
+.title-h1 .green { color: #45E85C; }
+.title-badges { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.badge {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+}
+.badge.green { color: #45E85C; border-color: rgba(69,232,92,0.3); }
+.badge.orange { color: #F58220; border-color: rgba(245,130,32,0.3); }
+
+/* ---------- KPI CARDS ---------- */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 14px; margin-bottom: 14px;
+}
+.kpi-card {
+  position: relative; padding: 20px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); overflow: hidden;
+}
+.kpi-bar { position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
+.kpi-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.kpi-value {
+  font-family: 'PP Neue Corp', 'Inter', system-ui, sans-serif;
+  font-size: 32px; font-weight: 500; letter-spacing: -0.04em;
+  line-height: 1; color: #F5F8FF;
+}
+.kpi-sub {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.45); margin-top: 9px; text-transform: uppercase;
+}
+.kpi-delta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.02em; margin-top: 6px;
+  display: flex; align-items: center; gap: 5px;
+}
+.kpi-delta.up { color: #45E85C; }
+.kpi-delta.down { color: #FF5C9E; }
+.kpi-delta.flat { color: rgba(255,255,255,0.35); }
+.kpi-info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.45);
+  font-size: 8px; font-weight: 600; cursor: help; flex-shrink: 0;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  position: relative;
+  padding: 28px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02); margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+}
+.card-title {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.card-meta {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35); text-transform: uppercase;
+}
+.card-source {
+  position: absolute; right: 20px; bottom: 12px;
+  font-size: 9px; font-weight: 500; letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.18); text-transform: uppercase;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ---------- METRIC SWITCHER ---------- */
+.metric-switcher { display: flex; gap: 6px; flex-wrap: wrap; }
+.metric-btn {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; outline: none;
+  transition: all 0.15s ease;
+  background: transparent; border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  font-family: inherit;
+}
+.metric-btn.active {
+  background: rgba(69,232,92,0.12); border: 1px solid rgba(69,232,92,0.3);
+  color: #45E85C;
+}
+.metric-btn:hover:not(.active) {
+  border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
+}
+
+/* ---------- CHART ---------- */
+.chart-container { position: relative; height: 300px; margin-top: 16px; }
+.chart-svg { width: 100%; height: 100%; display: block; }
+.chart-bar { transition: opacity 0.15s ease; cursor: pointer; }
+.chart-bar:hover { opacity: 0.85; }
+.chart-label {
+  font-size: 10px; font-weight: 500; fill: rgba(255,255,255,0.5);
+  text-anchor: middle;
+}
+.chart-value {
+  font-size: 10px; font-weight: 600; fill: rgba(255,255,255,0.7);
+  text-anchor: middle;
+}
+.chart-axis-label {
+  font-size: 9px; font-weight: 500; fill: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.chart-grid-line { stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+.chart-annotation {
+  font-size: 9px; font-weight: 600; fill: #C4E84A;
+  letter-spacing: 0.04em; text-anchor: middle;
+}
+.chart-note {
+  margin-top: 10px; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.04em; color: rgba(245,130,32,0.75);
+}
+.chart-legend {
+  display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+  margin-top: 14px;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.45); text-transform: uppercase;
+}
+.legend-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-line { width: 16px; height: 2px; border-radius: 2px; flex-shrink: 0; }
+
+/* ---------- FUNNEL ---------- */
+.funnel-row { display: flex; align-items: center; gap: 0; margin-bottom: 10px; }
+.funnel-stage {
+  width: 150px; flex-shrink: 0;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.7); text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.funnel-track {
+  flex: 1; height: 30px; border-radius: 4px;
+  background: rgba(255,255,255,0.03); overflow: hidden; position: relative;
+}
+.funnel-fill {
+  height: 100%; border-radius: 4px; min-width: 2px;
+  transition: width 0.4s ease;
+}
+.funnel-value {
+  width: 100px; text-align: right; flex-shrink: 0;
+  font-size: 12px; font-weight: 600; color: #F5F8FF; padding-left: 12px;
+}
+.funnel-conv {
+  width: 76px; text-align: right; flex-shrink: 0;
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4);
+  padding-left: 10px;
+}
+
+/* ---------- TABLE ---------- */
+.table-scroll { overflow-x: auto; }
+.breakdown-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+.breakdown-table th {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4); text-transform: uppercase;
+  text-align: right; padding: 0 0 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+}
+.breakdown-table th:first-child { text-align: left; }
+.breakdown-table td {
+  padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+  text-align: right; white-space: nowrap;
+}
+.breakdown-table td:first-child { text-align: left; }
+.breakdown-table td.green { color: #45E85C; }
+.breakdown-table td.orange { color: #F58220; }
+.breakdown-table td.strong { color: #F5F8FF; font-weight: 600; }
+.breakdown-table tr.partial-row td { background: rgba(245,130,32,0.04); }
+.breakdown-table tr.summary-row td {
+  border-bottom: none; font-weight: 600; color: #F5F8FF;
+  border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;
+}
+.breakdown-table tr.summary-row td:first-child { color: #45E85C; }
+.breakdown-table tr.highlight-row td:first-child { color: #C4E84A; }
+.partial-tag {
+  display: inline-block; margin-left: 8px; padding: 2px 6px;
+  border-radius: 4px; background: rgba(245,130,32,0.12);
+  color: #F58220; font-size: 8px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; vertical-align: middle;
+}
+.spark { vertical-align: middle; margin-left: 8px; }
+
+/* ---------- TOP CONTENT ---------- */
+.top-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+}
+.top-card {
+  padding: 16px; border-radius: 12px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.15s ease; display: flex; flex-direction: column; gap: 10px;
+}
+.top-card:hover { border-color: rgba(69,232,92,0.3); background: rgba(69,232,92,0.03); }
+.chan-badge {
+  display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+  padding: 4px 9px; border-radius: 6px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.chan-x { background: rgba(69,232,92,0.12); color: #45E85C; }
+.chan-kol { background: rgba(155,124,255,0.12); color: #9B7CFF; }
+.chan-inf { background: rgba(245,130,32,0.12); color: #F58220; }
+.chan-cc { background: rgba(59,130,246,0.12); color: #3B82F6; }
+.chan-other { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
+.top-copy {
+  font-size: 12px; line-height: 1.45; color: rgba(255,255,255,0.75);
+  flex: 1;
+}
+.top-metrics {
+  display: flex; gap: 14px; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.top-metric { display: flex; flex-direction: column; gap: 3px; }
+.top-metric-val { font-size: 13px; font-weight: 600; color: #F5F8FF; }
+.top-metric-key {
+  font-size: 8px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3); text-transform: uppercase;
+}
+
+/* ---------- CONTENT TIMELINE ---------- */
+.day-strip {
+  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 14px;
+  scrollbar-width: thin;
+}
+.day-chip {
+  flex-shrink: 0; padding: 10px 14px; border-radius: 10px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08); background: transparent;
+  color: rgba(255,255,255,0.5); font-family: inherit;
+  display: flex; flex-direction: column; gap: 4px; align-items: flex-start;
+  transition: all 0.15s ease; min-width: 92px;
+}
+.day-chip:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.75); }
+.day-chip.active {
+  background: rgba(69,232,92,0.1); border-color: rgba(69,232,92,0.35); color: #45E85C;
+}
+.day-chip-date {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.day-chip-count { font-size: 9px; font-weight: 500; letter-spacing: 0.06em; opacity: 0.7; }
+
+.day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+  padding: 14px 0 18px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 20px;
+}
+.day-header-left { display: flex; flex-direction: column; gap: 6px; }
+.day-header-date {
+  font-family: 'PP Neue Corp', 'Inter', sans-serif; font-weight: 500;
+  font-size: 22px; letter-spacing: -0.02em; color: #F5F8FF;
+}
+.day-header-sub { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
+.day-header-stats { display: flex; gap: 26px; }
+.day-stat { display: flex; flex-direction: column; gap: 4px; }
+.day-stat-val { font-size: 18px; font-weight: 600; color: #F5F8FF; }
+.day-stat-key {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3); text-transform: uppercase;
+}
+
+.post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.post-cell { min-height: 220px; }
+.post-card {
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 12px;
+  background: rgba(255,255,255,0.02); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.post-overlay {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.015);
+}
+.post-overlay-metric { display: flex; align-items: baseline; gap: 5px; }
+.post-overlay-val { font-size: 12px; font-weight: 600; color: #F5F8FF; }
+.post-overlay-key {
+  font-size: 8px; font-weight: 500; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3); text-transform: uppercase;
+}
+.ribbon {
+  margin-left: auto; padding: 3px 8px; border-radius: 5px;
+  background: rgba(196,232,74,0.14); color: #C4E84A;
+  font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.post-body { padding: 14px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.post-handle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8);
+}
+.post-time { font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 500; }
+.post-text { font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.72); flex: 1; }
+.post-link {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #45E85C; text-decoration: none; align-self: flex-start;
+}
+.post-link:hover { text-decoration: underline; }
+.post-embed { padding: 6px 10px 10px; }
+.post-embed .twitter-tweet { margin: 0 !important; }
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.cc-chip-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.cc-chip {
+  padding: 8px 13px; border-radius: 8px;
+  border: 1px solid rgba(59,130,246,0.25); background: rgba(59,130,246,0.06);
+  color: #3B82F6; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* ---------- SCORECARD ---------- */
+.collapse-btn {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  background: transparent; border: none; padding: 0; font-family: inherit;
+  color: #F5F8FF; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.collapse-arrow { font-size: 9px; transition: transform 0.2s ease; color: rgba(255,255,255,0.4); }
+.collapse-btn.open .collapse-arrow { transform: rotate(180deg); }
+.collapse-body { display: none; margin-top: 24px; }
+.collapse-body.open { display: block; }
+.verdict-pill {
+  display: inline-block; padding: 3px 9px; border-radius: 5px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.verdict-ahead { background: rgba(69,232,92,0.12); color: #45E85C; }
+.verdict-behind { background: rgba(255,92,158,0.12); color: #FF5C9E; }
+.verdict-flat { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
+
+/* ---------- STATES ---------- */
+.skeleton { border-radius: 8px; background: rgba(255,255,255,0.04); }
+.skel-line { height: 12px; margin-bottom: 10px; }
+.panel-error {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 18px; border-radius: 10px;
+  border: 1px solid rgba(255,92,158,0.25); background: rgba(255,92,158,0.05);
+  font-size: 12px; color: #FF5C9E; flex-wrap: wrap;
+}
+.retry-btn {
+  padding: 7px 14px; border-radius: 8px; cursor: pointer; font-family: inherit;
+  border: 1px solid rgba(255,92,158,0.4); background: transparent;
+  color: #FF5C9E; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.retry-btn:hover { background: rgba(255,92,158,0.1); }
+.empty-note {
+  padding: 30px; text-align: center; font-size: 12px;
+  color: rgba(255,255,255,0.3); letter-spacing: 0.04em;
+}
+.section-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin: 34px 0 14px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1280px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .top-grid { grid-template-columns: repeat(3, 1fr); }
+  .post-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .nav { padding: 0 20px; }
+  .content { padding: 28px 20px 48px; }
+  .title-h1 { font-size: 30px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .top-grid { grid-template-columns: 1fr; }
+  .post-grid { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .card { padding: 20px; }
+  .funnel-stage { width: 104px; font-size: 10px; }
+  .funnel-value { width: 74px; }
+  .funnel-conv { width: 56px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <svg class="nav-logo" viewBox="0 0 1909 433" fill="#F5F5F5" xmlns="http://www.w3.org/2000/svg">
+      <path d="M328.373 0L232.985 181.528H130.652L128.14 186.798L106.792 231.575H0L78.0242 83.4806H88.5718C144.657 83.4806 196.284 51.3822 225.378 0H328.373Z"/>
+      <path d="M351 200.059L273.128 348.609H262.594C206.313 348.609 154.729 380.585 125.575 432.318H22.5811L118.118 250.24H220.414L222.94 245.014L244.663 200.059H351Z"/>
+      <path d="M563.684 339.077C493.476 339.077 454 289.961 454 231.619C454 173.776 493.476 124.659 563.684 124.659C633.892 124.659 673.369 173.776 673.369 231.619C673.369 289.961 633.892 339.077 563.684 339.077ZM490.228 231.619C490.228 271.76 512.465 307.164 563.684 307.164C614.904 307.164 637.14 271.76 637.14 231.619C637.14 192.226 614.904 156.573 563.684 156.573C512.465 156.573 490.228 192.226 490.228 231.619Z"/>
+      <path d="M831.867 336.584V307.912C819.375 326.611 799.637 339.077 771.404 339.077C731.178 339.077 704.694 312.151 704.694 267.771V174.524H738.673V263.283C738.673 293.451 753.414 309.907 782.897 309.907C824.122 309.907 831.867 278.243 831.867 261.289V174.524H865.847V336.584H831.867Z"/>
+      <path d="M1029.93 174.524V203.695H971.711V280.237C971.711 300.682 975.209 307.413 989.451 307.413H1029.93V336.584H983.704C947.726 336.584 938.481 318.633 938.481 286.221V203.695H889.76V174.524H913.496C936.482 174.524 943.228 160.063 942.979 127.152H976.209C976.209 152.334 971.462 171.283 959.719 174.524H1029.93Z"/>
+      <path d="M1186.73 237.852C1185.23 220.898 1170.74 201.451 1137.26 201.451C1099.28 201.451 1084.04 223.89 1084.04 255.554V256.302C1084.04 287.218 1099.28 309.657 1137.51 309.657C1172.99 309.657 1185.23 290.21 1186.98 273.007L1187.73 266.275H1222.21L1221.46 273.007C1217.71 305.917 1191.98 339.077 1136.76 339.077C1078.04 339.077 1049.31 304.92 1049.31 255.554V255.055C1049.31 206.188 1078.04 172.031 1136.76 172.031C1191.48 172.031 1218.46 204.692 1221.46 237.852L1222.21 245.082H1187.73L1186.73 237.852Z"/>
+      <path d="M1331.91 339.077C1274.45 339.077 1246.21 304.92 1246.21 255.554C1246.21 206.188 1274.45 172.031 1331.91 172.031C1389.63 172.031 1417.61 206.188 1417.61 255.554C1417.61 304.92 1389.63 339.077 1331.91 339.077ZM1280.94 255.554C1280.94 287.218 1294.69 309.657 1331.91 309.657C1369.39 309.657 1383.13 287.218 1383.13 255.554C1383.13 223.89 1369.39 201.451 1331.91 201.451C1294.69 201.451 1280.94 223.89 1280.94 255.554Z"/>
+      <path d="M1672.46 245.082C1672.46 224.389 1665.97 201.202 1634.48 201.202C1598.01 201.202 1592.51 231.12 1592.51 245.332V336.584H1558.53V245.082C1558.53 224.887 1552.28 201.202 1520.55 201.202C1484.32 201.202 1478.58 231.12 1478.58 245.082V336.584H1444.85V174.524H1478.58V195.716C1489.57 179.51 1505.81 172.031 1527.8 172.031C1556.78 172.031 1574.52 184.746 1583.76 202.697C1594.51 184.497 1612.75 172.031 1640.73 172.031C1683.45 172.031 1706.44 200.454 1706.44 237.603V336.584H1672.46V245.082Z"/>
+      <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
+    </svg>
+    <span class="nav-divider">/</span>
+    <span class="nav-subtitle">PERMISSIONLESS DEPLOYMENT</span>
+  </div>
+  <div class="nav-right">
+    <div class="live-badge" id="liveBadge">
+      <div class="live-dot"></div>
+      <span id="liveText">LIVE</span>
+    </div>
+    <div class="date-badge" id="updatedBadge">SYNCING…</div>
+  </div>
+</nav>
+
+<div class="content">
+
+  <!-- 5.1 TITLE -->
+  <div class="title-row">
+    <h1 class="title-h1">PERMISSIONLESS<br>DEPLOYMENT <span class="green">LIVE</span></h1>
+    <div class="title-badges">
+      <div class="badge green" id="dayBadge">DAY —</div>
+      <div class="badge" id="poolBadge">$1M REWARDS POOL</div>
+      <div class="badge orange" id="shareBadge">SHARE —</div>
+    </div>
+  </div>
+
+  <!-- 5.2 HERO -->
+  <div class="kpi-grid" id="heroGrid"></div>
+
+  <!-- 5.3 MARKET SHARE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div>HIP-4 MARKET SHARE</div>
+      <div class="metric-switcher" id="shareSwitcher">
+        <button class="metric-btn active" data-mode="share">100% SHARE</button>
+        <button class="metric-btn" data-mode="absolute">ABSOLUTE VOLUME</button>
+      </div>
+    </div>
+    <div class="chart-container" id="shareChart" style="height:330px"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:#45E85C"></div>OUTCOME</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#5A6272"></div>HL FRONTEND</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2F343D"></div>OTHER BUILDERS</div>
+      <div class="legend-item"><div class="legend-line" style="background:#C4E84A"></div>OUTCOME SHARE %</div>
+    </div>
+    <div class="card-source">stats.outcome.xyz · live</div>
+  </div>
+
+  <!-- 5.4 PACING -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#C4E84A"></div>TODAY PACING · UTC</div>
+      <div class="metric-switcher" id="pacingSwitcher">
+        <button class="metric-btn active" data-metric="outcomeVolume">VOLUME</button>
+        <button class="metric-btn" data-metric="uvs">UVS</button>
+        <button class="metric-btn" data-metric="signups">SIGNUPS</button>
+        <button class="metric-btn" data-metric="depositors">DEPOSITORS</button>
+        <button class="metric-btn" data-metric="traders">ACTIVE TRADERS</button>
+        <button class="metric-btn" data-metric="impressions">IMPRESSIONS</button>
+      </div>
+    </div>
+    <div class="chart-container" id="pacingChart" style="height:300px"></div>
+    <div class="chart-note" id="pacingNote"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>TODAY</div>
+      <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>YESTERDAY</div>
+      <div class="legend-item"><div class="legend-line" style="background:#9B7CFF"></div><span id="avgLegend">AVG TO DATE</span></div>
+    </div>
+    <div class="card-source" id="pacingSource">sheet</div>
+  </div>
+
+  <!-- CAMPAIGN PACING vs WORLD CUP -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div>CAMPAIGN PACING · PD vs WORLD CUP</div>
+      <div class="metric-switcher" id="campaignSwitcher"></div>
+    </div>
+    <div class="chart-container" id="campaignChart" style="height:310px"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>PD LAUNCH</div>
+      <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>WORLD CUP</div>
+      <div class="legend-item" id="campaignDelta" style="color:rgba(255,255,255,0.7)"></div>
+    </div>
+    <div class="card-source">pd + world cup trackers · daily totals</div>
+  </div>
+
+  <!-- 5.5 FUNNEL -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#3B82F6"></div>FUNNEL · CAMPAIGN TO DATE</div>
+      </div>
+      <div id="funnelAll"></div>
+      <div class="card-source">sheet · daily totals</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:#9B7CFF"></div>FUNNEL · YESTERDAY</div>
+        <div class="card-meta" id="funnelYestDate"></div>
+      </div>
+      <div id="funnelYesterday"></div>
+      <div class="card-source">sheet · daily totals</div>
+    </div>
+  </div>
+
+  <!-- 5.6 DAILY TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#1FCFA0"></div>DAILY BREAKDOWN</div>
+      <div class="card-meta" id="dailyMeta"></div>
+    </div>
+    <div class="table-scroll" id="dailyTable"></div>
+    <div class="card-source">sheet · daily totals</div>
+  </div>
+
+  <!-- 5.7 TOP CONTENT -->
+  <div class="section-title">TOP CONTENT BY VIEWS</div>
+  <div class="top-grid" id="topContent"></div>
+
+  <!-- 5.9 CONTENT TIMELINE -->
+  <div class="card" style="margin-top:14px">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#45E85C"></div>CONTENT TIMELINE</div>
+      <div class="metric-switcher" id="channelFilter">
+        <button class="metric-btn active" data-chan="all">ALL</button>
+        <button class="metric-btn" data-chan="X Organic">X ORGANIC</button>
+        <button class="metric-btn" data-chan="Stratosphere (KOL)">KOL</button>
+        <button class="metric-btn" data-chan="Arcadia (Influencers)">INFLUENCERS</button>
+      </div>
+    </div>
+    <div class="chart-container" id="postSpark" style="height:70px;margin-top:0"></div>
+    <div class="day-strip" id="dayStrip"></div>
+    <div id="dayHeader"></div>
+    <div id="ccChips"></div>
+    <div class="post-grid" id="postGrid"></div>
+    <div class="card-source">sheet · content log + x oembed</div>
+  </div>
+
+  <!-- 5.8 CHANNELS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#F58220"></div>CHANNEL SUMMARY</div>
+      <div class="card-meta">ZERO-ACTIVITY CHANNELS HIDDEN</div>
+    </div>
+    <div class="table-scroll" id="channelTable"></div>
+    <div class="card-source">sheet · channel summary</div>
+  </div>
+
+  <!-- 5.10 SCORECARD -->
+  <div class="card">
+    <button class="collapse-btn" id="scoreToggle">
+      <span class="collapse-arrow">▼</span> WORLD CUP vs PD SCORECARD
+    </button>
+    <div class="collapse-body" id="scoreBody"></div>
+    <div class="card-source">sheet · wc vs pd comparison</div>
+  </div>
+
+</div>
+
+<script src="/dashboards/pd/pd.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var P = window.PDDerive;
+  var PD = P.PD;
+
+  // Series colours. Outcome takes the brand green; HL Frontend is deliberately
+  // neutral and other builders are muted, so the eye reads Outcome first.
+  var C = {
+    outcome: '#45E85C',
+    hl: '#5A6272',
+    other: '#2F343D',
+    share: '#C4E84A',
+    avg: '#9B7CFF',
+    grid: 'rgba(255,255,255,0.05)',
+  };
+
+  var state = {
+    volume: null, daily: null, hourly: null, hourlyApi: null,
+    content: null, channels: null, comparison: null, wcDaily: null,
+    errors: {}, lastOk: {},
+    pacingMetric: 'outcomeVolume',
+    campaignMetric: 'volume',
+    shareMode: 'share',
+    selectedDay: null,
+    channelFilter: 'all',
+  };
+
+  // ------------------------------------------------------------- helpers ----
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function todayUTC() { return new Date().toISOString().slice(0, 10); }
+  function fmtDayLabel(iso) {
+    var d = P.parseSheetDate(iso);
+    if (!d) return iso;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  }
+
+  function panelError(el, key, retry) {
+    el.innerHTML =
+      '<div class="panel-error"><span>Could not load ' + esc(key) + '.</span>' +
+      '<button class="retry-btn" data-retry="' + esc(key) + '">Retry</button></div>';
+    var btn = el.querySelector('.retry-btn');
+    if (btn) btn.addEventListener('click', retry);
+  }
+
+  function skeleton(el, lines) {
+    var h = '';
+    for (var i = 0; i < (lines || 4); i++) {
+      h += '<div class="skeleton skel-line" style="width:' + (95 - i * 11) + '%"></div>';
+    }
+    el.innerHTML = h;
+  }
+
+  function getJSON(url) {
+    return fetch(url, { headers: { Accept: 'application/json' } }).then(function (r) {
+      if (!r.ok) throw new Error('http_' + r.status);
+      return r.json();
+    }).then(function (j) {
+      if (!j || j.ok !== true) throw new Error((j && j.error) || 'bad_response');
+      return j;
+    });
+  }
+
+  // --------------------------------------------------------------- charts --
+
+  // Shared axis maths so every chart lines up the same way.
+  function chartFrame(container, height, pad) {
+    var w = container.clientWidth || 900;
+    var p = pad || { l: 56, r: 20, t: 20, b: 40 };
+    return {
+      w: w, h: height, pad: p,
+      cw: Math.max(10, w - p.l - p.r),
+      ch: Math.max(10, height - p.t - p.b),
+    };
+  }
+
+  function gridLines(f, max, fmt, count) {
+    var n = count || 4;
+    var out = '';
+    for (var g = 0; g <= n; g++) {
+      var y = f.pad.t + (f.ch / n) * g;
+      var v = max - (max / n) * g;
+      out += '<line x1="' + f.pad.l + '" y1="' + y + '" x2="' + (f.w - f.pad.r) + '" y2="' + y + '" class="chart-grid-line"/>';
+      out += '<text x="' + (f.pad.l - 10) + '" y="' + (y + 4) + '" class="chart-axis-label" text-anchor="end">' + fmt(v) + '</text>';
+    }
+    return out;
+  }
+
+  function svgWrap(f, inner) {
+    return '<svg class="chart-svg" viewBox="0 0 ' + f.w + ' ' + f.h + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' + inner + '</svg>';
+  }
+
+  // 5.3 Stacked bars by day, with the Outcome share line overlaid.
+  function renderShareChart() {
+    var el = $('shareChart');
+    if (state.errors.volume) return panelError(el, 'volume', loadVolume);
+    if (!state.volume) return skeleton(el, 5);
+
+    var days = state.volume.days || [];
+    if (!days.length) { el.innerHTML = '<div class="empty-note">No volume yet.</div>'; return; }
+
+    var today = todayUTC();
+    var f = chartFrame(el, 330, { l: 56, r: 44, t: 26, b: 46 });
+    var pct = state.shareMode === 'share';
+    var maxAbs = 0;
+    days.forEach(function (d) { if (d.total > maxAbs) maxAbs = d.total; });
+    var max = pct ? 1 : maxAbs * 1.1;
+
+    var inner = gridLines(f, max, function (v) {
+      return pct ? Math.round(v * 100) + '%' : P.fmtMoney(v);
+    });
+
+    var slot = f.cw / days.length;
+    var barW = Math.min(74, slot * 0.62);
+    var pts = [];
+
+    days.forEach(function (d, i) {
+      var x = f.pad.l + slot * i + (slot - barW) / 2;
+      var isToday = d.date === today;
+      var denom = pct ? (d.total || 1) : max;
+      var segs = [
+        { v: d.other, c: C.other },
+        { v: d.hlFrontend, c: C.hl },
+        { v: d.outcome, c: C.outcome },
+      ];
+      var y = f.pad.t + f.ch;
+      segs.forEach(function (s) {
+        var hgt = (s.v / denom) * f.ch;
+        if (!(hgt > 0)) return;
+        y -= hgt;
+        inner += '<rect class="chart-bar" x="' + x + '" y="' + y + '" width="' + barW +
+          '" height="' + hgt + '" fill="' + s.c + '"' +
+          (isToday ? ' opacity="0.72" stroke="rgba(255,255,255,0.25)" stroke-dasharray="3 2"' : '') +
+          '><title>' + fmtDayLabel(d.date) + ' — ' + P.fmtMoney(s.v) + '</title></rect>';
+      });
+
+      // Share line rides its own 0-100% scale on the right.
+      pts.push([x + barW / 2, f.pad.t + f.ch - d.share * f.ch]);
+
+      inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t + f.ch + 18) + '" class="chart-label">' +
+        fmtDayLabel(d.date) + '</text>';
+      if (isToday) {
+        inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t + f.ch + 33) +
+          '" class="chart-label" style="font-size:8px;fill:#F58220">PARTIAL</text>';
+      }
+
+      PD.annotations.forEach(function (a) {
+        if (a.date !== d.date) return;
+        inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t - 9) + '" class="chart-annotation">' +
+          esc(a.label) + '</text>';
+      });
+    });
+
+    if (pts.length > 1) {
+      inner += '<polyline fill="none" stroke="' + C.share + '" stroke-width="2" stroke-linejoin="round" points="' +
+        pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') + '"/>';
+    }
+    pts.forEach(function (p, i) {
+      inner += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3.5" fill="#0A0A0B" stroke="' + C.share + '" stroke-width="2"><title>' +
+        P.fmtPct(days[i].share) + ' share</title></circle>';
+    });
+
+    el.innerHTML = svgWrap(f, inner);
+  }
+
+  // 5.4 Cumulative curve for the selected metric: today, yesterday, and the
+  // average of the days before that.
+  function renderPacingChart() {
+    var el = $('pacingChart');
+    if (state.errors.hourly) return panelError(el, 'hourly snapshots', loadSheets);
+    if (!state.hourly) return skeleton(el, 5);
+
+    var metric = state.pacingMetric;
+    var today = todayUTC();
+    var yest = P.addDays(today, -1);
+    var isVolume = metric === 'outcomeVolume';
+
+    // Volume comes from the live hourly endpoint so the curve is current
+    // rather than as-of the last sheet write; everything else is sheet-only.
+    var todaySeries = (isVolume && state.hourlyApi)
+      ? P.hourlyCumulative(state.hourlyApi, today)
+      : P.pacingSeries(state.hourly, today, metric);
+    var yestSeries = (isVolume && state.hourlyApi)
+      ? P.hourlyCumulative(state.hourlyApi, yest)
+      : P.pacingSeries(state.hourly, yest, metric);
+
+    $('pacingSource').textContent = isVolume && state.hourlyApi
+      ? 'stats.outcome.xyz · live' : 'sheet · hourly snapshots';
+
+    // Average across earlier complete days, up to seven.
+    var priorDays = [];
+    for (var k = 2; k <= 8; k++) {
+      var d = P.addDays(today, -k);
+      var s = P.pacingSeries(state.hourly, d, metric);
+      if (s.length) priorDays.push(s);
+    }
+    $('avgLegend').textContent = priorDays.length >= 7 ? '7-DAY AVG' : 'AVG TO DATE';
+
+    var avgSeries = [];
+    if (priorDays.length) {
+      for (var h = 0; h < 24; h++) {
+        var sum = 0, n = 0;
+        priorDays.forEach(function (s) {
+          var pt = null;
+          s.forEach(function (p) { if (p.hour === h) pt = p; });
+          if (pt) { sum += pt.value; n++; }
+        });
+        if (n) avgSeries.push({ hour: h, value: sum / n });
+      }
+    }
+
+    var all = todaySeries.concat(yestSeries, avgSeries);
+    if (!all.length) {
+      el.innerHTML = '<div class="empty-note">No snapshots for today yet.</div>';
+      $('pacingNote').textContent = '';
+      return;
+    }
+
+    var max = 0;
+    all.forEach(function (p) { if (p.value > max) max = p.value; });
+    max = max * 1.1 || 1;
+
+    var f = chartFrame(el, 300, { l: 62, r: 20, t: 20, b: 40 });
+    var fmt = isVolume ? P.fmtMoney : P.fmtNum;
+    var inner = gridLines(f, max, fmt);
+
+    for (var hh = 0; hh <= 24; hh += 4) {
+      var gx = f.pad.l + (hh / 24) * f.cw;
+      inner += '<text x="' + gx + '" y="' + (f.pad.t + f.ch + 20) + '" class="chart-label">' +
+        (hh < 10 ? '0' + hh : hh) + ':00</text>';
+    }
+
+    function line(series, color, dash, width) {
+      if (!series.length) return '';
+      var pts = series.map(function (p) {
+        return (f.pad.l + (p.hour / 24) * f.cw) + ',' + (f.pad.t + f.ch - (p.value / max) * f.ch);
+      }).join(' ');
+      return '<polyline fill="none" stroke="' + color + '" stroke-width="' + (width || 2) +
+        '" stroke-linejoin="round" stroke-linecap="round"' +
+        (dash ? ' stroke-dasharray="' + dash + '"' : '') + ' points="' + pts + '"/>';
+    }
+
+    inner += line(avgSeries, C.avg, '2 4');
+    inner += line(yestSeries, C.hl, '6 4');
+    inner += line(todaySeries, C.outcome, null, 2.5);
+
+    // Interpolated points are marked hollow so a gap is never mistaken for data.
+    todaySeries.forEach(function (p) {
+      var cx = f.pad.l + (p.hour / 24) * f.cw;
+      var cy = f.pad.t + f.ch - (p.value / max) * f.ch;
+      inner += '<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="' +
+        (p.interpolated ? '#0A0A0B' : C.outcome) + '" stroke="' + C.outcome +
+        '" stroke-width="1.5"><title>' + (p.interpolated ? 'interpolated — ' : '') +
+        String(p.hour) + ':00Z · ' + fmt(p.value) + '</title></circle>';
+    });
+
+    el.innerHTML = svgWrap(f, inner);
+
+    // Impressions are written only by the 3x/day full runs, so early in the day
+    // there can be a single point and no line. Say why, rather than leaving a
+    // lone dot that reads as a broken chart.
+    $('pacingNote').textContent = todaySeries.length >= 2 ? '' : (
+      metric === 'impressions'
+        ? 'Impressions are recorded only on the full runs (08:05 / 14:05 / 20:05 local), so today has ' +
+          todaySeries.length + ' point so far \u2014 the hourly runs do not carry them.'
+        : 'Only ' + todaySeries.length + ' snapshot recorded for today so far.'
+    );
+  }
+
+  // Cumulative PD against the World Cup baseline, indexed by campaign day so
+  // day 1 meets day 1. The World Cup series stops at day 14 - only weeks 1-2
+  // of that dashboard carry the full metric set.
+  function renderCampaignChart() {
+    var el = $('campaignChart');
+    if (state.errors.daily || state.errors.wcDaily) {
+      return panelError(el, 'campaign comparison', loadSheets);
+    }
+    if (!state.daily || !state.wcDaily) return skeleton(el, 5);
+
+    var metric = state.campaignMetric;
+    var spec = null;
+    P.CAMPAIGN_METRICS.forEach(function (m) { if (m.key === metric) spec = m; });
+    var fmt = spec && spec.money ? P.fmtMoney : P.fmtNum;
+
+    var series = P.campaignPacing(state.daily, state.wcDaily, metric);
+    if (!series.pd.length) { el.innerHTML = '<div class="empty-note">No campaign days yet.</div>'; return; }
+
+    var maxDay = Math.max(series.pd.length, series.wc.length);
+    var max = 0;
+    series.pd.concat(series.wc).forEach(function (p) { if (p.value > max) max = p.value; });
+    max = max * 1.1 || 1;
+
+    var f = chartFrame(el, 310, { l: 66, r: 20, t: 22, b: 42 });
+    var inner = gridLines(f, max, fmt);
+
+    function x(day) { return f.pad.l + ((day - 1) / Math.max(1, maxDay - 1)) * f.cw; }
+    function y(v) { return f.pad.t + f.ch - (v / max) * f.ch; }
+
+    for (var d = 1; d <= maxDay; d++) {
+      if (maxDay > 10 && d % 2 === 0 && d !== maxDay) continue;
+      inner += '<text x="' + x(d) + '" y="' + (f.pad.t + f.ch + 20) + '" class="chart-label">D' + d + '</text>';
+    }
+
+    function line(pts, color, dash, width) {
+      if (pts.length < 2) return '';
+      return '<polyline fill="none" stroke="' + color + '" stroke-width="' + (width || 2) +
+        '" stroke-linejoin="round" stroke-linecap="round"' +
+        (dash ? ' stroke-dasharray="' + dash + '"' : '') + ' points="' +
+        pts.map(function (p) { return x(p.day) + ',' + y(p.value); }).join(' ') + '"/>';
+    }
+
+    inner += line(series.wc, C.hl, '6 4');
+    inner += line(series.pd, C.outcome, null, 2.5);
+
+    series.wc.forEach(function (p) {
+      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="2.5" fill="' + C.hl +
+        '"><title>WC day ' + p.day + ' (' + p.label + ') — ' + fmt(p.value) + '</title></circle>';
+    });
+    series.pd.forEach(function (p) {
+      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="3.5" fill="' + C.outcome +
+        '"><title>PD day ' + p.day + ' (' + p.label + ') — ' + fmt(p.value) + '</title></circle>';
+    });
+
+    el.innerHTML = svgWrap(f, inner);
+
+    // Headline: where PD stands against the World Cup on the same campaign day.
+    var lastPd = series.pd[series.pd.length - 1];
+    var wcSame = series.wc[lastPd.day - 1];
+    var deltaEl = $('campaignDelta');
+    if (!wcSame) {
+      deltaEl.textContent = 'NO WC BASELINE PAST DAY ' + series.wc.length;
+      deltaEl.style.color = 'rgba(255,255,255,0.35)';
+    } else {
+      var ratio = wcSame.value > 0 ? (lastPd.value - wcSame.value) / wcSame.value : 0;
+      deltaEl.textContent = 'DAY ' + lastPd.day + ': ' + fmt(lastPd.value) + ' vs ' +
+        fmt(wcSame.value) + ' — ' + P.fmtDelta(ratio);
+      deltaEl.style.color = ratio >= 0 ? '#45E85C' : '#FF5C9E';
+    }
+  }
+
+  function sparkline(values, w, h, color) {
+    if (!values.length) return '';
+    var max = Math.max.apply(null, values) || 1;
+    var step = w / Math.max(1, values.length - 1);
+    var pts = values.map(function (v, i) { return (i * step) + ',' + (h - (v / max) * h); }).join(' ');
+    return '<svg class="spark" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
+      '<polyline fill="none" stroke="' + color + '" stroke-width="1.5" points="' + pts + '"/></svg>';
+  }
+
+  // ---------------------------------------------------------------- hero ----
+
+  function renderHero() {
+    var el = $('heroGrid');
+    if (state.errors.volume && state.errors.hourly) return panelError(el, 'live metrics', loadAll);
+    if (!state.volume || !state.hourly) {
+      el.innerHTML = new Array(6).fill(
+        '<div class="kpi-card"><div class="skeleton skel-line" style="width:60%"></div>' +
+        '<div class="skeleton" style="height:32px;width:80%;margin:12px 0"></div>' +
+        '<div class="skeleton skel-line" style="width:45%"></div></div>').join('');
+      return;
+    }
+
+    var today = todayUTC();
+    // /api/pd/volume already collapses the packed response to one row per day,
+    // so the last row is today so far.
+    var vdays = state.volume.days || [];
+    var live = vdays[vdays.length - 1] || { outcome: 0, share: 0 };
+    var snap = P.latestSnapshot(state.hourly) || {};
+    var hour = snap.hour === undefined ? new Date().getUTCHours() : snap.hour;
+
+    // Delta prefers the same hour yesterday. When that hour was never recorded
+    // - the first day, or a missed run - it falls back to yesterday's final and
+    // says so, rather than silently comparing unlike things.
+    function delta(metric, current, isPts) {
+      var base = P.sameHourYesterday(state.hourly, metric, today, hour);
+      var mode = 'vs yesterday ' + (hour < 10 ? '0' + hour : hour) + ':00';
+      if (base === null) {
+        base = P.yesterdayFinal(state.hourly, metric, today);
+        mode = 'vs yesterday final';
+      }
+      if (base === null || !base) return { html: '<span class="kpi-delta flat">no comparison yet</span>' };
+      var cls, txt;
+      if (isPts) {
+        var pts = (current - base) * 100;
+        cls = pts > 0.05 ? 'up' : (pts < -0.05 ? 'down' : 'flat');
+        txt = (pts > 0 ? '+' : '') + pts.toFixed(1) + ' pts';
+      } else {
+        var ch = (current - base) / base;
+        cls = ch > 0.001 ? 'up' : (ch < -0.001 ? 'down' : 'flat');
+        txt = P.fmtDelta(ch);
+      }
+      var info = mode === 'vs yesterday final'
+        ? '<span class="kpi-info" title="No snapshot exists for this hour yesterday, so this compares against yesterday&#39;s end-of-day total.">i</span>' : '';
+      return { html: '<span class="kpi-delta ' + cls + '">' + txt + ' ' + mode + info + '</span>' };
+    }
+
+    var cards = [
+      { label: 'OUTCOME VOLUME', color: C.outcome, value: P.fmtMoney(live.outcome), sub: 'today so far · utc',
+        d: delta('outcomeVolume', live.outcome), src: 'live' },
+      { label: 'MARKET SHARE', color: C.share, value: P.fmtPct(live.share), sub: 'of total hip-4',
+        d: delta('share', live.share, true), src: 'live' },
+      { label: 'UNIQUE VISITORS', color: '#3B82F6', value: P.fmtNum(snap.uvs || 0), sub: 'today so far',
+        d: delta('uvs', snap.uvs || 0), src: 'sheet' },
+      { label: 'SIGNUPS', color: '#1FCFA0', value: P.fmtNum(snap.signups || 0), sub: 'today so far',
+        d: delta('signups', snap.signups || 0), src: 'sheet' },
+      { label: 'DEPOSITORS', color: '#9B7CFF', value: P.fmtNum(snap.depositors || 0), sub: 'today so far',
+        d: delta('depositors', snap.depositors || 0), src: 'sheet' },
+      { label: 'ACTIVE TRADERS', color: '#F58220', value: P.fmtNum(snap.traders || 0), sub: 'today so far',
+        d: delta('traders', snap.traders || 0), src: 'sheet' },
+    ];
+
+    el.innerHTML = cards.map(function (c) {
+      return '<div class="kpi-card">' +
+        '<div class="kpi-bar" style="background:' + c.color + '"></div>' +
+        '<div class="kpi-label" style="color:' + c.color + '">' + c.label + '</div>' +
+        '<div class="kpi-value">' + c.value + '</div>' +
+        '<div class="kpi-sub">' + c.sub + '</div>' +
+        c.d.html +
+        '</div>';
+    }).join('');
+
+    $('shareBadge').textContent = 'SHARE ' + P.fmtPct(live.share);
+    $('dayBadge').textContent = 'DAY ' + (P.daysBetween(PD.campaignStart, today) + 1);
+  }
+
+  // -------------------------------------------------------------- funnel ----
+
+  function funnelHTML(rows) {
+    if (!rows.length || !rows[0].value) return '<div class="empty-note">No data yet.</div>';
+    var max = rows[0].value || 1;
+    var colors = ['#45E85C', '#C4E84A', '#1FCFA0', '#3B82F6', '#9B7CFF', '#F58220'];
+    return rows.map(function (r, i) {
+      var pctW = Math.max(0.6, (r.value / max) * 100);
+      return '<div class="funnel-row">' +
+        '<div class="funnel-stage"><div class="dot" style="width:8px;height:8px;background:' + colors[i] + '"></div>' + esc(r.stage) + '</div>' +
+        '<div class="funnel-track"><div class="funnel-fill" style="width:' + pctW + '%;background:' + colors[i] + '"></div></div>' +
+        '<div class="funnel-value">' + P.fmtNum(r.value) + '</div>' +
+        '<div class="funnel-conv">' + (r.convFromPrev === null ? '—' : P.fmtPct(r.convFromPrev)) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderFunnels() {
+    var elA = $('funnelAll');
+    var elY = $('funnelYesterday');
+    if (state.errors.daily) { panelError(elA, 'daily totals', loadSheets); elY.innerHTML = ''; return; }
+    if (!state.daily) { skeleton(elA, 6); skeleton(elY, 6); return; }
+
+    elA.innerHTML = funnelHTML(P.funnel(state.daily));
+
+    var yest = P.addDays(todayUTC(), -1);
+    var yRows = state.daily.filter(function (r) { return P.dayKey(r.date) === yest; });
+    $('funnelYestDate').textContent = fmtDayLabel(yest);
+    elY.innerHTML = funnelHTML(P.funnel(yRows));
+  }
+
+  // --------------------------------------------------------- daily table ----
+
+  function renderDailyTable() {
+    var el = $('dailyTable');
+    if (state.errors.daily) return panelError(el, 'daily totals', loadSheets);
+    if (!state.daily) return skeleton(el, 6);
+
+    var days = P.populatedDays(state.daily);
+    if (!days.length) { el.innerHTML = '<div class="empty-note">No days recorded yet.</div>'; return; }
+
+    var today = todayUTC();
+    var cols = [
+      { key: 'impressions', label: 'IMPR', fmt: P.fmtNum },
+      { key: 'clicks', label: 'CLICKS', fmt: P.fmtNum },
+      { key: 'uvs', label: 'UVS', fmt: P.fmtNum },
+      { key: 'signups', label: 'SIGNUPS', fmt: P.fmtNum },
+      { key: 'depositors', label: 'DEPOSITORS', fmt: P.fmtNum },
+      { key: 'traders', label: 'TRADERS', fmt: P.fmtNum },
+      { key: 'outcomeVolume', label: 'OUTCOME VOL', fmt: P.fmtMoney, cls: 'green' },
+      { key: 'hlVolume', label: 'HL FE VOL', fmt: P.fmtMoney },
+      { key: 'totalVolume', label: 'TOTAL HIP-4', fmt: P.fmtMoney },
+    ];
+
+    var head = '<tr><th>DATE</th>' + cols.map(function (c) {
+      return '<th>' + c.label + sparkline(days.map(function (d) { return d[c.key] || 0; }), 46, 14, 'rgba(255,255,255,0.25)') + '</th>';
+    }).join('') + '<th>SHARE</th></tr>';
+
+    var rows = days.slice().reverse().map(function (d) {
+      var iso = P.dayKey(d.date);
+      var isToday = iso === today;
+      return '<tr class="' + (isToday ? 'partial-row' : '') + '">' +
+        '<td class="strong">' + fmtDayLabel(iso) + (isToday ? '<span class="partial-tag">partial</span>' : '') + '</td>' +
+        cols.map(function (c) {
+          return '<td class="' + (c.cls || '') + '">' + c.fmt(d[c.key] || 0) + '</td>';
+        }).join('') +
+        '<td class="strong">' + P.fmtPct(d.share) + '</td></tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="breakdown-table"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table>';
+    $('dailyMeta').textContent = days.length + ' DAYS';
+  }
+
+  // ------------------------------------------------------------ channels ----
+
+  function renderChannels() {
+    var el = $('channelTable');
+    if (state.errors.channels) return panelError(el, 'channel summary', loadSheets);
+    if (!state.channels) return skeleton(el, 6);
+
+    var rows = P.activeChannels(state.channels);
+    var total = P.channelBlock(state.channels).filter(function (r) {
+      return String(r.channel || '').trim().toUpperCase() === 'TOTAL';
+    })[0];
+    if (!rows.length) { el.innerHTML = '<div class="empty-note">No channel activity yet.</div>'; return; }
+
+    var cols = [
+      { key: 'posts', label: 'POSTS' }, { key: 'views', label: 'VIEWS' },
+      { key: 'clicks', label: 'CLICKS' }, { key: 'engagements', label: 'ENGAGE' },
+      { key: 'uvs', label: 'UVS' }, { key: 'signups', label: 'SIGNUPS' },
+      { key: 'depositors', label: 'DEPOSITORS' }, { key: 'trades', label: 'TRADES' },
+      { key: 'traders', label: 'TRADERS' },
+    ];
+
+    var highlight = { 'X Organic': 1, 'CoConnect Communities': 1 };
+    var body = rows.map(function (r) {
+      return '<tr class="' + (highlight[r.channel] ? 'highlight-row' : '') + '">' +
+        '<td class="strong">' + esc(r.channel) + '</td>' +
+        cols.map(function (c) { return '<td>' + P.fmtNum(r[c.key] || 0) + '</td>'; }).join('') + '</tr>';
+    }).join('');
+
+    if (total) {
+      body += '<tr class="summary-row"><td>TOTAL</td>' +
+        cols.map(function (c) { return '<td>' + P.fmtNum(total[c.key] || 0) + '</td>'; }).join('') + '</tr>';
+    }
+
+    el.innerHTML = '<table class="breakdown-table"><thead><tr><th>CHANNEL</th>' +
+      cols.map(function (c) { return '<th>' + c.label + '</th>'; }).join('') +
+      '</tr></thead><tbody>' + body + '</tbody></table>';
+  }
+
+  // --------------------------------------------------------- top content ----
+
+  function channelClass(ch) {
+    if (ch === 'X Organic') return 'chan-x';
+    if (ch === 'Stratosphere (KOL)') return 'chan-kol';
+    if (ch === 'Arcadia (Influencers)') return 'chan-inf';
+    if (ch === 'CoConnect Communities') return 'chan-cc';
+    return 'chan-other';
+  }
+
+  function renderTopContent() {
+    var el = $('topContent');
+    if (state.errors.content) return panelError(el, 'content log', loadSheets);
+    if (!state.content) { el.innerHTML = '<div class="top-card"><div class="skeleton skel-line"></div></div>'.repeat(5); return; }
+
+    var top = P.topContent(state.content, 5);
+    if (!top.length) { el.innerHTML = '<div class="empty-note">No content with views yet.</div>'; return; }
+
+    el.innerHTML = top.map(function (r) {
+      return '<div class="top-card" data-day="' + esc(r.day) + '" data-post="' + esc(r.postId) + '">' +
+        '<span class="chan-badge ' + channelClass(r.channel) + '">' + esc(r.channel) + '</span>' +
+        '<div class="top-copy">' + esc(P.truncate(r.copy, 90)) + '</div>' +
+        '<div class="top-metrics">' +
+        '<div class="top-metric"><span class="top-metric-val">' + P.fmtNum(r.views) + '</span><span class="top-metric-key">views</span></div>' +
+        '<div class="top-metric"><span class="top-metric-val">' + P.fmtNum(r.engagements) + '</span><span class="top-metric-key">engage</span></div>' +
+        '<div class="top-metric"><span class="top-metric-val">' + P.fmtNum(r.clicks) + '</span><span class="top-metric-key">clicks</span></div>' +
+        '</div></div>';
+    }).join('');
+
+    Array.prototype.forEach.call(el.querySelectorAll('.top-card'), function (card) {
+      card.addEventListener('click', function () {
+        selectDay(card.dataset.day, card.dataset.post);
+      });
+    });
+  }
+
+  // ---------------------------------------------------- content timeline ----
+
+  var observer = null;
+  var widgetsReady = false;
+  var widgetsBlocked = false;
+
+  // Holders whose blockquote is in the DOM but not yet upgraded by widgets.js.
+  // The script is async, so a batch can mount before it lands; without this
+  // queue those cards would keep a raw blockquote forever.
+  var pendingHolders = [];
+
+  function upgradeEmbeds() {
+    if (widgetsBlocked || !window.twttr || !window.twttr.widgets) return;
+    var queue = pendingHolders;
+    pendingHolders = [];
+    queue.forEach(function (h) {
+      try { window.twttr.widgets.load(h); } catch (e) { /* keep the native card */ }
+    });
+  }
+
+  function loadWidgets() {
+    if (document.getElementById('twitter-wjs')) return;
+    var s = document.createElement('script');
+    s.id = 'twitter-wjs';
+    s.async = true;
+    s.src = 'https://platform.twitter.com/widgets.js';
+    s.onload = function () {
+      widgetsReady = true;
+      if (window.twttr && window.twttr.ready) window.twttr.ready(upgradeEmbeds);
+      else upgradeEmbeds();
+    };
+    document.head.appendChild(s);
+    // Ad blockers swallow widgets.js silently. After three seconds without it,
+    // every card stays native rather than waiting on an embed that never comes.
+    setTimeout(function () { if (!window.twttr) widgetsBlocked = true; }, 3000);
+  }
+
+  function campaignDays() {
+    var out = [];
+    var today = todayUTC();
+    var d = PD.campaignStart;
+    while (d && d <= today) { out.push(d); d = P.addDays(d, 1); }
+    return out;
+  }
+
+  function filteredPosts(day) {
+    var byDay = P.postsByDay(state.content || []);
+    var posts = byDay[day] || [];
+    if (state.channelFilter === 'all') return posts;
+    return posts.filter(function (p) { return p.channel === state.channelFilter; });
+  }
+
+  function renderDayStrip() {
+    var el = $('dayStrip');
+    if (!state.content) { el.innerHTML = ''; return; }
+    var byDay = P.postsByDay(state.content);
+    var days = campaignDays();
+    if (!state.selectedDay) {
+      // Default to the newest day that actually has posts.
+      for (var i = days.length - 1; i >= 0; i--) {
+        if ((byDay[days[i]] || []).length) { state.selectedDay = days[i]; break; }
+      }
+      if (!state.selectedDay) state.selectedDay = days[days.length - 1];
+    }
+    el.innerHTML = days.map(function (d) {
+      var n = (byDay[d] || []).length;
+      return '<button class="day-chip' + (d === state.selectedDay ? ' active' : '') + '" data-day="' + d + '">' +
+        '<span class="day-chip-date">' + fmtDayLabel(d) + '</span>' +
+        '<span class="day-chip-count">' + n + ' post' + (n === 1 ? '' : 's') + '</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(el.querySelectorAll('.day-chip'), function (chip) {
+      chip.addEventListener('click', function () { selectDay(chip.dataset.day); });
+    });
+  }
+
+  function renderPostSpark() {
+    var el = $('postSpark');
+    if (!state.content) { el.innerHTML = ''; return; }
+    var byDay = P.postsByDay(state.content);
+    var days = campaignDays();
+    var vals = days.map(function (d) { return (byDay[d] || []).length; });
+    var f = chartFrame(el, 70, { l: 6, r: 6, t: 10, b: 14 });
+    var max = Math.max.apply(null, vals) || 1;
+    var slot = f.cw / Math.max(1, vals.length);
+    var inner = '';
+    vals.forEach(function (v, i) {
+      var hgt = (v / max) * f.ch;
+      var x = f.pad.l + slot * i + slot * 0.2;
+      inner += '<rect x="' + x + '" y="' + (f.pad.t + f.ch - hgt) + '" width="' + (slot * 0.6) +
+        '" height="' + Math.max(1, hgt) + '" rx="2" fill="' +
+        (days[i] === state.selectedDay ? C.outcome : 'rgba(255,255,255,0.13)') + '"><title>' +
+        fmtDayLabel(days[i]) + ' — ' + v + ' posts</title></rect>';
+    });
+    el.innerHTML = svgWrap(f, inner);
+  }
+
+  function renderDayHeader() {
+    var el = $('dayHeader');
+    if (!state.content || !state.selectedDay) { el.innerHTML = ''; return; }
+    var posts = filteredPosts(state.selectedDay);
+    var views = posts.reduce(function (a, p) { return a + (p.views || 0); }, 0);
+    var byChan = {};
+    posts.forEach(function (p) { byChan[p.channel] = (byChan[p.channel] || 0) + 1; });
+    var best = posts.slice().sort(function (a, b) { return b.views - a.views; })[0];
+
+    el.innerHTML = '<div class="day-header"><div class="day-header-left">' +
+      '<div class="day-header-date">' + fmtDayLabel(state.selectedDay) + '</div>' +
+      '<div class="day-header-sub">' +
+      (Object.keys(byChan).map(function (c) { return byChan[c] + ' × ' + esc(c); }).join(' · ') || 'No posts') +
+      (best ? ' — top: “' + esc(P.truncate(best.copy, 60)) + '”' : '') +
+      '</div></div>' +
+      '<div class="day-header-stats">' +
+      '<div class="day-stat"><span class="day-stat-val">' + posts.length + '</span><span class="day-stat-key">posts</span></div>' +
+      '<div class="day-stat"><span class="day-stat-val">' + P.fmtNum(views) + '</span><span class="day-stat-key">views</span></div>' +
+      '</div></div>';
+
+    // CoConnect and anything else without a post URL: one chip per channel.
+    var cc = (P.nonEmbeddableByDay(state.content) || {})[state.selectedDay] || [];
+    var ccByChan = {};
+    cc.forEach(function (r) { ccByChan[r.channel] = (ccByChan[r.channel] || 0) + 1; });
+    $('ccChips').innerHTML = Object.keys(ccByChan).length
+      ? '<div class="cc-chip-row">' + Object.keys(ccByChan).map(function (c) {
+          return '<div class="cc-chip">+' + ccByChan[c] + ' ' + esc(c) + '</div>';
+        }).join('') + '</div>'
+      : '';
+  }
+
+  // A native card is rendered first for every post and is the permanent
+  // fallback. The embed is layered on top only once it actually arrives, so a
+  // deleted post or a blocked widgets.js can never leave a blank hole.
+  function nativeCard(p, isTop) {
+    return '<div class="post-card" id="post-' + esc(p.postId) + '">' +
+      '<div class="post-overlay">' +
+      '<div class="post-overlay-metric"><span class="post-overlay-val">' + P.fmtNum(p.views) + '</span><span class="post-overlay-key">views</span></div>' +
+      '<div class="post-overlay-metric"><span class="post-overlay-val">' + P.fmtNum(p.engagements) + '</span><span class="post-overlay-key">eng</span></div>' +
+      '<div class="post-overlay-metric"><span class="post-overlay-val">' + P.fmtNum(p.clicks) + '</span><span class="post-overlay-key">clicks</span></div>' +
+      (isTop ? '<span class="ribbon">🔥 top</span>' : '') +
+      '</div>' +
+      '<div class="post-body" data-body="' + esc(p.postId) + '">' +
+      '<div class="post-handle"><span class="chan-badge ' + channelClass(p.channel) + '">' + esc(p.channel) + '</span>' +
+      '<span>@' + esc(p.handle) + '</span><span class="post-time">' + esc(p.time || '') + '</span></div>' +
+      '<div class="post-text">' + esc(p.copy) + '</div>' +
+      '<a class="post-link" href="' + esc(p.postUrl) + '" target="_blank" rel="noopener">View on X ↗</a>' +
+      '</div></div>';
+  }
+
+  function mountEmbed(cell, p) {
+    if (cell.dataset.mounted === '1') return;
+    cell.dataset.mounted = '1';
+    if (widgetsBlocked) return;
+
+    fetch('/api/pd/oembed?url=' + encodeURIComponent(p.postUrl))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.html || widgetsBlocked) return;
+        var body = cell.querySelector('[data-body="' + p.postId + '"]');
+        if (!body) return;
+        var holder = document.createElement('div');
+        holder.className = 'post-embed';
+        holder.innerHTML = j.html;
+        body.parentNode.replaceChild(holder, body);
+        pendingHolders.push(holder);
+        upgradeEmbeds();
+      })
+      .catch(function () { /* the native card is already correct */ });
+  }
+
+  function renderPostGrid() {
+    var el = $('postGrid');
+    if (state.errors.content) return panelError(el, 'content log', loadSheets);
+    if (!state.content) {
+      el.innerHTML = '<div class="post-cell skeleton-shimmer"></div>'.repeat(6);
+      return;
+    }
+    var posts = filteredPosts(state.selectedDay);
+    if (!posts.length) {
+      el.innerHTML = '<div class="empty-note" style="grid-column:1/-1">No posts for this day and filter.</div>';
+      return;
+    }
+
+    var topId = posts.slice().sort(function (a, b) { return b.views - a.views; })[0].postId;
+
+    // Only the selected day is mounted; switching days replaces this entirely,
+    // which unmounts the previous day's iframes.
+    if (observer) observer.disconnect();
+    pendingHolders = []; // holders from the previous day are about to be discarded
+    el.innerHTML = posts.map(function (p) {
+      return '<div class="post-cell" data-post="' + esc(p.postId) + '">' + nativeCard(p, p.postId === topId) + '</div>';
+    }).join('');
+
+    // Embeds mount lazily, in view order, so a 40-post day does not load 40
+    // iframes at once.
+    var byId = {};
+    posts.forEach(function (p) { byId[p.postId] = p; });
+    observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var cell = e.target;
+        mountEmbed(cell, byId[cell.dataset.post]);
+        observer.unobserve(cell);
+      });
+    }, { rootMargin: '300px 0px' });
+
+    Array.prototype.forEach.call(el.querySelectorAll('.post-cell'), function (c) { observer.observe(c); });
+  }
+
+  function selectDay(day, focusPostId) {
+    if (!day) return;
+    state.selectedDay = day;
+    renderDayStrip();
+    renderPostSpark();
+    renderDayHeader();
+    renderPostGrid();
+    if (focusPostId) {
+      var target = document.getElementById('post-' + focusPostId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      $('dayStrip').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // ----------------------------------------------------------- scorecard ----
+
+  function renderScorecard() {
+    var el = $('scoreBody');
+    if (state.errors.comparison) return panelError(el, 'comparison', loadSheets);
+    if (!state.comparison) return skeleton(el, 5);
+
+    var blocks = state.comparison.blocks || [];
+    if (!blocks.length) { el.innerHTML = '<div class="empty-note">No comparison rows.</div>'; return; }
+
+    el.innerHTML = blocks.map(function (b) {
+      return '<div style="margin-bottom:26px">' +
+        '<div class="card-meta" style="margin-bottom:12px">' + esc(b.title) + '</div>' +
+        '<div class="table-scroll"><table class="breakdown-table" style="min-width:640px"><thead><tr>' +
+        '<th>METRIC</th><th>' + esc(b.worldCupLabel) + '</th><th>' + esc(b.pdLabel) + '</th>' +
+        '<th>DELTA</th><th>% CHANGE</th><th>VERDICT</th></tr></thead><tbody>' +
+        b.rows.map(function (r) {
+          var v = /ahead/i.test(r.verdict) ? 'verdict-ahead'
+            : (/behind/i.test(r.verdict) ? 'verdict-behind' : 'verdict-flat');
+          var up = /^\+/.test(r.pctChange);
+          return '<tr><td class="strong">' + esc(r.metric) + '</td>' +
+            '<td>' + esc(r.worldCup) + '</td><td>' + esc(r.pd) + '</td>' +
+            '<td>' + esc(r.delta) + '</td>' +
+            '<td class="' + (up ? 'green' : '') + '">' + esc(r.pctChange) + '</td>' +
+            '<td><span class="verdict-pill ' + v + '">' + esc(r.verdict) + '</span></td></tr>';
+        }).join('') +
+        '</tbody></table></div></div>';
+    }).join('');
+  }
+
+  // ------------------------------------------------------------- loading ----
+
+  function markOk(key) { state.lastOk[key] = Date.now(); delete state.errors[key]; }
+
+  function loadVolume() {
+    return getJSON('/api/pd/volume?startDate=' + PD.campaignStart)
+      .then(function (j) { state.volume = j; markOk('volume'); })
+      .catch(function () { state.errors.volume = 1; })
+      .then(function () { renderHero(); renderShareChart(); updateBadges(); });
+  }
+
+  function loadHourlyApi() {
+    return getJSON('/api/pd/hourly?builder=outcome&hours=48')
+      .then(function (j) { state.hourlyApi = j; markOk('hourlyApi'); })
+      .catch(function () { state.hourlyApi = null; })
+      .then(function () { renderPacingChart(); });
+  }
+
+  function loadTab(tab, key, after) {
+    return getJSON('/api/pd/sheet?tab=' + tab)
+      .then(function (j) {
+        state[key] = tab === 'comparison' ? j : j.rows;
+        markOk(key);
+      })
+      .catch(function () { state.errors[key] = 1; })
+      .then(after);
+  }
+
+  function loadSheets() {
+    return Promise.all([
+      loadTab('daily', 'daily', function () { renderFunnels(); renderDailyTable(); renderCampaignChart(); }),
+      loadTab('hourly', 'hourly', function () { renderHero(); renderPacingChart(); updateBadges(); }),
+      loadTab('content', 'content', function () {
+        renderTopContent(); renderDayStrip(); renderPostSpark(); renderDayHeader(); renderPostGrid();
+      }),
+      loadTab('channels', 'channels', renderChannels),
+      loadTab('comparison', 'comparison', renderScorecard),
+      loadTab('wcdaily', 'wcDaily', renderCampaignChart),
+    ]);
+  }
+
+  function loadAll() {
+    return Promise.all([loadVolume(), loadHourlyApi(), loadSheets()]);
+  }
+
+  // The badge reports the sheet's own freshness, which is what can actually go
+  // stale: volume is refetched every 60s and is either live or errored.
+  function updateBadges() {
+    var badge = $('updatedBadge');
+    var live = $('liveBadge');
+    var snap = state.hourly ? P.latestSnapshot(state.hourly) : null;
+
+    if (snap && snap.timestamp) {
+      var t = new Date(snap.timestamp);
+      var hh = String(t.getUTCHours()).padStart(2, '0');
+      var mm = String(t.getUTCMinutes()).padStart(2, '0');
+      var next = new Date(t.getTime());
+      next.setUTCHours(t.getUTCHours() + 1, 5, 0, 0);
+      badge.textContent = 'SHEET ' + hh + ':' + mm + 'Z · NEXT ~' +
+        String(next.getUTCHours()).padStart(2, '0') + ':05Z';
+    } else {
+      badge.textContent = state.errors.hourly ? 'SHEET UNAVAILABLE' : 'SYNCING…';
+    }
+
+    var lastVol = state.lastOk.volume || 0;
+    var stale = !lastVol || (Date.now() - lastVol) > 15 * 60 * 1000;
+    live.className = 'live-badge' + (stale ? ' stale' : '');
+    $('liveText').textContent = stale ? 'STALE' : 'LIVE';
+  }
+
+  // ---------------------------------------------------------------- init ----
+
+  function debounce(fn, ms) {
+    var t;
+    return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  function init() {
+    $('poolBadge').textContent = '$' + (PD.rewardsPool / 1e6) + 'M REWARDS POOL';
+
+    $('shareSwitcher').addEventListener('click', function (e) {
+      var b = e.target.closest('.metric-btn');
+      if (!b) return;
+      Array.prototype.forEach.call(this.children, function (c) { c.classList.remove('active'); });
+      b.classList.add('active');
+      state.shareMode = b.dataset.mode;
+      renderShareChart();
+    });
+
+    $('campaignSwitcher').innerHTML = P.CAMPAIGN_METRICS.map(function (m, i) {
+      return '<button class="metric-btn' + (i === 0 ? ' active' : '') + '" data-metric="' +
+        m.key + '">' + m.label.toUpperCase() + '</button>';
+    }).join('');
+
+    $('campaignSwitcher').addEventListener('click', function (e) {
+      var b = e.target.closest('.metric-btn');
+      if (!b) return;
+      Array.prototype.forEach.call(this.children, function (c) { c.classList.remove('active'); });
+      b.classList.add('active');
+      state.campaignMetric = b.dataset.metric;
+      renderCampaignChart();
+    });
+
+    $('pacingSwitcher').addEventListener('click', function (e) {
+      var b = e.target.closest('.metric-btn');
+      if (!b) return;
+      Array.prototype.forEach.call(this.children, function (c) { c.classList.remove('active'); });
+      b.classList.add('active');
+      state.pacingMetric = b.dataset.metric;
+      renderPacingChart();
+    });
+
+    $('channelFilter').addEventListener('click', function (e) {
+      var b = e.target.closest('.metric-btn');
+      if (!b) return;
+      Array.prototype.forEach.call(this.children, function (c) { c.classList.remove('active'); });
+      b.classList.add('active');
+      state.channelFilter = b.dataset.chan;
+      renderDayHeader();
+      renderPostGrid();
+    });
+
+    $('scoreToggle').addEventListener('click', function () {
+      this.classList.toggle('open');
+      $('scoreBody').classList.toggle('open');
+    });
+
+    // Arrow keys walk the day strip.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      if (/input|textarea/i.test((e.target.tagName || ''))) return;
+      var days = campaignDays();
+      var i = days.indexOf(state.selectedDay);
+      if (i === -1) return;
+      var next = days[i + (e.key === 'ArrowRight' ? 1 : -1)];
+      if (next) selectDay(next);
+    });
+
+    window.addEventListener('resize', debounce(function () {
+      renderShareChart(); renderPacingChart(); renderCampaignChart(); renderPostSpark();
+    }, 180));
+
+    loadWidgets();
+    loadAll();
+
+    // Volume is real-time; the sheet only changes when a Cowork task writes it.
+    setInterval(function () { loadVolume(); loadHourlyApi(); }, 60 * 1000);
+    setInterval(loadSheets, 5 * 60 * 1000);
+    setInterval(updateBadges, 30 * 1000);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>

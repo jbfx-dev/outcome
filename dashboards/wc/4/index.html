@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Week 5: World Cup 2026 Campaign | Outcome</title>
-<meta name="description" content="Week 5 surge: $5.0M WC volume, 22.6% share (32.9% peak). Signups +95% WoW (1,756), depositors +530% (963) as semi-finals drive conversion.">
+<title>Week 4: World Cup 2026 Campaign | Outcome</title>
+<meta name="description" content="Week 4 knockouts: $4.5M WC volume, 16% share (31% peak). 25,029 visitors (+41% WoW), 935 signups, 151 depositors as knockout rounds begin.">
 
 <!-- Open Graph -->
-<meta property="og:title" content="Week 5: World Cup 2026 Campaign | Outcome">
-<meta property="og:description" content="Week 5 surge: $5.0M WC volume, 22.6% share (32.9% peak). Signups +95% WoW (1,756), depositors +530% (963) as semi-finals drive conversion.">
-<meta property="og:url" content="https://outcome.labs.tg/world-cup/5/">
+<meta property="og:title" content="Week 4: World Cup 2026 Campaign | Outcome">
+<meta property="og:description" content="Week 4 knockouts: $4.5M WC volume, 16% share (31% peak). 25,029 visitors (+41% WoW), 935 signups, 151 depositors as knockout rounds begin.">
+<meta property="og:url" content="https://outcome.labs.tg/dashboards/wc/4/">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://outcome.labs.tg/meta-image.png">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Week 5: World Cup 2026 Campaign | Outcome">
-<meta name="twitter:description" content="Week 5 surge: $5.0M WC volume, 22.6% share (32.9% peak). Signups +95% WoW (1,756), depositors +530% (963) as semi-finals drive conversion.">
+<meta name="twitter:title" content="Week 4: World Cup 2026 Campaign | Outcome">
+<meta name="twitter:description" content="Week 4 knockouts: $4.5M WC volume, 16% share (31% peak). 25,029 visitors (+41% WoW), 935 signups, 151 depositors as knockout rounds begin.">
 <meta name="twitter:image" content="https://outcome.labs.tg/meta-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,14 +25,14 @@
 <style>
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("../fonts/PPNeueCorp-Medium.otf") format("opentype");
+  src: url("/fonts/PPNeueCorp-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "PP Neue Corp";
-  src: url("../fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
+  src: url("/fonts/PPNeueCorp-ExtraBoldCondensed.otf") format("opentype");
   font-weight: 800;
   font-style: normal;
   font-stretch: condensed;
@@ -434,26 +434,6 @@ body {
   text-transform: uppercase; text-align: center;
 }
 
-/* ---------- EVENT BADGE ---------- */
-.event-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 2px 10px; border-radius: 6px;
-  font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; margin-left: 8px;
-}
-.event-badge.final {
-  background: rgba(245,130,32,0.15); border: 1px solid rgba(245,130,32,0.3);
-  color: #F58220;
-}
-.event-badge.peak {
-  background: rgba(196,232,74,0.15); border: 1px solid rgba(196,232,74,0.3);
-  color: #C4E84A;
-}
-.event-badge.article {
-  background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3);
-  color: #3B82F6;
-}
-
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 1200px) {
   .kpi-grid { grid-template-columns: repeat(3, 1fr); }
@@ -494,17 +474,17 @@ body {
       LIVE
     </div>
     <div class="week-selector" id="weekSelector">
-      <button class="week-selector-btn has-week" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEK 5 <span class="week-selector-arrow">&#9660;</span></button>
+      <button class="week-selector-btn has-week" onclick="document.getElementById('weekSelector').classList.toggle('open')">WEEK 4 <span class="week-selector-arrow">&#9660;</span></button>
       <div class="week-selector-dropdown">
-        <a href="/world-cup/1">Week 1 <span class="ws-date">Jun 10–16</span></a>
-        <a href="/world-cup/2">Week 2 <span class="ws-date">Jun 17–23</span></a>
-        <a href="/world-cup/3">Week 3 <span class="ws-date">Jun 24–30</span></a>
-        <a href="/world-cup/4">Week 4 <span class="ws-date">Jul 1–7</span></a>
-        <a href="/world-cup/5" class="active">Week 5 <span class="ws-date">Jul 8–14</span></a>
-        <a href="/world-cup/6">Week 6 <span class="ws-date">Jul 15–20</span></a>
+        <a href="/dashboards/wc/1">Week 1 <span class="ws-date">Jun 10–16</span></a>
+        <a href="/dashboards/wc/2">Week 2 <span class="ws-date">Jun 17–23</span></a>
+        <a href="/dashboards/wc/3">Week 3 <span class="ws-date">Jun 24–30</span></a>
+        <a href="/dashboards/wc/4" class="active">Week 4 <span class="ws-date">Jul 1–7</span></a>
+        <a href="/dashboards/wc/5">Week 5 <span class="ws-date">Jul 8–14</span></a>
+        <a href="/dashboards/wc/6">Week 6 <span class="ws-date">Jul 15–20</span></a>
       </div>
     </div>
-    <div class="date-badge">JUL 7 &ndash; 13, 2026</div>
+    <div class="date-badge">JUL 1 &ndash; 7, 2026</div>
   </div>
 </nav>
 
@@ -512,17 +492,17 @@ body {
 
   <!-- WEEK NAV -->
   <div class="week-nav">
-    <a href="/world-cup/">Overall</a>
-    <a href="/world-cup/channels">Channels</a>
-    <a href="/clicks-explorer/">Clicks</a>
-    <a href="/ugc-explorer/">UGC</a>
-    <a href="/world-cup/insights/">Insights</a>
+    <a href="/dashboards/wc/">Overall</a>
+    <a href="/dashboards/wc/channels">Channels</a>
+    <a href="/dashboards/wc/clicks-explorer/">Clicks</a>
+    <a href="/dashboards/wc/ugc-explorer/">UGC</a>
+    <a href="/dashboards/wc/insights/">Insights</a>
   </div>
 
   <!-- TITLE -->
   <div class="title-area">
     <div class="title-left">
-      <div class="title-sub">WEEKLY ROLLUP &middot; WEEK 5</div>
+      <div class="title-sub">WEEKLY ROLLUP &middot; WEEK 4</div>
       <h1 class="title-h1">
         World Cup 2026<br>
         <span class="green">Campaign</span>
@@ -530,7 +510,7 @@ body {
     </div>
     <div class="title-badges">
       <div class="badge">7 Days</div>
-      <div class="badge orange">~$20,000 Spend</div>
+      <div class="badge orange">~$48,000 Spend</div>
     </div>
   </div>
 
@@ -539,38 +519,38 @@ body {
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#C4E84A"></div>
       <div class="kpi-label" style="color:#C4E84A">WC Volume</div>
-      <div class="kpi-value">$5.0M</div>
-      <div class="kpi-sub">WC market share trajectory below</div>
+      <div class="kpi-value">$4.5M</div>
+      <div class="kpi-sub">5.6x from W1</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#FF5C9E"></div>
       <div class="kpi-label" style="color:#FF5C9E">Market Share</div>
-      <div class="kpi-value">22.6%</div>
-      <div class="kpi-sub">avg &middot; 32.9% peak Jul 13</div>
+      <div class="kpi-value">16.0%</div>
+      <div class="kpi-sub">avg &middot; 31% peak Jul 2</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#1FCFA0"></div>
       <div class="kpi-label" style="color:#1FCFA0">Unique Visitors</div>
-      <div class="kpi-value">24,506</div>
-      <div class="kpi-delta up">&#9650; +7% vs W4</div>
+      <div class="kpi-value">25,029</div>
+      <div class="kpi-delta up">&#9650; +41% vs W3</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#45E85C"></div>
       <div class="kpi-label" style="color:#45E85C">Signups</div>
-      <div class="kpi-value">1,756</div>
-      <div class="kpi-delta up">&#9650; +95% vs W4</div>
+      <div class="kpi-value">935</div>
+      <div class="kpi-delta down">&#9660; -8% vs W3</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#F58220"></div>
       <div class="kpi-label" style="color:#F58220">Depositors</div>
-      <div class="kpi-value">963</div>
-      <div class="kpi-delta up">&#9650; +530% vs W4</div>
+      <div class="kpi-value">151</div>
+      <div class="kpi-delta down">&#9660; -10% vs W3</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-bar" style="background:#3B82F6"></div>
       <div class="kpi-label" style="color:#3B82F6">Active Traders</div>
-      <div class="kpi-value">1,200</div>
-      <div class="kpi-delta up">&#9650; +11% vs W4</div>
+      <div class="kpi-value">1,111</div>
+      <div class="kpi-sub">flat vs W3</div>
     </div>
   </div>
 
@@ -583,82 +563,82 @@ body {
     <div class="volume-grid">
       <div>
         <div class="volume-col-label">World Cup Markets</div>
-        <div class="volume-big" style="color:#45E85C">22.6%</div>
+        <div class="volume-big" style="color:#45E85C">16.0%</div>
         <div class="volume-of">OF HL WC</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:22.6%; background:#45E85C"></div>
+          <div class="volume-bar-fill" style="width:16%; background:#45E85C"></div>
         </div>
-        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome $5.0M &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC $21.7M</div>
-        <div class="volume-delta up">&#9650; +19.1pp vs W1 (3.5%)</div>
+        <div class="volume-legend"><span style="color:#45E85C">&#9679;</span> Outcome $4.5M &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> HL WC $28.4M</div>
+        <div class="volume-delta up">&#9650; +12.5pp vs W1 (3.5%)</div>
       </div>
       <div>
         <div class="volume-col-label">Volume per Trader</div>
-        <div class="volume-big" style="color:#3B82F6">$4,127</div>
+        <div class="volume-big" style="color:#3B82F6">$4,096</div>
         <div class="volume-of">PER ACTIVE TRADER</div>
         <div class="volume-bar-track">
-          <div class="volume-bar-fill" style="width:46%; background:#3B82F6"></div>
+          <div class="volume-bar-fill" style="width:45%; background:#3B82F6"></div>
         </div>
-        <div class="volume-legend"><span style="color:#3B82F6">&#9679;</span> 1,200 traders &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> $5.0M total WC</div>
-        <div class="volume-delta up">&#9650; 6.2x WC vol vs W1</div>
+        <div class="volume-legend"><span style="color:#3B82F6">&#9679;</span> 1,111 traders &nbsp; <span style="color:rgba(255,255,255,0.3)">&#9679;</span> $4.5M total WC</div>
+        <div class="volume-delta up">&#9650; 5.6x WC vol vs W1</div>
       </div>
       <div>
         <div class="volume-col-label">Daily Outcome WC Volume</div>
         <div class="vol-chart">
           <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$633K</div>
+            <div class="vol-bar-label">$950K</div>
             <div class="vol-bar-stack" style="width:100%">
               <div class="vol-bar-total" style="height:6px"></div>
-              <div class="vol-bar-wc" style="height:81px"></div>
+              <div class="vol-bar-wc" style="height:124px"></div>
             </div>
-            <div class="vol-bar-day">7</div>
+            <div class="vol-bar-day">1</div>
           </div>
           <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$162K</div>
+            <div class="vol-bar-label">$1.0M</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:6px"></div>
+              <div class="vol-bar-wc" style="height:134px"></div>
+            </div>
+            <div class="vol-bar-day">2</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$483K</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:5px"></div>
+              <div class="vol-bar-wc" style="height:61px"></div>
+            </div>
+            <div class="vol-bar-day">3</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$757K</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:5px"></div>
+              <div class="vol-bar-wc" style="height:99px"></div>
+            </div>
+            <div class="vol-bar-day">4</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$302K</div>
             <div class="vol-bar-stack" style="width:100%">
               <div class="vol-bar-total" style="height:4px"></div>
-              <div class="vol-bar-wc" style="height:21px"></div>
+              <div class="vol-bar-wc" style="height:37px"></div>
             </div>
-            <div class="vol-bar-day">8</div>
+            <div class="vol-bar-day">5</div>
           </div>
           <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$1.25M</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-total" style="height:6px"></div>
-              <div class="vol-bar-wc" style="height:160px"></div>
-            </div>
-            <div class="vol-bar-day">9</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$734K</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-total" style="height:6px"></div>
-              <div class="vol-bar-wc" style="height:94px"></div>
-            </div>
-            <div class="vol-bar-day">10</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$989K</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-total" style="height:6px"></div>
-              <div class="vol-bar-wc" style="height:127px"></div>
-            </div>
-            <div class="vol-bar-day">11</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$794K</div>
-            <div class="vol-bar-stack" style="width:100%">
-              <div class="vol-bar-total" style="height:6px"></div>
-              <div class="vol-bar-wc" style="height:102px"></div>
-            </div>
-            <div class="vol-bar-day">12</div>
-          </div>
-          <div class="vol-bar-wrap">
-            <div class="vol-bar-label">$393K</div>
+            <div class="vol-bar-label">$404K</div>
             <div class="vol-bar-stack" style="width:100%">
               <div class="vol-bar-total" style="height:5px"></div>
               <div class="vol-bar-wc" style="height:50px"></div>
             </div>
-            <div class="vol-bar-day">13</div>
+            <div class="vol-bar-day">6</div>
+          </div>
+          <div class="vol-bar-wrap">
+            <div class="vol-bar-label">$633K</div>
+            <div class="vol-bar-stack" style="width:100%">
+              <div class="vol-bar-total" style="height:5px"></div>
+              <div class="vol-bar-wc" style="height:82px"></div>
+            </div>
+            <div class="vol-bar-day">7</div>
           </div>
         </div>
         <div style="display:flex;gap:16px;margin-top:12px">
@@ -679,9 +659,51 @@ body {
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#C4E84A"></div> MARKET SHARE TRAJECTORY</div>
-      <div class="card-meta">OUTCOME VS HL WC &middot; JUL 7 &ndash; 13</div>
+      <div class="card-meta">OUTCOME VS HL WC &middot; JUL 1 &ndash; 7</div>
     </div>
     <div class="imp-chart">
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 1</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:63%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">25.0%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 2 (Peak)</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:79%;background:#C4E84A;opacity:0.9"></div>
+        </div>
+        <div class="imp-value">31.4%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 3</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:31%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">12.4%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 4</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:40%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">16.0%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 5</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:24%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">9.6%</div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 6</div>
+        <div class="imp-bar-track">
+          <div class="imp-bar-fill" style="width:25%;background:#C4E84A;opacity:0.7"></div>
+        </div>
+        <div class="imp-value">10.0%</div>
+      </div>
       <div class="imp-row">
         <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 7</div>
         <div class="imp-bar-track">
@@ -689,60 +711,18 @@ body {
         </div>
         <div class="imp-value">11.4%</div>
       </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 8</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:31%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">12.5%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 9 <span class="event-badge peak">Genesis Badge Launch</span></div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:70%;background:#C4E84A;opacity:0.8"></div>
-        </div>
-        <div class="imp-value">27.9%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 10</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:60%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">24.1%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 11</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:69%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">27.4%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 12</div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:55%;background:#C4E84A;opacity:0.7"></div>
-        </div>
-        <div class="imp-value">22.0%</div>
-      </div>
-      <div class="imp-row">
-        <div class="imp-channel"><div class="dot" style="background:#C4E84A"></div>Jul 13 <span class="event-badge peak">Peak</span></div>
-        <div class="imp-bar-track">
-          <div class="imp-bar-fill" style="width:82%;background:#C4E84A;opacity:0.95"></div>
-        </div>
-        <div class="imp-value">32.9%</div>
-      </div>
       <div class="imp-axis">
         <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span>
       </div>
     </div>
     <div class="imp-callouts">
-      <div class="imp-callout"><strong>32.9%</strong> peak share on Jul 13</div>
-      <div class="imp-callout"><strong>22.6%</strong> average share for the week</div>
-      <div class="imp-callout"><strong>6.5x</strong> higher share than W1 avg (3.5%)</div>
+      <div class="imp-callout"><strong>31.4%</strong> peak share on Jul 2</div>
+      <div class="imp-callout"><strong>16.0%</strong> average share for the week</div>
+      <div class="imp-callout"><strong>4.6x</strong> higher share than W1 avg (3.5%)</div>
     </div>
   </div>
 
-  <!-- DAILY TOTALS + WEEK 5 SUMMARY -->
+  <!-- DAILY TOTALS + WEEK 4 SUMMARY -->
   <div class="side-grid">
     <div class="card" id="dailyCard">
       <div class="card-header">
@@ -753,31 +733,30 @@ body {
           <button class="metric-btn" data-metric="traders">Traders</button>
         </div>
       </div>
-      <div class="daily-subtitle" id="dailySubtitle">Visits &middot; Jul 7 &ndash; 13</div>
+      <div class="daily-subtitle" id="dailySubtitle">Visits &middot; Jul 1 &ndash; 7</div>
       <div class="daily-chart" id="dailyChartArea"></div>
       <div id="dailyLegend"></div>
     </div>
 
     <div class="card">
       <div class="card-header">
-        <div class="card-title"><div class="dot" style="background:#F58220"></div> WEEK 5 SUMMARY</div>
+        <div class="card-title"><div class="dot" style="background:#F58220"></div> WEEK 4 SUMMARY</div>
       </div>
       <table class="conv-table">
         <thead>
-          <tr><th>Metric</th><th>Value</th><th>vs W4</th></tr>
+          <tr><th>Metric</th><th>Value</th><th>vs W3</th></tr>
         </thead>
         <tbody>
-          <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>24,506</td><td style="color:#45E85C">+7%</td></tr>
-          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>1,756</td><td style="color:#45E85C">+95%</td></tr>
-          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>963</td><td style="color:#45E85C">+530%</td></tr>
-          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>1,200</td><td style="color:#45E85C">+11%</td></tr>
-          <tr><td><div class="dot" style="background:#C4E84A"></div>WC Volume</td><td>$5.0M</td><td style="color:#45E85C">+10%</td></tr>
-          <tr><td><div class="dot" style="background:#FF5C9E"></div>HL WC Share</td><td>22.6%</td><td style="color:#45E85C">+6.6pp</td></tr>
-          <tr class="total"><td>Vol / Trader</td><td>$4,127</td><td></td></tr>
+          <tr><td><div class="dot" style="background:#1FCFA0"></div>Visitors</td><td>25,029</td><td style="color:#45E85C">+41%</td></tr>
+          <tr><td><div class="dot" style="background:#45E85C"></div>Signups</td><td>935</td><td style="color:#FF5C9E">-8%</td></tr>
+          <tr><td><div class="dot" style="background:#F58220"></div>Depositors</td><td>151</td><td style="color:#FF5C9E">-10%</td></tr>
+          <tr><td><div class="dot" style="background:#3B82F6"></div>Active Traders</td><td>1,111</td><td style="color:rgba(255,255,255,0.5)">0%</td></tr>
+          <tr><td><div class="dot" style="background:#C4E84A"></div>WC Volume</td><td>$4.5M</td><td style="color:#FF5C9E">-47%</td></tr>
+          <tr><td><div class="dot" style="background:#FF5C9E"></div>HL WC Share</td><td>16.0%</td><td style="color:#FF5C9E">-4.0pp</td></tr>
+          <tr class="total"><td>Vol / Trader</td><td>$4,096</td><td></td></tr>
         </tbody>
       </table>
       <div class="conv-footnote">Week-over-week comparisons. Volume and share vs Hyperliquid WC markets.</div>
-      <div class="conv-footnote" style="margin-top:10px"><strong style="color:#F58220">Signups +95%</strong> &amp; <strong style="color:#F58220">Depositors +530%</strong> driven by Genesis Badge Launch.</div>
     </div>
   </div>
 
@@ -785,7 +764,7 @@ body {
   <div class="card">
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#3B82F6"></div> CONVERSIONS BY SOURCE</div>
-      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 13</div>
+      <div class="card-meta">CAMPAIGN TOTALS &middot; JUN 10 &ndash; JUL 7</div>
     </div>
     <table class="conv-table">
       <thead>
@@ -798,17 +777,16 @@ body {
         <tr><td><div class="dot" style="background:#FF5C9E"></div>X Giveaways</td><td>0</td><td>0</td><td>0</td></tr>
         <tr><td><div class="dot" style="background:#F58220"></div>Telegram Organic</td><td>750</td><td>18</td><td>1</td></tr>
         <tr><td><div class="dot" style="background:#9B7CFF"></div>Discord Organic</td><td>133</td><td>9</td><td>17</td></tr>
-        <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>737</td><td>667</td><td>10</td></tr>
+        <tr><td><div class="dot" style="background:#F58220"></div>CoConnect (Alphabot)</td><td>708</td><td>649</td><td>10</td></tr>
         <tr><td><div class="dot" style="background:#FF5C9E"></div>Substack</td><td>196</td><td>14</td><td>74</td></tr>
         <tr><td><div class="dot" style="background:#3B82F6"></div>HL S2 Analyzer</td><td>18</td><td>0</td><td>1</td></tr>
         <tr><td><div class="dot" style="background:#1FCFA0"></div>Shortmob</td><td>498</td><td>15</td><td>0</td></tr>
         <tr><td><div class="dot" style="background:rgba(255,255,255,0.3)"></div>Unattributed</td><td>34,976</td><td>4,601</td><td>4,206</td></tr>
-        <tr class="total"><td>Total</td><td>69,228</td><td>5,530</td><td>4,404</td></tr>
+        <tr class="total"><td>Total</td><td>69,199</td><td>5,527</td><td>4,404</td></tr>
       </tbody>
     </table>
-    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jul 13.</div>
+    <div class="conv-footnote">Campaign totals from Channel Summary sheet. Updated through Jul 7.</div>
     <div class="conv-footnote">Post-sign-in events (deposit, trade) largely unattributed due to losing tracking parameters in the sign-in process.</div>
-    <div class="conv-footnote">CoConnect: 265 community collabs, ~1.06M est. impressions (265 &times; ~4K avg), 2,464 clicks (Dub), 667 signups &amp; 667 depositors (tracked separately outside UTMs). No meaningful traffic correlation (r&nbsp;=&nbsp;0.07).</div>
   </div>
 
   <!-- DAILY BREAKDOWN -->
@@ -816,7 +794,7 @@ body {
     <div class="card-header">
       <div class="card-title"><div class="dot" style="background:#F58220"></div> DAILY BREAKDOWN</div>
     </div>
-    <div class="breakdown-subtitle">ACQUISITION FUNNEL &middot; WEEK 5</div>
+    <div class="breakdown-subtitle">ACQUISITION FUNNEL &middot; WEEK 4</div>
     <table class="breakdown-table">
       <thead>
         <tr>
@@ -824,15 +802,15 @@ body {
         </tr>
       </thead>
       <tbody>
+        <tr><td><span class="breakdown-date-main">Jul 1</span><span class="breakdown-date-day">Tue</span></td><td>3,009</td><td class="green">121</td><td>18</td><td>171</td><td class="orange">$950K</td></tr>
+        <tr><td><span class="breakdown-date-main">Jul 2</span><span class="breakdown-date-day">Wed</span></td><td>2,751</td><td class="green">146</td><td>26</td><td>161</td><td class="orange">$1.0M</td></tr>
+        <tr><td><span class="breakdown-date-main">Jul 3</span><span class="breakdown-date-day">Thu</span></td><td>4,043</td><td class="green">158</td><td>31</td><td>175</td><td class="orange">$483K</td></tr>
+        <tr><td><span class="breakdown-date-main">Jul 4</span><span class="breakdown-date-day">Fri</span></td><td>2,676</td><td class="green">132</td><td>28</td><td>155</td><td class="orange">$757K</td></tr>
+        <tr><td><span class="breakdown-date-main">Jul 5</span><span class="breakdown-date-day">Sat</span></td><td>2,551</td><td class="green">112</td><td>16</td><td>134</td><td class="orange">$302K</td></tr>
+        <tr><td><span class="breakdown-date-main">Jul 6</span><span class="breakdown-date-day">Sun</span></td><td>5,195</td><td class="green">135</td><td>9</td><td>153</td><td class="orange">$404K</td></tr>
         <tr><td><span class="breakdown-date-main">Jul 7</span><span class="breakdown-date-day">Mon</span></td><td>4,804</td><td class="green">131</td><td>23</td><td>162</td><td class="orange">$633K</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 8</span><span class="breakdown-date-day">Tue</span></td><td>1,403</td><td class="green">68</td><td>10</td><td>91</td><td class="orange">$162K</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 9</span><span class="breakdown-date-day">Wed</span><span class="event-badge peak">GENESIS BADGE LAUNCH</span></td><td>3,817</td><td class="green">322</td><td>233</td><td>207</td><td class="orange">$1.25M</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 10</span><span class="breakdown-date-day">Thu</span><span class="event-badge final">BADGE DAY 2 &middot; 26 COLLABS</span></td><td>5,347</td><td class="green">652</td><td>511</td><td>251</td><td class="orange">$734K</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 11</span><span class="breakdown-date-day">Fri</span></td><td>3,003</td><td class="green">206</td><td>86</td><td>195</td><td class="orange">$989K</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 12</span><span class="breakdown-date-day">Sat</span></td><td>3,993</td><td class="green">208</td><td>53</td><td>161</td><td class="orange">$794K</td></tr>
-        <tr><td><span class="breakdown-date-main">Jul 13</span><span class="breakdown-date-day">Sun</span><span class="event-badge peak">32.9% SHARE PEAK</span></td><td>2,139</td><td class="green">169</td><td>47</td><td>133</td><td class="orange">$393K</td></tr>
         <tr class="summary-row">
-          <td>WEEK 5</td><td>24,506</td><td class="green">1,756</td><td>963</td><td>1,200</td><td class="orange">$5.0M</td>
+          <td>WEEK 4</td><td>25,029</td><td class="green">935</td><td>151</td><td>1,111</td><td class="orange">$4.5M</td>
         </tr>
       </tbody>
     </table>
@@ -845,13 +823,13 @@ body {
 // ===================== DAILY TOTALS =====================
 (function() {
   const DAILY = [
-    { date: "Jul 7", day: "Mon", visits: 4804, signups: 131, traders: 162 },
-    { date: "Jul 8", day: "Tue", visits: 1403, signups: 68, traders: 91 },
-    { date: "Jul 9", day: "Wed", visits: 3817, signups: 322, traders: 207 },
-    { date: "Jul 10", day: "Thu", visits: 5347, signups: 652, traders: 251 },
-    { date: "Jul 11", day: "Fri", visits: 3003, signups: 206, traders: 195 },
-    { date: "Jul 12", day: "Sat", visits: 3993, signups: 208, traders: 161 },
-    { date: "Jul 13", day: "Sun", visits: 2139, signups: 169, traders: 133 }
+    { date: "Jul 1", day: "Tue", visits: 3009, signups: 121, traders: 171 },
+    { date: "Jul 2", day: "Wed", visits: 2751, signups: 146, traders: 161 },
+    { date: "Jul 3", day: "Thu", visits: 4043, signups: 158, traders: 175 },
+    { date: "Jul 4", day: "Fri", visits: 2676, signups: 132, traders: 155 },
+    { date: "Jul 5", day: "Sat", visits: 2551, signups: 112, traders: 134 },
+    { date: "Jul 6", day: "Sun", visits: 5195, signups: 135, traders: 153 },
+    { date: "Jul 7", day: "Mon", visits: 4804, signups: 131, traders: 162 }
   ];
 
   const metrics = [
@@ -869,7 +847,7 @@ body {
     if (metricKey === 'visits') {
       DAILY.forEach((d, i) => {
         const totalH = maxVal > 0 ? Math.round((vals[i] / maxVal) * 160) : 0;
-        const clickH = Math.round(totalH * 0.18);
+        const clickH = Math.round(totalH * 0.82);
         const organicH = totalH - clickH;
         barsHtml += `
           <div class="daily-bar-wrap">
@@ -923,7 +901,7 @@ body {
       this.classList.add('active');
       const mk = this.dataset.metric;
       const label = metrics.find(m => m.key === mk).label;
-      document.getElementById('dailySubtitle').textContent = label + ' · Jul 7 – 13';
+      document.getElementById('dailySubtitle').textContent = label + ' · Jul 1 – 7';
       document.getElementById('dailyChartArea').innerHTML = renderDailyChart(mk);
       document.getElementById('dailyLegend').innerHTML = getLegend(mk);
     });
