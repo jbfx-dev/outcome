@@ -34,10 +34,9 @@
       impressions: 1538005, clicks: 11105, uvs: 18079,
       signups: 1660, depositors: 169, traders: 1137, volume: 1394003,
     },
-    // Hand-curated milestones drawn on the market-share chart.
-    annotations: [
-      { date: '2026-09-01', label: 'Flipped HL - 72%' },
-    ],
+    // Milestones drawn on the market-share chart. Empty by default; add
+    // { date, label } entries to annotate a day.
+    annotations: [],
   };
 
   // The tabs the dashboard reads, and nothing else. Budget Tracker and Cost
