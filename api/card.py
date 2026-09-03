@@ -274,7 +274,7 @@ def build(query, headers):
         params = {"address": address, "coin": coin}
         if closed_at:
             params["closedAt"] = closed_at
-        for key in ("title", "side", "theme"):
+        for key in ("title", "side", "theme", "style", "wcPosition"):
             val = (query.get(key) or [""])[0].strip()
             if val:
                 params[key] = val

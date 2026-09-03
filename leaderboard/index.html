@@ -1232,6 +1232,13 @@ a.trader:hover .uname { color: var(--up); }
       q += '&address=' + encodeURIComponent(who.address) +
         '&title=' + encodeURIComponent(p.title) +
         '&side=' + encodeURIComponent(p.sideLabel);
+      // Which design a card gets depends on market metadata, which the server
+      // cannot read while Cloudflare blocks it. We can, so pass our reading;
+      // the server ignores it whenever it can see the market itself.
+      if (p.cardStyle === 'wc') {
+        q += '&style=wc';
+        if (p.wcPosition) q += '&wcPosition=' + encodeURIComponent(p.wcPosition);
+      }
       // The renderer cannot look the profile image up itself in this mode; we
       // already have it. Host-allowlisted server-side, and decorative only.
       if (who.avatar) q += '&avatar=' + encodeURIComponent(who.avatar);

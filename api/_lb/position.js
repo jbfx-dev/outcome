@@ -59,6 +59,13 @@ module.exports = async (req, res) => {
     const position = L.decorate(chosen, entry);
 
     // Only fill gaps left by unreachable metadata - never override real data.
+    //
+    // Which card design a position gets depends on market metadata, and that is
+    // precisely what Cloudflare blocks us from reading. The page can read it
+    // (its direct path runs from the visitor's own connection), so when we
+    // cannot see the market we accept its reading of the labels AND the style.
+    // When we can see the market, ours wins and these are ignored - the same
+    // precedence the title already had.
     if (!position.known) {
       const title = String(q.title || '').trim().slice(0, 120);
       const side = String(q.side || '').trim().slice(0, 24);
@@ -70,6 +77,15 @@ module.exports = async (req, res) => {
       if (side) position.sideLabel = side.toUpperCase();
       const theme = String(q.theme || '').trim().toLowerCase();
       if (THEMES.has(theme)) position.theme = theme;
+
+      // Still wins-only: the World Cup design has no loss variant, and that is
+      // decided here rather than trusted from the caller.
+      if (String(q.style || '').trim().toLowerCase() === 'wc' && position.outcome === 'win') {
+        position.cardStyle = 'wc';
+        position.styleSource = 'client';
+        const pill = String(q.wcPosition || '').trim().slice(0, 32);
+        position.wcPosition = pill ? pill.toUpperCase() : position.sideLabel;
+      }
       position.cardReady = Boolean(position.resolved && position.title);
     }
 
