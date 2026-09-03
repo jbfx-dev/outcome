@@ -19,6 +19,13 @@
 <meta name="twitter:description" content="Live tracker for the Permissionless Deployment launch: real-time HIP-4 market share, volume pacing, funnel and content performance.">
 <meta name="twitter:image" content="https://outcome.labs.tg/dashboards/pd/meta-pd.png">
 
+<!-- Favicon: the Outcome mark on brand green, drawn from the same vector as the nav logo -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="alternate icon" href="/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0B">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -226,6 +233,27 @@ body {
   font-size: 9px; font-weight: 600; fill: #C4E84A;
   letter-spacing: 0.04em; text-anchor: middle;
 }
+.chart-tip {
+  position: fixed; z-index: 60; pointer-events: none; opacity: 0;
+  transition: opacity 0.1s ease;
+  padding: 10px 12px; border-radius: 10px;
+  background: rgba(20,20,23,0.97); border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+  font-size: 11px; letter-spacing: 0.02em; min-width: 150px;
+}
+.chart-tip.on { opacity: 1; }
+.chart-tip-head {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); margin-bottom: 7px;
+}
+.chart-tip-row {
+  display: flex; align-items: center; gap: 8px; margin-top: 4px;
+  color: rgba(255,255,255,0.65);
+}
+.chart-tip-row .sw { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.chart-tip-row .lb { flex: 1; }
+.chart-tip-row .vl { color: #F5F8FF; font-weight: 600; }
+.chart-cursor { stroke: rgba(255,255,255,0.18); stroke-width: 1; }
 .chart-note {
   margin-top: 10px; font-size: 10px; font-weight: 500;
   letter-spacing: 0.04em; color: rgba(245,130,32,0.75);
@@ -749,8 +777,105 @@ body {
 
   // --------------------------------------------------------------- charts --
 
+  // ------------------------------------------------------------ tooltip ----
+  // Native SVG <title> tooltips were unusable here: they wait about a second,
+  // cannot be styled, and demand a hit on a 3px target. This replaces them with
+  // one shared tooltip that snaps to the nearest point along x and reports every
+  // series at that position, so the whole chart width is a hover target.
+
+  var tipEl = null;
+  var charts = {};   // container id -> { points, frame }
+
+  function tipNode() {
+    if (!tipEl) {
+      tipEl = document.createElement('div');
+      tipEl.className = 'chart-tip';
+      document.body.appendChild(tipEl);
+    }
+    return tipEl;
+  }
+
+  function hideTip() { if (tipEl) tipEl.classList.remove('on'); }
+
+  // points: [{ x, head, rows: [{ label, color, value }] }] in viewBox coords.
+  function attachTip(id, points, frame) {
+    charts[id] = { points: points, frame: frame };
+    var el = $(id);
+    if (el.dataset.tipBound === '1') return;
+    el.dataset.tipBound = '1';
+
+    el.addEventListener('mousemove', function (e) {
+      var c = charts[id];
+      if (!c || !c.points.length) return hideTip();
+      var svg = el.querySelector('svg');
+      if (!svg) return hideTip();
+
+      var r = svg.getBoundingClientRect();
+      var vb = svg.viewBox.baseVal;
+      // A chart laid out at zero width (rendered while hidden, or before first
+      // layout) would divide by zero here and silently swallow every hover.
+      if (!(r.width > 0) || !(vb.width > 0)) return hideTip();
+      var vx = ((e.clientX - r.left) / r.width) * vb.width;
+
+      var best = null;
+      var bestD = Infinity;
+      c.points.forEach(function (p) {
+        var d = Math.abs(p.x - vx);
+        if (d < bestD) { bestD = d; best = p; }
+      });
+      if (!best) return hideTip();
+
+      var t = tipNode();
+      t.innerHTML = '<div class="chart-tip-head">' + esc(best.head) + '</div>' +
+        best.rows.map(function (row) {
+          return '<div class="chart-tip-row">' +
+            '<span class="sw" style="background:' + row.color + '"></span>' +
+            '<span class="lb">' + esc(row.label) + '</span>' +
+            '<span class="vl">' + esc(row.value) + '</span></div>';
+        }).join('');
+      t.classList.add('on');
+
+      // Keep the card on screen near the cursor.
+      var tw = t.offsetWidth;
+      var th = t.offsetHeight;
+      var x = e.clientX + 14;
+      var y = e.clientY - th - 12;
+      if (x + tw > window.innerWidth - 8) x = e.clientX - tw - 14;
+      if (y < 8) y = e.clientY + 16;
+      t.style.left = x + 'px';
+      t.style.top = y + 'px';
+    });
+
+    el.addEventListener('mouseleave', hideTip);
+  }
+
+  // Same tooltip for plain HTML rows (the funnel), which have no viewBox to
+  // snap along - the row itself is the target.
+  function attachRowTip(el, head, rows) {
+    el.addEventListener('mousemove', function (e) {
+      var t = tipNode();
+      t.innerHTML = '<div class="chart-tip-head">' + esc(head) + '</div>' +
+        rows.map(function (row) {
+          return '<div class="chart-tip-row">' +
+            '<span class="sw" style="background:' + row.color + '"></span>' +
+            '<span class="lb">' + esc(row.label) + '</span>' +
+            '<span class="vl">' + esc(row.value) + '</span></div>';
+        }).join('');
+      t.classList.add('on');
+      var tw = t.offsetWidth, th = t.offsetHeight;
+      var x = e.clientX + 14, y = e.clientY - th - 12;
+      if (x + tw > window.innerWidth - 8) x = e.clientX - tw - 14;
+      if (y < 8) y = e.clientY + 16;
+      t.style.left = x + 'px';
+      t.style.top = y + 'px';
+    });
+    el.addEventListener('mouseleave', hideTip);
+  }
+
   // Shared axis maths so every chart lines up the same way.
   function chartFrame(container, height, pad) {
+    // clientWidth is 0 when the page has no layout yet; 900 keeps the maths
+    // sane, and the resize handler re-renders at the real width once it exists.
     var w = container.clientWidth || 900;
     var p = pad || { l: 56, r: 20, t: 20, b: 40 };
     return {
@@ -817,7 +942,7 @@ body {
         inner += '<rect class="chart-bar" x="' + x + '" y="' + y + '" width="' + barW +
           '" height="' + hgt + '" fill="' + s.c + '"' +
           (isToday ? ' opacity="0.72" stroke="rgba(255,255,255,0.25)" stroke-dasharray="3 2"' : '') +
-          '><title>' + fmtDayLabel(d.date) + ' — ' + P.fmtMoney(s.v) + '</title></rect>';
+          '/>';
       });
 
       // Share line rides its own 0-100% scale on the right.
@@ -841,12 +966,25 @@ body {
       inner += '<polyline fill="none" stroke="' + C.share + '" stroke-width="2" stroke-linejoin="round" points="' +
         pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') + '"/>';
     }
-    pts.forEach(function (p, i) {
-      inner += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3.5" fill="#0A0A0B" stroke="' + C.share + '" stroke-width="2"><title>' +
-        P.fmtPct(days[i].share) + ' share</title></circle>';
+    pts.forEach(function (p) {
+      inner += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3.5" fill="#0A0A0B" stroke="' + C.share + '" stroke-width="2"/>';
     });
 
     el.innerHTML = svgWrap(f, inner);
+
+    attachTip('shareChart', days.map(function (d, i) {
+      return {
+        x: pts[i][0],
+        head: fmtDayLabel(d.date) + (d.date === today ? ' · partial' : ''),
+        rows: [
+          { label: 'Outcome', color: C.outcome, value: P.fmtMoney(d.outcome) },
+          { label: 'HL Frontend', color: C.hl, value: P.fmtMoney(d.hlFrontend) },
+          { label: 'Other builders', color: C.other, value: P.fmtMoney(d.other) },
+          { label: 'Total HIP-4', color: 'rgba(255,255,255,0.35)', value: P.fmtMoney(d.total) },
+          { label: 'Outcome share', color: C.share, value: P.fmtPct(d.share) },
+        ],
+      };
+    }), f);
   }
 
   // 5.4 Cumulative curve for the selected metric: today, yesterday, and the
@@ -930,17 +1068,7 @@ body {
     inner += line(yestSeries, C.hl, '6 4');
     inner += line(todaySeries, C.outcome, null, 2.5);
 
-    // Comparison series get invisible, generously sized hit targets so their
-    // totals are readable on hover without cluttering the chart.
-    function hitPoints(series, label) {
-      series.forEach(function (p) {
-        inner += '<circle cx="' + (f.pad.l + (p.hour / 24) * f.cw) + '" cy="' +
-          (f.pad.t + f.ch - (p.value / max) * f.ch) + '" r="7" fill="transparent">' +
-          '<title>' + label + ' — ' + String(p.hour) + ':00Z · ' + fmt(p.value) + '</title></circle>';
-      });
-    }
-    hitPoints(yestSeries, 'Yesterday');
-    hitPoints(avgSeries, $('avgLegend').textContent || 'Average');
+
 
     // Interpolated points are marked hollow so a gap is never mistaken for data.
     todaySeries.forEach(function (p) {
@@ -948,11 +1076,33 @@ body {
       var cy = f.pad.t + f.ch - (p.value / max) * f.ch;
       inner += '<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="' +
         (p.interpolated ? '#0A0A0B' : C.outcome) + '" stroke="' + C.outcome +
-        '" stroke-width="1.5"><title>' + (p.interpolated ? 'interpolated — ' : '') +
-        String(p.hour) + ':00Z · ' + fmt(p.value) + '</title></circle>';
+        '" stroke-width="1.5"/>';
     });
 
     el.innerHTML = svgWrap(f, inner);
+
+    // One tooltip entry per hour, carrying whichever series have a value there.
+    var byHour = {};
+    function collect(series, label, color, flagInterp) {
+      series.forEach(function (p) {
+        (byHour[p.hour] || (byHour[p.hour] = [])).push({
+          label: label + (flagInterp && p.interpolated ? ' (interpolated)' : ''),
+          color: color, value: fmt(p.value),
+        });
+      });
+    }
+    collect(todaySeries, 'Today', C.outcome, true);
+    collect(yestSeries, 'Yesterday', C.hl);
+    collect(avgSeries, $('avgLegend').textContent || 'Average', C.avg);
+
+    attachTip('pacingChart', Object.keys(byHour).map(Number).sort(function (a, b) { return a - b; })
+      .map(function (h) {
+        return {
+          x: f.pad.l + (h / 24) * f.cw,
+          head: (h < 10 ? '0' + h : h) + ':00 UTC',
+          rows: byHour[h],
+        };
+      }), f);
 
     // Impressions are written only by the 3x/day full runs, so early in the day
     // there can be a single point and no line. Say why, rather than leaving a
@@ -1011,15 +1161,32 @@ body {
     inner += line(series.pd, C.outcome, null, 2.5);
 
     series.wc.forEach(function (p) {
-      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="2.5" fill="' + C.hl +
-        '"><title>WC day ' + p.day + ' (' + p.label + ') — ' + fmt(p.value) + '</title></circle>';
+      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="2.5" fill="' + C.hl + '"/>';
     });
     series.pd.forEach(function (p) {
-      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="3.5" fill="' + C.outcome +
-        '"><title>PD day ' + p.day + ' (' + p.label + ') — ' + fmt(p.value) + '</title></circle>';
+      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="3.5" fill="' + C.outcome + '"/>';
     });
 
     el.innerHTML = svgWrap(f, inner);
+
+    // Both campaigns at the same campaign day, plus the gap between them.
+    var pdBy = {};
+    var wcBy = {};
+    series.pd.forEach(function (p) { pdBy[p.day] = p; });
+    series.wc.forEach(function (p) { wcBy[p.day] = p; });
+    var dayKeys = [];
+    for (var dd = 1; dd <= maxDay; dd++) if (pdBy[dd] || wcBy[dd]) dayKeys.push(dd);
+
+    attachTip('campaignChart', dayKeys.map(function (dd) {
+      var rows = [];
+      if (pdBy[dd]) rows.push({ label: 'PD · ' + pdBy[dd].label, color: C.outcome, value: fmt(pdBy[dd].value) });
+      if (wcBy[dd]) rows.push({ label: 'WC · ' + wcBy[dd].label, color: C.hl, value: fmt(wcBy[dd].value) });
+      if (pdBy[dd] && wcBy[dd] && wcBy[dd].value > 0) {
+        var diff = (pdBy[dd].value - wcBy[dd].value) / wcBy[dd].value;
+        rows.push({ label: 'Difference', color: diff >= 0 ? C.outcome : '#FF5C9E', value: P.fmtDelta(diff) });
+      }
+      return { x: x(dd), head: 'Campaign day ' + dd, rows: rows };
+    }), f);
 
     // Headline: where PD stands against the World Cup on the same campaign day.
     var lastPd = series.pd[series.pd.length - 1];
@@ -1208,15 +1375,27 @@ body {
       var pctW = r.value > 0
         ? 12 + ((Math.log(Math.max(1, r.value)) - lo) / span) * 88
         : 0.6;
-      return '<div class="funnel-row">' +
+      return '<div class="funnel-row" data-stage="' + i + '">' +
         '<div class="funnel-stage"><div class="dot" style="width:8px;height:8px;background:' + colors[i] + '"></div>' + esc(r.stage) + '</div>' +
-        '<div class="funnel-track" title="' + esc(r.stage) + ': ' + r.value.toLocaleString('en-US') +
-        (r.convFromPrev === null ? '' : ' · ' + P.fmtPct(r.convFromPrev) + ' from previous stage') +
-        '"><div class="funnel-fill" style="width:' + pctW + '%;background:' + colors[i] + '"></div></div>' +
+        '<div class="funnel-track"><div class="funnel-fill" style="width:' + pctW +
+        '%;background:' + colors[i] + '"></div></div>' +
         '<div class="funnel-value">' + P.fmtNum(r.value) + '</div>' +
         '<div class="funnel-conv">' + (r.convFromPrev === null ? '—' : P.fmtPct(r.convFromPrev)) + '</div>' +
         '</div>';
     }).join('');
+  }
+
+  function bindFunnelTips(container, rows) {
+    var colors = ['#45E85C', '#C4E84A', '#1FCFA0', '#3B82F6', '#9B7CFF', '#F58220'];
+    Array.prototype.forEach.call(container.querySelectorAll('.funnel-row'), function (el) {
+      var r = rows[+el.dataset.stage];
+      if (!r) return;
+      var tip = [{ label: 'Total', color: colors[+el.dataset.stage], value: r.value.toLocaleString('en-US') }];
+      if (r.convFromPrev !== null) {
+        tip.push({ label: 'From previous', color: 'rgba(255,255,255,0.35)', value: P.fmtPct(r.convFromPrev) });
+      }
+      attachRowTip(el, r.stage, tip);
+    });
   }
 
   function renderFunnels() {
@@ -1225,12 +1404,16 @@ body {
     if (state.errors.daily) { panelError(elA, 'daily totals', loadSheets); elY.innerHTML = ''; return; }
     if (!state.daily) { skeleton(elA, 6); skeleton(elY, 6); return; }
 
-    elA.innerHTML = funnelHTML(P.funnel(state.daily));
+    var allRows = P.funnel(state.daily);
+    elA.innerHTML = funnelHTML(allRows);
+    bindFunnelTips(elA, allRows);
 
     var yest = P.addDays(todayUTC(), -1);
     var yRows = state.daily.filter(function (r) { return P.dayKey(r.date) === yest; });
     $('funnelYestDate').textContent = fmtDayLabel(yest);
-    elY.innerHTML = funnelHTML(P.funnel(yRows));
+    var yFunnel = P.funnel(yRows);
+    elY.innerHTML = funnelHTML(yFunnel);
+    bindFunnelTips(elY, yFunnel);
   }
 
   // --------------------------------------------------------- daily table ----
@@ -1439,10 +1622,17 @@ body {
       var x = f.pad.l + slot * i + slot * 0.2;
       inner += '<rect x="' + x + '" y="' + (f.pad.t + f.ch - hgt) + '" width="' + (slot * 0.6) +
         '" height="' + Math.max(1, hgt) + '" rx="2" fill="' +
-        (days[i] === state.selectedDay ? C.outcome : 'rgba(255,255,255,0.13)') + '"><title>' +
-        fmtDayLabel(days[i]) + ' — ' + v + ' posts</title></rect>';
+        (days[i] === state.selectedDay ? C.outcome : 'rgba(255,255,255,0.13)') + '"/>';
     });
     el.innerHTML = svgWrap(f, inner);
+
+    attachTip('postSpark', days.map(function (dayIso, i) {
+      return {
+        x: f.pad.l + slot * i + slot * 0.5,
+        head: fmtDayLabel(dayIso),
+        rows: [{ label: 'Posts', color: C.outcome, value: String(vals[i]) }],
+      };
+    }), f);
   }
 
   function renderDayHeader() {
