@@ -13,6 +13,9 @@
     "api/pd.js": {
       "includeFiles": "dashboards/pd/pd.js",
       "maxDuration": 20
+    },
+    "api/top-trades.js": {
+      "maxDuration": 60
     }
   },
   "redirects": [
@@ -88,6 +91,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/leaderboard/trades",
+      "destination": "/leaderboard/index.html"
+    },
     {
       "source": "/api/pd/:route",
       "destination": "/api/pd?_r=:route"
