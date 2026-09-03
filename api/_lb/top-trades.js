@@ -12,7 +12,7 @@
 // Scanning deeper closes the gap at a linear cost in upstream calls, which is
 // why `scan` is capped rather than unbounded.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 const DEFAULT_SCAN = 25;
 const MAX_SCAN = 40;

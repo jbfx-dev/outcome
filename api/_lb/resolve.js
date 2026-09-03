@@ -1,7 +1,7 @@
 // GET /api/resolve?url=https://outcome.xyz/profile/<username>
 // Accepts a pasted profile link or a bare username and confirms it exists.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 module.exports = async (req, res) => {
   try {

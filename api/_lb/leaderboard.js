@@ -1,7 +1,7 @@
 // GET /api/leaderboard?duration=24h|168h|720h|all&limit=&offset=
 // Mirrors Outcome's own leaderboard, trimmed to what the table renders.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 module.exports = async (req, res) => {
   try {

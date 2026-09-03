@@ -4,17 +4,11 @@
       "includeFiles": "api/_kit/**",
       "maxDuration": 60
     },
-    "api/positions.js": {
-      "maxDuration": 30
-    },
-    "api/trader.js": {
-      "maxDuration": 20
-    },
     "api/pd.js": {
       "includeFiles": "dashboards/pd/pd.js",
       "maxDuration": 20
     },
-    "api/top-trades.js": {
+    "api/lb.js": {
       "maxDuration": 60
     }
   },
@@ -92,12 +86,44 @@
   ],
   "rewrites": [
     {
-      "source": "/leaderboard/trades",
-      "destination": "/leaderboard/index.html"
+      "source": "/api/lb/:route",
+      "destination": "/api/lb?_r=:route"
+    },
+    {
+      "source": "/api/leaderboard",
+      "destination": "/api/lb?_r=leaderboard"
+    },
+    {
+      "source": "/api/trader",
+      "destination": "/api/lb?_r=trader"
+    },
+    {
+      "source": "/api/positions",
+      "destination": "/api/lb?_r=positions"
+    },
+    {
+      "source": "/api/position",
+      "destination": "/api/lb?_r=position"
+    },
+    {
+      "source": "/api/resolve",
+      "destination": "/api/lb?_r=resolve"
+    },
+    {
+      "source": "/api/top-trades",
+      "destination": "/api/lb?_r=top-trades"
+    },
+    {
+      "source": "/api/diag",
+      "destination": "/api/lb?_r=diag"
     },
     {
       "source": "/api/pd/:route",
       "destination": "/api/pd?_r=:route"
+    },
+    {
+      "source": "/leaderboard/trades",
+      "destination": "/leaderboard/index.html"
     },
     {
       "source": "/leaderboard/t/:username",

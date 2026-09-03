@@ -13,7 +13,7 @@
 // the worst a forged request achieves is mislabelling which market a real trade
 // was in; it can never invent the money.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
 const COIN = /^#\d+$/;

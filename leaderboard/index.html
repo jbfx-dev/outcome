@@ -41,6 +41,9 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Any element given an explicit display (the view switcher is inline-flex)
+   would otherwise ignore the hidden attribute. */
+[hidden] { display: none !important; }
 html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
   background: #0A0A0B; color: #F5F8FF;
@@ -535,7 +538,8 @@ a.trader:hover .uname { color: var(--up); }
 
   var state = {
     duration: '24h',
-    window: 'all',
+    window: 'all',        // trader page position window
+    tradeWindow: '24h',   // top-trades board window (independent)
     view: 'traders',
     trades: [],
     tradesCache: {},
@@ -820,6 +824,9 @@ a.trader:hover .uname { color: var(--up); }
       '<div><div class="thead-name">' + esc(username) + '</div>' +
       '<div class="thead-meta">Loading profile&hellip;</div></div></div>';
     $('trader-stats').innerHTML = '';
+    Array.prototype.forEach.call($('pos-tabs').children, function (b) {
+      b.setAttribute('aria-selected', String(b.dataset.window === state.window));
+    });
     $('pos-body').innerHTML = skeletonRows(7, 8);
 
     load(
@@ -1052,7 +1059,7 @@ a.trader:hover .uname { color: var(--up); }
 
   function loadTopTrades() {
     var token = ++state.token.trades;
-    var cachedRows = state.tradesCache[state.window];
+    var cachedRows = state.tradesCache[state.tradeWindow];
     if (cachedRows) return renderTopTrades(cachedRows, cachedRows.scanned, cachedRows.scanned, true);
 
     $('tt-body').innerHTML = '<tr><td colspan="7">' +
@@ -1062,7 +1069,7 @@ a.trader:hover .uname { color: var(--up); }
 
     load(
       function () {
-        return get('/top-trades?window=' + encodeURIComponent(state.window) +
+        return get('/top-trades?window=' + encodeURIComponent(state.tradeWindow) +
                    '&limit=' + TT_LIMIT + '&scan=' + TT_SCAN);
       },
       function () { return directTopTrades(token); }
@@ -1071,7 +1078,7 @@ a.trader:hover .uname { color: var(--up); }
         if (token !== state.token.trades) return;
         var rows = data.trades || [];
         rows.scanned = data.scanned;
-        state.tradesCache[state.window] = rows;
+        state.tradesCache[state.tradeWindow] = rows;
         renderTopTrades(rows, data.scanned, data.requested, true);
       })
       .catch(function () {
@@ -1087,7 +1094,7 @@ a.trader:hover .uname { color: var(--up); }
   // a few at a time to stay well inside Outcome's 60/min rate limit.
   function directTopTrades(token) {
     return o1('/api/v1/leaderboard', {
-      duration: state.window, filter_by: 'pnl', order_by: 'desc', offset: 0, limit: TT_SCAN
+      duration: state.tradeWindow, filter_by: 'pnl', order_by: 'desc', offset: 0, limit: TT_SCAN
     }).then(function (board) {
       var candidates = (board.rows || []).filter(function (r) { return r.username; });
       var entries = [];
@@ -1121,7 +1128,7 @@ a.trader:hover .uname { color: var(--up); }
             if (token !== state.token.trades) return;
             // Show what we have so far; the list only ever grows and re-sorts.
             renderTopTrades(
-              D.rankTrades(entries, state.window, TT_LIMIT).map(flattenTrade),
+              D.rankTrades(entries, state.tradeWindow, TT_LIMIT).map(flattenTrade),
               entries.length, candidates.length, false
             );
           });
@@ -1129,7 +1136,7 @@ a.trader:hover .uname { color: var(--up); }
 
       return promisePool(candidates, 4, one).then(function () {
         return {
-          trades: D.rankTrades(entries, state.window, TT_LIMIT).map(flattenTrade),
+          trades: D.rankTrades(entries, state.tradeWindow, TT_LIMIT).map(flattenTrade),
           scanned: entries.length,
           requested: candidates.length
         };
@@ -1357,8 +1364,6 @@ a.trader:hover .uname { color: var(--up); }
     } else if (route.view === 'trades') {
       state.username = null;
       document.title = 'Top trades · Outcome PnL Cards';
-      // The trade board has its own window, independent of the trader page's.
-      state.window = state.tradeWindow || '24h';
       syncWindowTabs();
       loadTopTrades();
     } else {
@@ -1371,7 +1376,7 @@ a.trader:hover .uname { color: var(--up); }
 
   function syncWindowTabs() {
     Array.prototype.forEach.call($('tt-tabs').children, function (b) {
-      b.setAttribute('aria-selected', String(b.dataset.window === state.window));
+      b.setAttribute('aria-selected', String(b.dataset.window === state.tradeWindow));
     });
   }
 
@@ -1393,7 +1398,6 @@ a.trader:hover .uname { color: var(--up); }
   $('tt-tabs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-window]');
     if (!b) return;
-    state.window = b.dataset.window;
     state.tradeWindow = b.dataset.window;
     syncWindowTabs();
     loadTopTrades();

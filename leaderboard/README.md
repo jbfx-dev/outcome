@@ -101,6 +101,22 @@ titles.
 
 ## Endpoints
 
+All leaderboard routes are handlers inside a **single** serverless function.
+Vercel counts every non-underscore file under `api/` as its own function and the
+Hobby plan caps that at 12; seven separate route files pushed the project to 13
+and the build failed. They now live in `api/_lb/` (underscore = not deployed
+separately) behind `api/lb.js`, the same shape as `api/pd.js`. Project total is
+7 of 12.
+
+`vercel.json` rewrites both `/api/lb/:route` and the original flat paths
+(`/api/leaderboard`, `/api/positions`, …) onto that function, so every URL that
+was ever live still resolves. `api/card.py` calls `/api/lb?_r=…` directly rather
+than a flat path: that request originates inside another function, and hitting
+the function file needs no rewrite to resolve.
+
+Adding a route means adding a file to `api/_lb/` and a line to `ROUTES` — it
+costs no function slots.
+
 | Route | Purpose |
 |---|---|
 | `GET /api/leaderboard?duration=24h\|168h\|720h\|all&limit=&offset=` | Ranked traders |

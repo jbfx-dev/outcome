@@ -74,7 +74,11 @@ def _get_json(url, timeout=25):
 
 def find_by_address(base, params):
     """Rebuild one position from Hyperliquid fills alone (no Outcome API)."""
-    url = "%s/api/position?%s" % (base, urllib.parse.urlencode(params))
+    # Hit the function file directly rather than /api/position: that flat path
+    # is an edge rewrite, and this request originates inside another function.
+    # /api/lb?_r=position needs no rewrite to resolve, so it cannot be affected
+    # by routing changes.
+    url = "%s/api/lb?%s" % (base, urllib.parse.urlencode(dict(params, _r="position")))
     try:
         payload = _get_json(url)
     except urllib.error.HTTPError as e:
@@ -92,9 +96,9 @@ def find_by_address(base, params):
 
 def find_position(base, username, coin, closed_at):
     """Locate one position in the trader's rebuilt history."""
-    url = "%s/api/positions?%s" % (
+    url = "%s/api/lb?%s" % (
         base,
-        urllib.parse.urlencode({"username": username, "window": "all"}),
+        urllib.parse.urlencode({"_r": "positions", "username": username, "window": "all"}),
     )
     try:
         payload = _get_json(url)
