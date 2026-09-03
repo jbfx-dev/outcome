@@ -41,6 +41,9 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Any element given an explicit display (the view switcher is inline-flex)
+   would otherwise ignore the hidden attribute. */
+[hidden] { display: none !important; }
 html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
   background: #0A0A0B; color: #F5F8FF;
@@ -98,6 +101,19 @@ button { font-family: inherit; }
 }
 .page-sub { margin-top: 10px; font-size: 14px; color: var(--dim); max-width: 62ch; line-height: 1.6; }
 
+/* ---------- VIEW SWITCHER ---------- */
+.viewswitch {
+  display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 26px;
+  border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,0.03);
+}
+.vs {
+  padding: 9px 18px; border-radius: 9px; text-decoration: none;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--dim); transition: all 0.15s ease; white-space: nowrap;
+}
+.vs:hover { color: rgba(255,255,255,0.8); }
+.vs[aria-selected="true"] { background: rgba(255,255,255,0.1); color: #F5F8FF; }
+
 /* ---------- CONTROLS ---------- */
 .controls {
   display: flex; align-items: center; justify-content: space-between;
@@ -140,6 +156,11 @@ button { font-family: inherit; }
   border: 1px solid var(--line); border-radius: 14px;
   background: rgba(255,255,255,0.02); overflow: hidden;
 }
+/* Safety net: if a table still cannot fit, it scrolls inside its own box
+   rather than pushing the page sideways. */
+.card-surface { overflow-x: auto; }
+.sm-only { display: none; }
+.sm-pill { margin-right: 6px; }
 table { width: 100%; border-collapse: collapse; }
 thead th {
   text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
@@ -154,6 +175,8 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 .rank { color: var(--dimmer); font-weight: 600; width: 54px; font-variant-numeric: tabular-nums; }
 .rank-1 { color: #FFD166; }
 .trader { display: flex; align-items: center; gap: 11px; min-width: 0; }
+a.trader { text-decoration: none; }
+a.trader:hover .uname { color: var(--up); }
 .avatar {
   width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; object-fit: cover;
   background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
@@ -312,6 +335,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
   .paste input { width: 100%; max-width: none; }
   .paste { width: 100%; }
   .hide-sm { display: none; }
+  .sm-only { display: inline-block; }
+  .sm-pill { padding: 2px 6px; font-size: 9px; vertical-align: baseline; }
+  .mkt-sub { line-height: 1.7; }
   thead th, tbody td { padding: 12px 12px; font-size: 13px; }
 }
 </style>
@@ -340,6 +366,12 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 </nav>
 
 <main class="content">
+  <!-- ============ VIEW SWITCHER ============ -->
+  <div class="viewswitch" id="viewswitch" role="tablist" aria-label="View">
+    <a class="vs" role="tab" href="/leaderboard/" data-view="traders" aria-selected="true">Top traders</a>
+    <a class="vs" role="tab" href="/leaderboard/trades" data-view="trades" aria-selected="false">Top trades</a>
+  </div>
+
   <!-- ============ LEADERBOARD VIEW ============ -->
   <section id="view-leaderboard">
     <h1 class="page-title">Top traders</h1>
@@ -379,6 +411,43 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
       </table>
     </div>
     <p class="section-note" id="lb-note" style="margin-top:12px"></p>
+  </section>
+
+  <!-- ============ TOP TRADES VIEW ============ -->
+  <section id="view-trades" hidden>
+    <h1 class="page-title">Top trades</h1>
+    <p class="page-sub">
+      The biggest single winning positions across Outcome, ranked by realised PnL.
+      Grab the share card straight from the row.
+    </p>
+
+    <div class="controls">
+      <div class="tabs" role="tablist" aria-label="Trade window" id="tt-tabs">
+        <button class="tab" role="tab" data-window="24h" aria-selected="true">Daily</button>
+        <button class="tab" role="tab" data-window="168h" aria-selected="false">Weekly</button>
+        <button class="tab" role="tab" data-window="720h" aria-selected="false">30 days</button>
+        <button class="tab" role="tab" data-window="all" aria-selected="false">All time</button>
+      </div>
+      <div class="section-note" id="tt-progress"></div>
+    </div>
+
+    <div class="card-surface">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">#</th>
+            <th class="hide-sm">Trader</th>
+            <th>Market</th>
+            <th class="hide-sm">Side</th>
+            <th class="num hide-sm">Staked</th>
+            <th class="num">PnL</th>
+            <th class="num">Card</th>
+          </tr>
+        </thead>
+        <tbody id="tt-body"></tbody>
+      </table>
+    </div>
+    <p class="section-note" id="tt-note" style="margin-top:12px"></p>
   </section>
 
   <!-- ============ TRADER VIEW ============ -->
@@ -469,7 +538,11 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 
   var state = {
     duration: '24h',
-    window: 'all',
+    window: 'all',        // trader page position window
+    tradeWindow: '24h',   // top-trades board window (independent)
+    view: 'traders',
+    trades: [],
+    tradesCache: {},
     username: null,
     address: null,
     avatar: null,
@@ -478,11 +551,12 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     truncated: false,
     active: null,      // position open in the modal
     theme: '',         // '' = auto (server picks from the market)
+    subject: null,     // whose card the modal is showing
     objectUrl: null,   // blob URL for the rendered preview
     // One token per concern, not one shared counter: the trader header, the
     // positions table and the card preview are all in flight at once, and a
     // single counter would let each new request silently discard the others.
-    token: { board: 0, trader: 0, positions: 0, preview: 0 }
+    token: { board: 0, trader: 0, positions: 0, preview: 0, trades: 0 }
   };
 
   // ------------------------------------------------------------ formatting --
@@ -750,6 +824,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
       '<div><div class="thead-name">' + esc(username) + '</div>' +
       '<div class="thead-meta">Loading profile&hellip;</div></div></div>';
     $('trader-stats').innerHTML = '';
+    Array.prototype.forEach.call($('pos-tabs').children, function (b) {
+      b.setAttribute('aria-selected', String(b.dataset.window === state.window));
+    });
     $('pos-body').innerHTML = skeletonRows(7, 8);
 
     load(
@@ -970,36 +1047,219 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     }).join('');
   }
 
+  // ------------------------------------------------------------ top trades --
+  // No upstream endpoint ranks trades, only traders, so the biggest trades are
+  // found by rebuilding the top-ranked traders' histories and ranking their
+  // positions. On the direct path that is real work in the visitor's browser -
+  // roughly 5MB and a few seconds for 20 traders - so results render
+  // progressively as each trader lands rather than after all of them.
+
+  var TT_SCAN = 20;
+  var TT_LIMIT = 25;
+
+  function loadTopTrades() {
+    var token = ++state.token.trades;
+    var cachedRows = state.tradesCache[state.tradeWindow];
+    if (cachedRows) return renderTopTrades(cachedRows, cachedRows.scanned, cachedRows.scanned, true);
+
+    $('tt-body').innerHTML = '<tr><td colspan="7">' +
+      loader('Finding the biggest trades') + '</td></tr>';
+    $('tt-progress').textContent = '';
+    $('tt-note').textContent = '';
+
+    load(
+      function () {
+        return get('/top-trades?window=' + encodeURIComponent(state.tradeWindow) +
+                   '&limit=' + TT_LIMIT + '&scan=' + TT_SCAN);
+      },
+      function () { return directTopTrades(token); }
+    )
+      .then(function (data) {
+        if (token !== state.token.trades) return;
+        var rows = data.trades || [];
+        rows.scanned = data.scanned;
+        state.tradesCache[state.tradeWindow] = rows;
+        renderTopTrades(rows, data.scanned, data.requested, true);
+      })
+      .catch(function () {
+        if (token !== state.token.trades) return;
+        $('tt-body').innerHTML = '<tr><td colspan="7"><div class="empty">' +
+          '<strong>Could not load top trades</strong>' +
+          'The upstream APIs did not respond. Try again shortly.</div></td></tr>';
+        $('tt-progress').textContent = '';
+      });
+  }
+
+  // Browser-side equivalent, used when the proxy is blocked. Traders are fetched
+  // a few at a time to stay well inside Outcome's 60/min rate limit.
+  function directTopTrades(token) {
+    return o1('/api/v1/leaderboard', {
+      duration: state.tradeWindow, filter_by: 'pnl', order_by: 'desc', offset: 0, limit: TT_SCAN
+    }).then(function (board) {
+      var candidates = (board.rows || []).filter(function (r) { return r.username; });
+      var entries = [];
+      var done = 0;
+
+      function one(row) {
+        return o1('/api/v1/profile/lookup', { username: row.username })
+          .then(function (p) {
+            return direct(HL, '/info', { type: 'userFills', user: p.address })
+              .then(function (fills) {
+                var built = D.buildPositions(Array.isArray(fills) ? fills : []);
+                if (!built.length) return;
+                var ids = [];
+                built.forEach(function (x) {
+                  if (ids.indexOf(x.outcomeId) === -1) ids.push(x.outcomeId);
+                });
+                return lookupMarkets(ids).then(function (mk) {
+                  entries.push({
+                    username: p.username || row.username,
+                    address: p.address,
+                    avatar: D.avatarUrl(p.avatar) || D.avatarUrl(row.avatar),
+                    verified: Boolean(row.x_verified),
+                    positions: built.map(function (x) { return D.decorate(x, mk[x.outcomeId]); })
+                  });
+                });
+              });
+          })
+          .catch(function () { /* one unreachable trader must not empty the board */ })
+          .then(function () {
+            done++;
+            if (token !== state.token.trades) return;
+            // Show what we have so far; the list only ever grows and re-sorts.
+            renderTopTrades(
+              D.rankTrades(entries, state.tradeWindow, TT_LIMIT).map(flattenTrade),
+              entries.length, candidates.length, false
+            );
+          });
+      }
+
+      return promisePool(candidates, 4, one).then(function () {
+        return {
+          trades: D.rankTrades(entries, state.tradeWindow, TT_LIMIT).map(flattenTrade),
+          scanned: entries.length,
+          requested: candidates.length
+        };
+      });
+    });
+  }
+
+  function flattenTrade(t) {
+    var p = t.position;
+    return {
+      username: t.username, address: t.address, avatar: t.avatar, verified: t.verified,
+      coin: p.coin, title: p.title, sideLabel: p.sideLabel, theme: p.theme,
+      outcome: p.outcome, shares: p.shares, avgEntry: p.avgEntry, exitPrice: p.exitPrice,
+      bought: p.bought, earned: p.earned, pnl: p.pnl, pnlPct: p.pnlPct,
+      closedAt: p.closedAt, cardReady: p.cardReady
+    };
+  }
+
+  function promisePool(items, size, fn) {
+    var next = 0;
+    function worker() {
+      if (next >= items.length) return Promise.resolve();
+      return fn(items[next++]).then(worker);
+    }
+    var workers = [];
+    for (var i = 0; i < Math.min(size, items.length); i++) workers.push(worker());
+    return Promise.all(workers);
+  }
+
+  function renderTopTrades(rows, scanned, requested, complete) {
+    state.trades = rows;
+
+    if (!complete && requested) {
+      $('tt-progress').textContent = 'Scanning traders… ' + scanned + ' of ' + requested;
+    } else {
+      $('tt-progress').textContent = '';
+    }
+
+    if (!rows.length) {
+      if (complete) {
+        $('tt-body').innerHTML = '<tr><td colspan="7"><div class="empty">' +
+          '<strong>No winning trades in this window</strong>Try a wider window.</div></td></tr>';
+      }
+      return;
+    }
+
+    $('tt-body').innerHTML = rows.map(function (t, i) {
+      var sidePill = 'pill ' + (t.outcome === 'win' ? 'pill-up' : 'pill-down');
+      return '<tr>' +
+        '<td class="rank' + (i === 0 ? ' rank-1' : '') + '">' + (i + 1) + '</td>' +
+        '<td class="hide-sm"><a class="trader tlink" href="/leaderboard/t/' +
+          encodeURIComponent(t.username) + '">' +
+          avatarHtml(t.avatar, t.username) +
+          '<span class="uname">' + esc(t.username) + '</span>' +
+          (t.verified ? CHECK : '') + '</a></td>' +
+        '<td><div class="mkt-title">' + esc(t.title) + '</div>' +
+          '<div class="mkt-sub">' +
+            '<span class="sm-only">' + esc(t.username) + ' · </span>' +
+            '<span class="' + sidePill + ' sm-only sm-pill">' + esc(t.sideLabel) + '</span>' +
+            when(t.closedAt) +
+          '</div></td>' +
+        '<td class="hide-sm"><span class="' + sidePill + '">' + esc(t.sideLabel) + '</span></td>' +
+        '<td class="num hide-sm muted">' + money(t.bought) + '</td>' +
+        '<td class="num ' + cls(t.pnl) + '">' + signed(t.pnl) + '</td>' +
+        '<td class="num"><button class="btn-card" data-trade="' + i + '"' +
+          (t.cardReady ? '' : ' disabled') + '>Card</button></td>' +
+      '</tr>';
+    }).join('');
+
+    if (complete) {
+      $('tt-note').textContent =
+        'Ranked from the ' + scanned + ' top-PnL traders in this window. A big trade by a ' +
+        'trader whose overall PnL sits outside that group will not appear.';
+    }
+  }
+
   // ------------------------------------------------------------ card modal --
   // Address mode keeps every financial figure server-derived from Hyperliquid
   // even while Outcome's API is blocked; title and side ride along only as a
   // fallback for when the server cannot look the market up itself.
   function cardUrl(p, opts) {
+    var who = state.subject || {};
     var q = '/api/card?coin=' + encodeURIComponent(p.coin) +
       '&closedAt=' + encodeURIComponent(p.closedAt || '') +
-      '&username=' + encodeURIComponent(state.username);
-    if (state.address) {
-      q += '&address=' + encodeURIComponent(state.address) +
+      '&username=' + encodeURIComponent(who.username || '');
+    if (who.address) {
+      q += '&address=' + encodeURIComponent(who.address) +
         '&title=' + encodeURIComponent(p.title) +
         '&side=' + encodeURIComponent(p.sideLabel);
       // The renderer cannot look the profile image up itself in this mode; we
       // already have it. Host-allowlisted server-side, and decorative only.
-      if (state.avatar) q += '&avatar=' + encodeURIComponent(state.avatar);
+      if (who.avatar) q += '&avatar=' + encodeURIComponent(who.avatar);
     }
     if (state.theme) q += '&theme=' + encodeURIComponent(state.theme);
     if (opts && opts.download) q += '&download=1';
     return q;
   }
 
+  function openTradeCard(index) {
+    var t = state.trades[index];
+    if (!t || !t.cardReady) return;
+    // A trade row carries its own trader, so the modal works without the trader
+    // page ever having been opened.
+    showCard(t, { username: t.username, address: t.address, avatar: t.avatar });
+  }
+
   function openModal(index) {
     var p = state.positions[index];
     if (!p || !p.cardReady) return;
+    showCard(p, {
+      username: state.username, address: state.address, avatar: state.avatar
+    });
+  }
+
+  function showCard(p, who) {
     state.active = p;
+    state.subject = who;
     state.theme = '';
     syncThemeButtons();
 
     $('modal-title').textContent = p.title;
-    $('modal-sub').textContent = p.sideLabel + ' · ' + when(p.closedAt) +
+    $('modal-sub').textContent = ((who && who.username) ? who.username + ' · ' : '') +
+      p.sideLabel + ' · ' + when(p.closedAt) +
       ' · ' + (p.outcome === 'win' ? 'Win' : 'Loss');
     $('readout').innerHTML =
       row('Shares', shares(p.shares)) +
@@ -1066,35 +1326,97 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
   }
 
   // --------------------------------------------------------------- routing --
-  function path(username) { return username ? '/leaderboard/t/' + encodeURIComponent(username) : '/leaderboard/'; }
+  // --------------------------------------------------------------- routing --
+  // Three routes: the trader board (/leaderboard/), the trade board
+  // (/leaderboard/trades) and one trader (/leaderboard/t/<username>). Both
+  // boards are shareable, which matters - a creator wants to send someone
+  // straight to "this week's biggest trades".
 
-  function navigate(username, replace) {
-    var url = path(username);
-    if (replace) history.replaceState({ username: username }, '', url);
-    else history.pushState({ username: username }, '', url);
-    render(username);
+  function routeToPath(r) {
+    if (r.view === 'trader') return '/leaderboard/t/' + encodeURIComponent(r.username);
+    if (r.view === 'trades') return '/leaderboard/trades';
+    return '/leaderboard/';
   }
 
-  function render(username) {
+  function navigate(route, replace) {
+    var url = routeToPath(route);
+    if (replace) history.replaceState(route, '', url);
+    else history.pushState(route, '', url);
+    render(route);
+  }
+
+  function render(route) {
     closeModal();
-    if (username) {
-      loadTrader(username);
+    state.view = route.view;
+
+    $('view-leaderboard').hidden = route.view !== 'traders';
+    $('view-trades').hidden = route.view !== 'trades';
+    $('view-trader').hidden = route.view !== 'trader';
+    $('viewswitch').hidden = route.view === 'trader';
+
+    Array.prototype.forEach.call($('viewswitch').children, function (a) {
+      a.setAttribute('aria-selected', String(a.dataset.view === route.view));
+    });
+
+    if (route.view === 'trader') {
+      loadTrader(route.username);
+      if (route.from) state.cameFrom = route.from;
+    } else if (route.view === 'trades') {
+      state.username = null;
+      document.title = 'Top trades · Outcome PnL Cards';
+      syncWindowTabs();
+      loadTopTrades();
     } else {
       state.username = null;
-      $('view-trader').hidden = true;
-      $('view-leaderboard').hidden = false;
       document.title = 'Outcome Leaderboard & PnL Share Cards';
       loadLeaderboard();
     }
     window.scrollTo(0, 0);
   }
 
-  function usernameFromLocation() {
+  function syncWindowTabs() {
+    Array.prototype.forEach.call($('tt-tabs').children, function (b) {
+      b.setAttribute('aria-selected', String(b.dataset.window === state.tradeWindow));
+    });
+  }
+
+  function routeFromLocation() {
     var m = /^\/leaderboard\/t\/([^/?#]+)/.exec(location.pathname);
-    return m ? decodeURIComponent(m[1]) : null;
+    if (m) return { view: 'trader', username: decodeURIComponent(m[1]) };
+    if (/^\/leaderboard\/trades\/?$/.test(location.pathname)) return { view: 'trades' };
+    return { view: 'traders' };
   }
 
   // ----------------------------------------------------------------- wiring --
+  $('viewswitch').addEventListener('click', function (e) {
+    var a = e.target.closest('[data-view]');
+    if (!a) return;
+    e.preventDefault();
+    navigate({ view: a.dataset.view });
+  });
+
+  $('tt-tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-window]');
+    if (!b) return;
+    state.tradeWindow = b.dataset.window;
+    syncWindowTabs();
+    loadTopTrades();
+  });
+
+  // A trade row opens the same card modal the trader page uses.
+  $('tt-body').addEventListener('click', function (e) {
+    var link = e.target.closest('a.tlink');
+    if (link) {
+      e.preventDefault();
+      return navigate({
+        view: 'trader', from: 'trades',
+        username: decodeURIComponent(link.getAttribute('href').split('/t/')[1])
+      });
+    }
+    var b = e.target.closest('button[data-trade]');
+    if (b && !b.disabled) openTradeCard(Number(b.dataset.trade));
+  });
+
   $('lb-tabs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-duration]');
     if (!b) return;
@@ -1117,12 +1439,12 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 
   $('lb-body').addEventListener('click', function (e) {
     var tr = e.target.closest('tr[data-username]');
-    if (tr) navigate(tr.dataset.username);
+    if (tr) navigate({ view: 'trader', username: tr.dataset.username });
   });
   $('lb-body').addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' && e.key !== ' ') return;
     var tr = e.target.closest('tr[data-username]');
-    if (tr) { e.preventDefault(); navigate(tr.dataset.username); }
+    if (tr) { e.preventDefault(); navigate({ view: 'trader', username: tr.dataset.username }); }
   });
 
   $('pos-body').addEventListener('click', function (e) {
@@ -1132,7 +1454,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
 
   $('back-link').addEventListener('click', function (e) {
     e.preventDefault();
-    navigate(null);
+    navigate({ view: state.cameFrom === 'trades' ? 'trades' : 'traders' });
   });
 
   $('paste-form').addEventListener('submit', function (e) {
@@ -1153,7 +1475,7 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     )
       .then(function (r) {
         $('paste-input').value = '';
-        navigate(r.username);
+        navigate({ view: 'trader', username: r.username });
       })
       .catch(function (e2) {
         err.textContent = e2.message === 'no_such_trader'
@@ -1210,9 +1532,9 @@ tbody tr.clickable:hover { background: rgba(255,255,255,0.04); }
     if (e.key === 'Escape' && !$('modal').hidden) closeModal();
   });
 
-  window.addEventListener('popstate', function () { render(usernameFromLocation()); });
+  window.addEventListener('popstate', function () { render(routeFromLocation()); });
 
-  render(usernameFromLocation());
+  render(routeFromLocation());
 })();
 </script>
 </body>

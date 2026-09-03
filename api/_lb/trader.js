@@ -14,7 +14,7 @@
 // "now - 24h" cutoff reports whatever happened before midnight. Windowed PnL
 // therefore comes from /api/positions, which sums real closes.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 module.exports = async (req, res) => {
   try {

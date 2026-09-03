@@ -70,6 +70,26 @@ Two things about Hyperliquid's fills matter and are easy to get wrong:
 Correctness check: summing rebuilt realised PnL for `drogo` gives **$7,847.47**
 against the leaderboard's reported 168h figure of **$7,847.45**.
 
+### Top trades is derived, not fetched
+
+Outcome ranks *traders*, not trades — there is no upstream endpoint for "biggest
+trades" (probed: `/trades`, `/activity`, `/positions`, `/fills`, `/top-trades`,
+`/recent-trades`, `/feed`, all 404). So the trade board takes the window's
+top-ranked traders, rebuilds each one's positions, and ranks the positions.
+
+That makes it an approximation, and the UI says so rather than implying
+completeness: a trader whose standout win was cancelled out by losses ranks low
+overall, so their big trade can fall outside the scanned set. `scan` trades
+coverage against upstream calls and is capped at 40; the response returns
+`scanned` so the page can state what it actually looked at.
+
+Cost measured against live data: ~5MB and ~9s for 20 traders at 5x
+concurrency. On the proxied path that is one cached server-side pass shared by
+every visitor. On the direct path it is real work in each visitor's browser,
+which is why results render progressively as each trader lands rather than
+after all of them, and why concurrency is held at 4 to stay inside Outcome's
+60/min rate limit.
+
 ### Market titles
 
 Names arrive as template ids (`template:binaryPrice`, `Recurring`, …) with a
@@ -81,6 +101,22 @@ titles.
 
 ## Endpoints
 
+All leaderboard routes are handlers inside a **single** serverless function.
+Vercel counts every non-underscore file under `api/` as its own function and the
+Hobby plan caps that at 12; seven separate route files pushed the project to 13
+and the build failed. They now live in `api/_lb/` (underscore = not deployed
+separately) behind `api/lb.js`, the same shape as `api/pd.js`. Project total is
+7 of 12.
+
+`vercel.json` rewrites both `/api/lb/:route` and the original flat paths
+(`/api/leaderboard`, `/api/positions`, …) onto that function, so every URL that
+was ever live still resolves. `api/card.py` calls `/api/lb?_r=…` directly rather
+than a flat path: that request originates inside another function, and hitting
+the function file needs no rewrite to resolve.
+
+Adding a route means adding a file to `api/_lb/` and a line to `ROUTES` — it
+costs no function slots.
+
 | Route | Purpose |
 |---|---|
 | `GET /api/leaderboard?duration=24h\|168h\|720h\|all&limit=&offset=` | Ranked traders |
@@ -88,6 +124,7 @@ titles.
 | `GET /api/positions?username=&window=&include=resolved\|all` | Rebuilt positions + summary |
 | `GET /api/resolve?url=` | Pasted profile link or username → username |
 | `GET /api/position?address=&coin=` | One position, rebuilt from Hyperliquid alone |
+| `GET /api/top-trades?window=&limit=&scan=` | Biggest single trades across traders |
 | `GET /api/card?address=\|username=&coin=&…` | Rendered PNG |
 | `GET /api/diag` | **Temporary** — probes upstream reachability. Delete once the WAF rule lands. |
 

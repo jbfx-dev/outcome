@@ -2,7 +2,7 @@
 // Rebuilds every Outcome position the trader has held, newest first, with the
 // derived fields the card renderer needs already formatted.
 
-const L = require('./_lib/outcome.js');
+const L = require('../_lib/outcome.js');
 
 module.exports = async (req, res) => {
   try {

@@ -389,7 +389,48 @@
     return USERNAME.test(name) ? name : null;
   }
 
+  // ----------------------------------------------------------- top trades --
+  // There is no upstream endpoint for "biggest trades" - only biggest traders -
+  // so a leaderboard of trades is assembled by rebuilding the histories of the
+  // top-ranked traders and ranking their individual positions.
+  //
+  // That makes it an approximation, and the UI says so: a trader whose huge win
+  // was cancelled out by losses ranks low overall, so their standout trade can
+  // fall outside the scanned set. Scanning deeper narrows the gap at a linear
+  // cost in upstream calls.
+
+  function inWindow(position, win, now) {
+    var hours = WINDOWS[win];
+    if (hours == null) return true;
+    var at = position.closedAt || position.openedAt;
+    return at >= (now || Date.now()) - hours * 3600000;
+  }
+
+  // entries: [{ username, address, avatar, verified, positions: [decorated] }]
+  function rankTrades(entries, win, limit) {
+    var now = Date.now();
+    var out = [];
+    (entries || []).forEach(function (t) {
+      (t.positions || []).forEach(function (p) {
+        if (!p.resolved) return;              // no final price, no card
+        if (!inWindow(p, win, now)) return;
+        out.push({
+          username: t.username,
+          address: t.address,
+          avatar: t.avatar || null,
+          verified: Boolean(t.verified),
+          position: p,
+          pnl: p.pnl,
+        });
+      });
+    });
+    out.sort(function (a, b) { return b.pnl - a.pnl; });
+    return limit ? out.slice(0, limit) : out;
+  }
+
   return {
+    inWindow: inWindow,
+    rankTrades: rankTrades,
     parseCoin: parseCoin,
     marketTitle: marketTitle,
     sideLabel: sideLabel,

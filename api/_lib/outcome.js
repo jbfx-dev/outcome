@@ -191,6 +191,8 @@ const fillKey = (f) => `${f.tid ?? ''}:${f.oid}:${f.time}:${f.coin}:${f.sz}:${f.
 const D = require('../../leaderboard/derive.js');
 
 const {
+  inWindow,
+  rankTrades,
   parseCoin,
   marketTitle,
   sideLabel,
@@ -224,6 +226,8 @@ function fail(res, err) {
 }
 
 module.exports = {
+  inWindow,
+  rankTrades,
   O1,
   HL,
   UpstreamError,
