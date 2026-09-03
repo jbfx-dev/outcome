@@ -246,6 +246,129 @@ test('latestSnapshot returns the newest row by timestamp', () => {
   assert.equal(P.latestSnapshot(SNAPS).timestamp, '2026-09-02T14:16:08Z');
 });
 
+// ------------------------------------------------------- mergeSnapshots ----
+
+const SHEET_ROWS = P.rowsToObjects(
+  P.parseCSV(
+    '"Timestamp (UTC)","Date","Hour (UTC)","Unique Visitors","Signups","Run Type"\n' +
+    '"2026-09-03T05:00:00Z","2026-09-03","5","438","34","hourly"\n' +
+    '"2026-09-03T06:00:00Z","2026-09-03","6","538","51","hourly"\n'
+  ),
+  P.COLS.hourly
+);
+
+// Shaped as api/_pd/posthog.js returns them. Hour 6 deliberately carries
+// different numbers so precedence is observable.
+const PH_ROWS = [
+  { timestamp: '2026-09-03T05:00:00Z', date: '2026-09-03', hour: 5, uvs: 999, signups: 999 },
+  { timestamp: '2026-09-03T06:00:00Z', date: '2026-09-03', hour: 6, uvs: 999, signups: 999 },
+  { timestamp: '2026-09-03T07:00:00Z', date: '2026-09-03', hour: 7, uvs: 663, signups: 64 },
+  { timestamp: '2026-09-03T08:00:00Z', date: '2026-09-03', hour: 8, uvs: 677, signups: 69 },
+];
+
+test('mergeSnapshots lets a written sheet row win its hour', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, PH_ROWS);
+  const h6 = m.filter((r) => r.hour === 6)[0];
+  assert.equal(h6.uvs, 538);        // the sheet's value, not PostHog's 999
+  assert.equal(h6._source, 'sheet');
+});
+
+test('mergeSnapshots uses PostHog for hours the sheet never wrote', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, PH_ROWS);
+  const h8 = m.filter((r) => r.hour === 8)[0];
+  assert.equal(h8.uvs, 677);
+  assert.equal(h8._source, 'posthog');
+});
+
+test('mergeSnapshots leads the sheet: the newest row is the live one', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, PH_ROWS);
+  const last = m[m.length - 1];
+  assert.equal(last.hour, 8);
+  assert.equal(last._source, 'posthog');
+  assert.equal(P.latestSnapshot(m).hour, 8);
+});
+
+test('mergeSnapshots is ordered by day then hour', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, PH_ROWS);
+  assert.deepEqual(m.map((r) => r.hour), [5, 6, 7, 8]);
+});
+
+test('mergeSnapshots degrades to sheet-only when PostHog is unavailable', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, []);
+  assert.equal(m.length, 2);
+  assert.ok(m.every((r) => r._source === 'sheet'));
+});
+
+test('mergeSnapshots degrades to PostHog-only before any sheet row exists', () => {
+  const m = P.mergeSnapshots([], PH_ROWS);
+  assert.equal(m.length, 4);
+  assert.ok(m.every((r) => r._source === 'posthog'));
+});
+
+test('mergeSnapshots keeps days separate rather than colliding on hour', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, [
+    { date: '2026-09-02', hour: 6, uvs: 111 },
+    { date: '2026-09-03', hour: 9, uvs: 222 },
+  ]);
+  const sep2 = m.filter((r) => P.dayKey(r.date) === '2026-09-02');
+  assert.equal(sep2.length, 1);
+  assert.equal(sep2[0].uvs, 111);        // not overwritten by 3 Sep hour 6
+  assert.equal(m[0].date, '2026-09-02'); // earlier day sorts first
+});
+
+test('a fresher live PostHog reading beats the sheet boundary row for that hour', () => {
+  // The sheet writes hour 8 at 08:00:00Z; PostHog reports the in-flight hour 8
+  // at 08:40Z. The dashboard must lead the sheet, so the newer one wins.
+  const sheet = P.rowsToObjects(
+    P.parseCSV(
+      '"Timestamp (UTC)","Date","Hour (UTC)","Unique Visitors"\n' +
+      '"2026-09-03T08:00:00Z","2026-09-03","8","677"\n'
+    ),
+    P.COLS.hourly
+  );
+  const ph = [{ timestamp: '2026-09-03T08:40:00Z', date: '2026-09-03', hour: 8, uvs: 712 }];
+  const m = P.mergeSnapshots(sheet, ph);
+  assert.equal(m.length, 1);
+  assert.equal(m[0].uvs, 712);
+  assert.equal(m[0]._source, 'posthog');
+});
+
+test('a written sheet row is never displaced by an equally-timed PostHog row', () => {
+  // Past hours: both sides carry H:00:00Z, so history stays frozen on the sheet.
+  const sheet = P.rowsToObjects(
+    P.parseCSV(
+      '"Timestamp (UTC)","Date","Hour (UTC)","Unique Visitors"\n' +
+      '"2026-09-03T06:00:00Z","2026-09-03","6","538"\n'
+    ),
+    P.COLS.hourly
+  );
+  const ph = [{ timestamp: '2026-09-03T06:00:00Z', date: '2026-09-03', hour: 6, uvs: 999 }];
+  const m = P.mergeSnapshots(sheet, ph);
+  assert.equal(m[0].uvs, 538);
+  assert.equal(m[0]._source, 'sheet');
+});
+
+test('a later sheet live run reclaims the hour from PostHog', () => {
+  // Cowork writes 08:50 after PostHog last read 08:40 - the sheet is newer.
+  const sheet = P.rowsToObjects(
+    P.parseCSV(
+      '"Timestamp (UTC)","Date","Hour (UTC)","Unique Visitors"\n' +
+      '"2026-09-03T08:50:00Z","2026-09-03","8","730"\n'
+    ),
+    P.COLS.hourly
+  );
+  const ph = [{ timestamp: '2026-09-03T08:40:00Z', date: '2026-09-03', hour: 8, uvs: 712 }];
+  const m = P.mergeSnapshots(sheet, ph);
+  assert.equal(m[0].uvs, 730);
+  assert.equal(m[0]._source, 'sheet');
+});
+
+test('merged rows still drive pacing and same-hour-yesterday', () => {
+  const m = P.mergeSnapshots(SHEET_ROWS, PH_ROWS);
+  const series = P.pacingSeries(m, '2026-09-03', 'uvs');
+  assert.deepEqual(series.map((p) => p.value), [438, 538, 663, 677]);
+});
+
 // ---------------------------------------------------------- pacingSeries ----
 
 test('pacingSeries interpolates a gap and flags the filled points', () => {
