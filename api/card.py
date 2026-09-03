@@ -345,15 +345,25 @@ def build(query, headers):
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
+        self._respond(body=True)
+
+    def do_HEAD(self):
+        # Link unfurlers (Discord, Slack, X) commonly probe with HEAD before
+        # embedding an image. BaseHTTPRequestHandler answers 501 to any method
+        # it has no do_* for, which would stop the card embedding at all - so
+        # HEAD returns the identical headers with no body.
+        self._respond(body=False)
+
+    def _respond(self, body=True):
         query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
         download = (query.get("download") or [""])[0] in ("1", "true", "yes")
         try:
             png, filename = build(query, self.headers)
         except CardError as e:
-            return self._fail(e.status, e.message)
+            return self._fail(e.status, e.message, body=body)
         except Exception as e:  # noqa: BLE001 - never leak a stack trace
             print("card render failed: %r" % (e,), file=sys.stderr)
-            return self._fail(500, "render_failed")
+            return self._fail(500, "render_failed", body=body)
 
         self.send_response(200)
         self.send_header("Content-Type", "image/png")
@@ -366,16 +376,18 @@ class handler(BaseHTTPRequestHandler):
             "Content-Disposition", '%s; filename="%s"' % (disposition, filename)
         )
         self.end_headers()
-        self.wfile.write(png)
+        if body:
+            self.wfile.write(png)
 
-    def _fail(self, status, message):
-        body = json.dumps({"ok": False, "error": message}).encode()
+    def _fail(self, status, message, body=True):
+        payload = json.dumps({"ok": False, "error": message}).encode()
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Content-Length", str(len(payload)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        self.wfile.write(body)
+        if body:
+            self.wfile.write(payload)
 
     def log_message(self, *args):  # keep function logs to real errors
         pass

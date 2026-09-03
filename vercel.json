@@ -86,6 +86,10 @@
   ],
   "rewrites": [
     {
+      "source": "/card/:slug.png",
+      "destination": "/api/card"
+    },
+    {
       "source": "/api/lb/:route",
       "destination": "/api/lb?_r=:route"
     },
