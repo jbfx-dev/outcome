@@ -93,16 +93,52 @@
     if (cls === 'priceBinary') return side === 0 ? 'UP' : 'DOWN';
     if (cls === 'priceBucket') return side === 0 ? 'YES' : 'NO';
 
+    // "SPAIN" / "ARGENTINA NO" reads far better than "YES" / "NO" sitting under
+    // a title of "2026 World Cup Champion".
+    if (isNamedOutcome(entry)) {
+      const label = String(o.name).toUpperCase();
+      return side === 0 ? label : label + ' NO';
+    }
+
     if (raw && !/^template:/.test(raw)) return String(raw).toUpperCase();
     if (raw === 'template:Yes') return 'YES';
     if (raw === 'template:No') return 'NO';
     return side === 0 ? 'YES' : 'NO';
   }
 
+  // A multi-outcome question ("2026 World Cup Champion") has one outcome per
+  // option, each named for the option ("Spain") with sideSpecs Yes/No. Titling
+  // such a position "Spain" loses the question entirely, so the question's name
+  // becomes the title and the option becomes the side label.
+  function isNamedOutcome(entry) {
+    const q = (entry && entry.question) || {};
+    const o = (entry && entry.outcome) || {};
+    if (!q.name || !o.name || o.name === q.name) return false;
+    const sides = (o.sideSpecs || []).map(function (x) {
+      return String((x && x.name) || '').toLowerCase();
+    });
+    return sides.length === 2 && sides[0] === 'yes' && sides[1] === 'no';
+  }
+
+  // The World Cup cards are a separate design, so these need identifying rather
+  // than merely formatting. Scoped to football so an unrelated market that
+  // happens to mention the phrase cannot pull in the trophy artwork.
+  function isWorldCup(entry) {
+    if (!entry || !entry.outcome) return false;
+    const o = entry.outcome;
+    const q = entry.question || {};
+    const cat = String(o.category || q.category || '').toLowerCase();
+    const sub = String(o.subCategory || q.subCategory || '').toLowerCase();
+    if (cat && cat !== 'sports') return false;
+    if (sub && sub !== 'football') return false;
+    return /world cup/i.test(String(q.name || '') + ' ' + String(o.name || ''));
+  }
+
   function marketTitle(entry) {
     if (!entry || !entry.outcome) return null;
     const o = entry.outcome;
     const q = entry.question || {};
+    if (isNamedOutcome(entry)) return q.name;
     const d = kv(o.description);
     const qd = kv(q.description);
     const name = o.name || '';
@@ -299,6 +335,11 @@
       title: title || 'Unknown market',
       known: Boolean(entry && title),
       theme: themeFor(entry),
+    // The World Cup renderer has no loss variant - its panel reads "To Win" -
+    // so a losing position would be dressed as a win. Wins only; losses fall
+    // through to the standard card, which has a proper loss treatment.
+    cardStyle: isWorldCup(entry) && win ? 'wc' : 'default',
+    wcPosition: isWorldCup(entry) ? worldCupPosition(entry, p.side) : null,
       resolved,
       settled: p.settled,
       merged: p.merged,
@@ -331,10 +372,12 @@
     '$' +
     Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
 
-  // Round thousands lose their cents, matching the kit's reference cards
-  // ("$1,300", not "$1,300.00"); anything with real pence keeps them.
-  const money = (n) =>
-    usd(n, Math.abs(n) >= 1000 && Number.isInteger(Number(n)) ? 0 : 2);
+  // Cards drop cents at four figures and up, matching the approved reference
+  // cards ("$514,526", "$10,900", "$1,000"). Cents on a half-million-dollar
+  // figure are noise on a social graphic; smaller trades keep them, where the
+  // pennies are a real part of the number. The tables show exact values either
+  // way - this is a display rule for the card only.
+  const money = (n) => usd(n, Math.abs(Number(n) || 0) >= 1000 ? 0 : 2);
 
   function cardFields(pos, username) {
     return {
@@ -428,7 +471,22 @@
     return limit ? out.slice(0, limit) : out;
   }
 
+  // Pill text for the World Cup card, following the approved reference cards:
+  // "SPAIN TO WIN" for the Yes side, "ARGENTINA NO" for the No side, and a bare
+  // "DRAW" where the option is the draw rather than a team.
+  function worldCupPosition(entry, side) {
+    const o = (entry && entry.outcome) || {};
+    const name = String(o.name || '').trim();
+    if (!name) return side === 0 ? 'YES' : 'NO';
+    const upper = name.toUpperCase();
+    if (/^draw$/i.test(name)) return side === 0 ? 'DRAW' : 'DRAW NO';
+    return side === 0 ? upper + ' TO WIN' : upper + ' NO';
+  }
+
   return {
+    isWorldCup: isWorldCup,
+    isNamedOutcome: isNamedOutcome,
+    worldCupPosition: worldCupPosition,
     inWindow: inWindow,
     rankTrades: rankTrades,
     parseCoin: parseCoin,

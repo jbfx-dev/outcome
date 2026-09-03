@@ -296,8 +296,12 @@ a.trader:hover .uname { color: var(--up); }
   padding: 24px; overflow: auto; display: grid;
   grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 26px; align-items: start;
 }
+/* The two card designs have different shapes - 1780x2188 portrait for the
+   themed card, 1929x1941 near-square for the World Cup one - so the frame
+   follows the card rather than letterboxing it. */
 .preview {
-  width: 100%; aspect-ratio: 1780 / 2188; border-radius: 12px; overflow: hidden;
+  width: 100%; aspect-ratio: var(--card-ratio, 1780 / 2188);
+  border-radius: 12px; overflow: hidden;
   background: rgba(255,255,255,0.04); border: 1px solid var(--line);
   display: flex; align-items: center; justify-content: center; position: relative;
 }
@@ -506,6 +510,7 @@ a.trader:hover .uname { color: var(--up); }
             <div class="field-label">Theme</div>
             <div class="theme-opts" id="theme-opts">
               <button class="tab" data-theme="" aria-selected="true">Auto</button>
+              <button class="tab" data-theme="wc" aria-selected="false" hidden>World Cup</button>
               <button class="tab" data-theme="default" aria-selected="false">Default</button>
               <button class="tab" data-theme="hype" aria-selected="false">Hype</button>
               <button class="tab" data-theme="btc" aria-selected="false">BTC</button>
@@ -1149,6 +1154,7 @@ a.trader:hover .uname { color: var(--up); }
     return {
       username: t.username, address: t.address, avatar: t.avatar, verified: t.verified,
       coin: p.coin, title: p.title, sideLabel: p.sideLabel, theme: p.theme,
+      cardStyle: p.cardStyle, wcPosition: p.wcPosition,
       outcome: p.outcome, shares: p.shares, avgEntry: p.avgEntry, exitPrice: p.exitPrice,
       bought: p.bought, earned: p.earned, pnl: p.pnl, pnlPct: p.pnlPct,
       closedAt: p.closedAt, cardReady: p.cardReady
@@ -1255,12 +1261,17 @@ a.trader:hover .uname { color: var(--up); }
     state.active = p;
     state.subject = who;
     state.theme = '';
+    // The World Cup design has no loss variant, so it is offered only where the
+    // renderer will actually accept it: a winning World Cup position.
+    $('theme-opts').querySelector('[data-theme="wc"]').hidden = p.cardStyle !== 'wc';
+    setPreviewRatio(p.cardStyle === 'wc' ? 'wc' : 'default');
     syncThemeButtons();
 
     $('modal-title').textContent = p.title;
     $('modal-sub').textContent = ((who && who.username) ? who.username + ' · ' : '') +
       p.sideLabel + ' · ' + when(p.closedAt) +
-      ' · ' + (p.outcome === 'win' ? 'Win' : 'Loss');
+      ' · ' + (p.outcome === 'win' ? 'Win' : 'Loss') +
+      (p.cardStyle === 'wc' ? ' · World Cup card' : '');
     $('readout').innerHTML =
       row('Shares', shares(p.shares)) +
       row('Avg. price', (p.avgEntry * 100).toFixed(2) + '¢') +
@@ -1274,6 +1285,11 @@ a.trader:hover .uname { color: var(--up); }
   }
 
   function row(k, v) { return '<dt>' + k + '</dt><dd>' + v + '</dd>'; }
+
+  function setPreviewRatio(style) {
+    $('preview').style.setProperty(
+      '--card-ratio', style === 'wc' ? '1929 / 1941' : '1780 / 2188');
+  }
 
   function renderPreview() {
     var p = state.active;
@@ -1490,6 +1506,10 @@ a.trader:hover .uname { color: var(--up); }
     if (!b) return;
     state.theme = b.dataset.theme;
     syncThemeButtons();
+    setPreviewRatio(
+      state.theme === 'wc' ? 'wc'
+        : (state.theme === '' && state.active && state.active.cardStyle === 'wc') ? 'wc'
+        : 'default');
     renderPreview();
   });
 

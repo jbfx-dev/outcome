@@ -84,6 +84,8 @@ function flatten(t) {
     title: p.title,
     sideLabel: p.sideLabel,
     theme: p.theme,
+    cardStyle: p.cardStyle,
+    wcPosition: p.wcPosition,
     outcome: p.outcome,
     shares: p.shares,
     avgEntry: p.avgEntry,

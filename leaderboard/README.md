@@ -149,9 +149,43 @@ at the true 9,040 / $5,246.32 / $9,040.
 Cards for resolved positions are immutable, so they are cached on disk by
 `(trader, coin, closedAt, theme)` and served with a long `Cache-Control`.
 
+## Two card designs
+
+| Design | Kit | Output | Used for |
+|---|---|---|---|
+| Themed | `api/_kit/` | 1780×2188 | Everything, in `default` / `hype` / `btc` × win / loss |
+| World Cup | `api/_kit_wc/` | 1929×1941 | Winning World Cup positions |
+
+Both define a module named `render`, so `card.py` loads them by explicit path
+rather than `sys.path` — importing one would otherwise shadow the other.
+
+The World Cup design is chosen automatically: `isWorldCup()` matches "world cup"
+in the question or outcome name, scoped to `sports`/`football` so an unrelated
+market mentioning the phrase cannot pull in the trophy artwork. It is applied to
+**wins only** — its panel reads "To Win" and there is no loss variant, so a loss
+dressed in it would read as a win.
+
+`theme=wc` is refused on non-World-Cup positions (409 `wc_style_unavailable`).
+The design asserts something about the trade; a gold-price position under a FIFA
+trophy is a false claim on a branded asset. The UI only offers the option where
+it applies.
+
+Its field contract differs from the themed card — `to_win` not `earned`,
+`wallet` not `username`, no theme, no avatar — mapped by `wc_card_fields()`.
+Pill text follows the approved reference cards in `Share cards/`: "SPAIN TO WIN"
+for the Yes side, "ARGENTINA NO" for the No side, bare "DRAW" for a draw option.
+
+### Multi-outcome questions
+
+A question like "2026 World Cup Champion" has one outcome per team, each named
+for the team with sideSpecs Yes/No. Titling such a position "Spain" loses the
+question, so `isNamedOutcome()` makes the question the title and the option the
+side: **"2026 World Cup Champion" / "SPAIN"**, not "Spain" / "YES". This applies
+to every multi-outcome market, not just football.
+
 ## Renderer
 
-`api/_kit/` is a vendored copy of `outcome-pnl-card-kit` — `render.py` plus the
+`api/_kit/` is a vendored copy of `outcome-pnl-card-kit` (v2) — `render.py` plus the
 assets it loads by name. Only the assets `render.py` actually references are
 vendored (10MB of the kit's 24MB; `up4k.png`, `card_texture.png`,
 `trophy_trim.png`, `footer_outcome.png` and `icon_dollar_lime.png` are unused).

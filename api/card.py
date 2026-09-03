@@ -31,14 +31,33 @@ import urllib.parse
 import urllib.request
 from http.server import BaseHTTPRequestHandler
 
-KIT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_kit")
-sys.path.insert(0, KIT)
+HERE = os.path.dirname(os.path.abspath(__file__))
+KIT = os.path.join(HERE, "_kit")
+KIT_WC = os.path.join(HERE, "_kit_wc")
 
-import render as card_renderer  # noqa: E402  (needs KIT on sys.path first)
+# Two independent renderers with different layouts, output sizes and field
+# names. Both define a module called `render`, so they are loaded by explicit
+# path rather than sys.path - importing one would otherwise shadow the other.
+def _load_renderer(directory, alias):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(alias, os.path.join(directory, "render.py"))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[alias] = module
+    sys.path.insert(0, directory)   # its own assets/fonts resolve relative to HERE
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.path.remove(directory)
+    return module
+
+
+card_renderer = _load_renderer(KIT, "outcome_render_v2")      # 1780x2188, themed
+wc_renderer = _load_renderer(KIT_WC, "outcome_render_wc")     # 1929x1941, World Cup
 
 CACHE = os.path.join(tempfile.gettempdir(), "outcome-cards")
 AVATARS = os.path.join(tempfile.gettempdir(), "outcome-avatars")
 THEMES = {"default", "hype", "btc"}
+STYLES = THEMES | {"wc"}
 COIN_RE = re.compile(r"^#\d+$")
 USERNAME_RE = re.compile(r"^[A-Za-z0-9_.-]{1,40}$")
 ADDRESS_RE = re.compile(r"^0x[0-9a-fA-F]{40}$")
@@ -131,9 +150,35 @@ def usd(value, decimals=2):
 
 
 def money(value):
-    """Round thousands drop their cents, matching cardFields() in _lib/outcome.js."""
+    """Cards drop cents at four figures and up. Mirrors money() in derive.js."""
     v = float(value or 0)
-    return usd(v, 0 if abs(v) >= 1000 and v.is_integer() else 2)
+    return usd(v, 0 if abs(v) >= 1000 else 2)
+
+
+def wc_card_fields(position, username):
+    """Fields for the World Cup renderer.
+
+    Different contract from the themed card: `to_win` instead of `earned`,
+    `wallet` instead of `username`, no theme and no win/loss variant. The pill
+    text follows the approved reference cards ("SPAIN TO WIN", "ARGENTINA NO"),
+    which the shared module derives as wcPosition.
+    """
+    entry = float(position.get("avgEntry") or 0)
+    exit_px = position.get("exitPrice")
+    shares = float(position.get("shares") or 0)
+    return {
+        "position": position.get("wcPosition") or position.get("sideLabel") or "YES",
+        "title": position.get("title") or "World Cup",
+        "price_from": "$%.4f" % entry,
+        "price_to": usd(0 if exit_px is None else exit_px),
+        "shares": format(int(round(shares)), ","),
+        "avg_price": "%.2f\u00a2" % (entry * 100),
+        "bought": money(position.get("bought")),
+        # The panel row is "To Win": the payout, which for a settled winner is
+        # exactly what was earned.
+        "to_win": money(position.get("earned")),
+        "wallet": (username or "").upper(),
+    }
 
 
 def card_fields(position, username):
@@ -214,7 +259,7 @@ def build(query, headers):
 
     if not COIN_RE.match(coin):
         raise CardError("bad_coin")
-    if theme_override and theme_override not in THEMES:
+    if theme_override and theme_override not in STYLES:
         raise CardError("bad_theme")
     if username and not USERNAME_RE.match(username):
         raise CardError("bad_username")
@@ -243,26 +288,48 @@ def build(query, headers):
         payload, position = find_position(base, username, coin, closed_at)
 
     display = payload.get("username") or username
-    data = card_fields(position, display)
-    if theme_override:
-        data["theme"] = theme_override
 
-    key = "%s-%s-%s-%s-%s" % (
+    # World Cup markets get their own card, chosen automatically and
+    # overridable either way. cardStyle is only ever "wc" for a WINNING
+    # position: that design's panel reads "To Win" and has no loss variant, so
+    # dressing a loss in it would misrepresent the trade.
+    is_wc_market = position.get("cardStyle") == "wc"
+    if theme_override == "wc" and not is_wc_market:
+        # The World Cup design is trophy artwork for a World Cup question. Put
+        # it on anything else and the card asserts something false about the
+        # trade - a gold-price position under a FIFA trophy. The UI never offers
+        # it there; a hand-built URL is refused rather than quietly honoured.
+        raise CardError("wc_style_unavailable", 409)
+    use_wc = theme_override == "wc" or (not theme_override and is_wc_market)
+
+    if use_wc:
+        data = wc_card_fields(position, display)
+    else:
+        data = card_fields(position, display)
+        if theme_override and theme_override in THEMES:
+            data["theme"] = theme_override
+
+    key = "%s-%s-%s-%s-%s-%s" % (
         display.lower(),
         (address or "").lower(),
         coin.lstrip("#"),
         position.get("closedAt") or 0,
-        data["theme"] + "|" + data["title"] + "|" + (payload.get("avatar") or ""),
+        "wc" if use_wc else data.get("theme", "default"),
+        data["title"] + "|" + (payload.get("avatar") or ""),
     )
     os.makedirs(CACHE, exist_ok=True)
     out = os.path.join(CACHE, hashlib.sha1(key.encode()).hexdigest() + ".png")
 
     # A resolved position never changes, so a rendered card is immutable.
     if not (os.path.exists(out) and os.path.getsize(out) > 0):
-        avatar = fetch_avatar(payload.get("avatar"))
-        if avatar:
-            data["avatar_path"] = avatar
-        card_renderer.render(data, out)
+        if use_wc:
+            # The World Cup layout has no avatar slot.
+            wc_renderer.render(data, out)
+        else:
+            avatar = fetch_avatar(payload.get("avatar"))
+            if avatar:
+                data["avatar_path"] = avatar
+            card_renderer.render(data, out)
 
     with open(out, "rb") as fh:
         png = fh.read()
@@ -270,8 +337,8 @@ def build(query, headers):
     filename = "%s-%s-%s-%s.png" % (
         slugify(display),
         slugify(position.get("title")),
-        slugify(data["position"], 12),
-        data["outcome"],
+        slugify(data["position"], 16),
+        "wc" if use_wc else data.get("outcome", "win"),
     )
     return png, filename
 
