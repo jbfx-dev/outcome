@@ -15,6 +15,7 @@ const ROUTES = {
   volume: require('./_pd/volume.js'),
   hourly: require('./_pd/hourly.js'),
   oembed: require('./_pd/oembed.js'),
+  posthog: require('./_pd/posthog.js'),
 };
 
 module.exports = async (req, res) => {

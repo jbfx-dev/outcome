@@ -26,6 +26,7 @@ Do not reference `process`, `fetch`, `window` or `document` in it.
 | Builder volume, hourly | `/api/pd/hourly?builder=outcome\|hl` | 60 s |
 | Campaign Tracker sheets | `/api/pd/sheet?tab=…` | 5 min client poll, `s-maxage=60` |
 | X post embeds | `/api/pd/oembed?url=…` | cached 24 h at the CDN |
+| PostHog metrics | `/api/pd/posthog?days=2` | 60 s client poll, `s-maxage=60` |
 
 Everything is proxied because none of these upstreams can be called from a
 browser: `stats.outcome.xyz` sends no CORS headers, and neither does
@@ -84,6 +85,67 @@ backfill rows, so `rowsToObjects` records which fields were blank and
 `pacingSeries` skips those hours instead of plotting a drop to zero. Today's
 impressions curve can therefore be a single point until a full run lands; the
 chart says so rather than showing a lone dot.
+
+## Live metrics: sheet first, PostHog for the rest
+
+The sheet is only written while the Cowork task runs, which needs a laptop that
+is open. The dashboard should not freeze because of that, so the hourly series
+is a **merge**:
+
+- A written sheet row wins the hour it recorded. History stays frozen — a
+  PostHog `uniq()` for a past hour can drift slightly if a person is identified
+  later, and nothing should move under the reader.
+- PostHog covers hours the task never wrote, and the **current partial hour**,
+  which the sheet cannot have yet. That is why the dashboard runs ahead of the
+  spreadsheet; the two reconcile as soon as the hourly task writes that hour.
+- Precedence is by timestamp, not by source, with ties going to the sheet.
+  Keying on `(date, hour)` alone is not enough — see the hour semantics below.
+
+### These definitions are load-bearing
+
+Each was verified to reproduce the sheet **exactly** before being wired up
+(2 Sep h4/h6/h14, 3 Sep h6, 1 Sep full day). Changing one silently
+desynchronises the dashboard from the spreadsheet.
+
+| Metric | Definition |
+|---|---|
+| Clicks | `count($pageview)` where `utm_source` is set — tagged pageviews, not distinct humans |
+| Unique Visitors | `uniq(person_id)` on `$pageview` |
+| Signups | `count(sign_up)` — **events, not unique people**; `uniq` reads ~7% low |
+| Depositors | `uniq(person_id)` on `deposit_completed` |
+| Active Traders | `uniq(person_id)` on `trade_placed` |
+| Trades Placed | `count(trade_placed)` |
+
+`uniq` is not additive, so the cumulative curve cannot be built by summing
+hourly buckets; `uniqState`/`uniqMerge` over an expanding window frame gives the
+exact running distinct count in one query. The PostHog project timezone is UTC,
+which is why the day boundaries line up with the sheet's without conversion.
+
+Impressions are **not** available here — they are X post impressions from the X
+API, and stay laptop-bound. Note PostHog has an unrelated `market_impression`
+event; conflating the two would be badly wrong.
+
+### Hour semantics — the sharp edge
+
+The sheet files two different instants under the same `Hour (UTC) = H`:
+
+- a **boundary** row at `H:00:00Z`, meaning state at H:00 (buckets 0…H-1), and
+- a **live** row at `H:mm:ssZ` from a Cowork run mid-hour, meaning state at H:mm.
+
+The route reproduces both: a completed ClickHouse bucket H becomes `Hour H+1`
+stamped `H+1:00:00Z`, while the in-flight bucket becomes `Hour H` stamped with
+the current time. Getting this off by one shifts every metric by an hour and
+looks entirely plausible.
+
+Live rows are also not permanent: the task later normalises a `07:08:12Z` row
+into a clean `07:00:00Z` one. The timestamp-precedence rule absorbs that.
+
+### Configuration
+
+`POSTHOG_API_KEY` is required for this route; without it the route reports
+`configured: false` and returns no rows, and the dashboard runs sheet-only
+exactly as it did before. `POSTHOG_PROJECT_ID` (default `407955`) and
+`POSTHOG_HOST` (default `https://us.posthog.com`) override the rest.
 
 ## Campaign pacing vs World Cup
 

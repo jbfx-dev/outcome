@@ -691,6 +691,7 @@ body {
 
   var state = {
     volume: null, daily: null, hourly: null, hourlyApi: null,
+    hourlySheet: null, hourlyPh: null, phConfigured: null,
     content: null, channels: null, comparison: null, wcDaily: null,
     errors: {}, lastOk: {},
     pacingMetric: 'outcomeVolume',
@@ -847,7 +848,7 @@ body {
   // average of the days before that.
   function renderPacingChart() {
     var el = $('pacingChart');
-    if (state.errors.hourly) return panelError(el, 'hourly snapshots', loadSheets);
+    if (!state.hourly && state.errors.hourlySheet) return panelError(el, 'hourly snapshots', loadSheets);
     if (!state.hourly) return skeleton(el, 5);
 
     var metric = state.pacingMetric;
@@ -1031,7 +1032,7 @@ body {
 
   function renderHero() {
     var el = $('heroGrid');
-    if (state.errors.volume && state.errors.hourly) return panelError(el, 'live metrics', loadAll);
+    if (state.errors.volume && !state.hourly) return panelError(el, 'live metrics', loadAll);
     if (!state.volume || !state.hourly) {
       el.innerHTML = new Array(6).fill(
         '<div class="kpi-card"><div class="skeleton skel-line" style="width:60%"></div>' +
@@ -1505,6 +1506,28 @@ body {
 
   function markOk(key) { state.lastOk[key] = Date.now(); delete state.errors[key]; }
 
+  // state.hourly is what every panel reads. It is the sheet's written rows plus
+  // PostHog for any hour the sheet has not recorded - including the current
+  // partial hour, which is why the dashboard runs ahead of the spreadsheet.
+  function recomputeHourly() {
+    if (!state.hourlySheet && !state.hourlyPh) return;
+    state.hourly = P.mergeSnapshots(state.hourlySheet || [], state.hourlyPh || []);
+    renderHero();
+    renderPacingChart();
+    updateBadges();
+  }
+
+  function loadPostHog() {
+    return getJSON('/api/pd/posthog?days=2')
+      .then(function (j) {
+        state.phConfigured = j.configured !== false;
+        state.hourlyPh = j.rows || [];
+        markOk('posthog');
+      })
+      .catch(function () { state.errors.posthog = 1; state.hourlyPh = null; })
+      .then(recomputeHourly);
+  }
+
   function loadVolume() {
     return getJSON('/api/pd/volume?startDate=' + PD.campaignStart)
       .then(function (j) { state.volume = j; markOk('volume'); })
@@ -1532,7 +1555,7 @@ body {
   function loadSheets() {
     return Promise.all([
       loadTab('daily', 'daily', function () { renderFunnels(); renderDailyTable(); renderCampaignChart(); }),
-      loadTab('hourly', 'hourly', function () { renderHero(); renderPacingChart(); updateBadges(); }),
+      loadTab('hourly', 'hourlySheet', recomputeHourly),
       loadTab('content', 'content', function () {
         renderTopContent(); renderDayStrip(); renderPostSpark(); renderDayHeader(); renderPostGrid();
       }),
@@ -1543,7 +1566,7 @@ body {
   }
 
   function loadAll() {
-    return Promise.all([loadVolume(), loadHourlyApi(), loadSheets()]);
+    return Promise.all([loadVolume(), loadHourlyApi(), loadPostHog(), loadSheets()]);
   }
 
   // The badge reports the sheet's own freshness, which is what can actually go
@@ -1553,19 +1576,26 @@ body {
     var live = $('liveBadge');
     var snap = state.hourly ? P.latestSnapshot(state.hourly) : null;
 
-    if (snap && snap.timestamp) {
-      var t = new Date(snap.timestamp);
+    // Report the sheet's own freshness, and say plainly when the leading hours
+    // are coming from PostHog instead - a reader should never have to guess
+    // which source a number came from.
+    var lastSheet = state.hourlySheet ? P.latestSnapshot(state.hourlySheet) : null;
+    var leadingIsLive = snap && snap._source === 'posthog';
+
+    if (lastSheet && lastSheet.timestamp) {
+      var t = new Date(lastSheet.timestamp);
       var hh = String(t.getUTCHours()).padStart(2, '0');
       var mm = String(t.getUTCMinutes()).padStart(2, '0');
-      var next = new Date(t.getTime());
-      next.setUTCHours(t.getUTCHours() + 1, 5, 0, 0);
-      badge.textContent = 'SHEET ' + hh + ':' + mm + 'Z · NEXT ~' +
-        String(next.getUTCHours()).padStart(2, '0') + ':05Z';
+      badge.textContent = leadingIsLive
+        ? 'SHEET ' + hh + ':' + mm + 'Z · LIVE VIA POSTHOG'
+        : 'SHEET ' + hh + ':' + mm + 'Z';
+    } else if (leadingIsLive) {
+      badge.textContent = 'LIVE VIA POSTHOG · SHEET PENDING';
     } else {
-      badge.textContent = state.errors.hourly ? 'SHEET UNAVAILABLE' : 'SYNCING…';
+      badge.textContent = state.errors.hourlySheet ? 'SHEET UNAVAILABLE' : 'SYNCING…';
     }
 
-    var lastVol = state.lastOk.volume || 0;
+    var lastVol = Math.max(state.lastOk.volume || 0, state.lastOk.posthog || 0);
     var stale = !lastVol || (Date.now() - lastVol) > 15 * 60 * 1000;
     live.className = 'live-badge' + (stale ? ' stale' : '');
     $('liveText').textContent = stale ? 'STALE' : 'LIVE';
@@ -1647,7 +1677,7 @@ body {
     loadAll();
 
     // Volume is real-time; the sheet only changes when a Cowork task writes it.
-    setInterval(function () { loadVolume(); loadHourlyApi(); }, 60 * 1000);
+    setInterval(function () { loadVolume(); loadHourlyApi(); loadPostHog(); }, 60 * 1000);
     setInterval(loadSheets, 5 * 60 * 1000);
     setInterval(updateBadges, 30 * 1000);
   }

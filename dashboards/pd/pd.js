@@ -461,6 +461,71 @@
     return out;
   }
 
+  // ---------------------------------------------------------- merging ------
+
+  // Combines written sheet rows with live PostHog rows into one snapshot series.
+  //
+  // The sheet always wins for an hour it has recorded. That is deliberate: a
+  // written row is frozen, whereas a PostHog answer for a past hour can drift
+  // slightly if a person is identified later and uniq() re-resolves. Sheet-first
+  // means history never moves under the reader.
+  //
+  // PostHog covers two cases: hours the Cowork task never wrote (laptop shut),
+  // and the current partial hour, which the sheet cannot have yet. The second is
+  // why the dashboard runs ahead of the spreadsheet - by design, and the two
+  // reconcile as soon as the hourly task writes that hour.
+  //
+  // Both sides are cumulative-for-the-UTC-day at hour H, so they are directly
+  // interchangeable per (date, hour). The PostHog definitions were verified to
+  // reproduce the sheet's numbers exactly before this was wired up.
+  function mergeSnapshots(sheetRows, posthogRows) {
+    const byKey = {};
+    const order = [];
+
+    // Later timestamp wins; a tie goes to the sheet.
+    //
+    // Keying on (date, hour) alone is not enough, because the sheet files two
+    // different instants under the same Hour: a boundary row at H:00:00Z and a
+    // live run at H:mm:ssZ. If the sheet simply won its hour, a stale 08:00 row
+    // would beat a fresher 08:08 PostHog reading and the dashboard would stop
+    // leading the sheet - the whole point of this merge.
+    //
+    // The tie-break still protects written history: for a past hour both sides
+    // carry the identical H:00:00Z timestamp, so the sheet's frozen row wins and
+    // nothing moves under the reader.
+    function put(row, source) {
+      const day = dayKey(row.date);
+      if (!day || row.hour === undefined || row.hour === null) return;
+      const key = day + '#' + row.hour;
+      const existing = byKey[key];
+
+      if (existing) {
+        const a = String(row.timestamp || '');
+        const b = String(existing.timestamp || '');
+        if (a < b) return;
+        if (a === b && source === 'posthog') return; // tie: sheet keeps it
+      } else {
+        order.push(key);
+      }
+
+      const merged = Object.assign({}, row);
+      merged._source = source;
+      byKey[key] = merged;
+    }
+
+    (sheetRows || []).forEach(function (r) { if (!r._blank) put(r, 'sheet'); });
+    (posthogRows || []).forEach(function (r) { put(r, 'posthog'); });
+
+    return order
+      .map(function (k) { return byKey[k]; })
+      .sort(function (a, b) {
+        const da = dayKey(a.date);
+        const db = dayKey(b.date);
+        if (da !== db) return da < db ? -1 : 1;
+        return a.hour - b.hour;
+      });
+  }
+
   // -------------------------------------------------------------- funnel ----
 
   const FUNNEL_STAGES = [
@@ -717,6 +782,7 @@
     yesterdayFinal: yesterdayFinal,
     pacingSeries: pacingSeries,
     funnel: funnel,
+    mergeSnapshots: mergeSnapshots,
     CAMPAIGN_METRICS: CAMPAIGN_METRICS,
     campaignPacing: campaignPacing,
     channelBlock: channelBlock,
