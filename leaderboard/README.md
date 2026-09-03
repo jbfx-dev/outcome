@@ -165,10 +165,18 @@ market mentioning the phrase cannot pull in the trophy artwork. It is applied to
 **wins only** — its panel reads "To Win" and there is no loss variant, so a loss
 dressed in it would read as a win.
 
-`theme=wc` is refused on non-World-Cup positions (409 `wc_style_unavailable`).
-The design asserts something about the trade; a gold-price position under a FIFA
-trophy is a false claim on a branded asset. The UI only offers the option where
-it applies.
+`theme=wc` is refused on non-World-Cup positions the server can see (409
+`wc_style_unavailable`). The design asserts something about the trade; a
+gold-price position under a FIFA trophy is a false claim on a branded asset. The
+UI only offers the option where it applies.
+
+**Detection needs market metadata, which is what Cloudflare blocks.** While the
+proxy is blocked the server cannot tell a World Cup market from any other, so
+the page passes its own reading (`style=wc`, `wcPosition`) alongside the title
+it already sends. Same precedence as the title: when the server can see the
+market its own determination wins and these are ignored — verified, a request
+carrying `style=wc` against a real gold market stays on the themed card. The
+wins-only rule is enforced server-side either way and is never taken on trust.
 
 Its field contract differs from the themed card — `to_win` not `earned`,
 `wallet` not `username`, no theme, no avatar — mapped by `wc_card_fields()`.
