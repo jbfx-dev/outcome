@@ -125,6 +125,27 @@ Impressions are **not** available here — they are X post impressions from the 
 API, and stay laptop-bound. Note PostHog has an unrelated `market_impression`
 event; conflating the two would be badly wrong.
 
+### Two different trader counts
+
+`Active Traders` and `Outcome Traders (API, hourly)` measure different things
+and will never agree:
+
+| | Active Traders | Outcome Traders (API, hourly) |
+|---|---|---|
+| Source | PostHog `trade_placed` | stats.outcome.xyz builder API |
+| Counts | distinct PostHog persons | distinct wallet addresses on-chain |
+| Sees | the web app only | every trade carrying the builder code, including API and bots |
+| Shape | cumulative for the day | **that hour alone** |
+
+The chain figure runs ~2.6–3.6x higher, mostly because API/bot flow never
+touches the frontend and because ad blockers suppress PostHog. The PostHog one
+is the attributable number, which is why the funnel uses it.
+
+The API column is hourly, not cumulative, because per-hour distinct counts
+cannot be summed into a running unique — doing so overstates by 1.5x–4.5x
+depending on the day. A true cumulative would need per-hour user sets, which
+the API does not expose.
+
 ### Hour semantics — the sharp edge
 
 The sheet files two different instants under the same `Hour (UTC) = H`:

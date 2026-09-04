@@ -102,7 +102,10 @@
       'Trades Placed': 'trades',
       Impressions: 'impressions',
       'Outcome Fills': 'fills',
-      'Outcome Traders (API)': 'tradersApi',
+      // Renamed in the sheet to make the shape explicit: this is traders active
+      // DURING that hour, not a running unique. Unlike every other column here
+      // it must never be summed - uniques do not add.
+      'Outcome Traders (API, hourly)': 'tradersApi',
       'Run Type': 'runType',
     },
     content: {
