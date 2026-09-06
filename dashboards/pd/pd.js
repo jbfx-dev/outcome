@@ -34,9 +34,10 @@
       impressions: 1538005, clicks: 11105, uvs: 18079,
       signups: 1660, depositors: 169, traders: 1137, volume: 1394003,
     },
-    // Milestones drawn on the market-share chart. Empty by default; add
-    // { date, label } entries to annotate a day.
-    annotations: [],
+    // Milestones drawn on the market-share chart.
+    annotations: [
+      { date: '2026-09-06', label: 'Match markets live' },
+    ],
 
     // Six-month volume plan, $4.621B total. Targets are monthly; goalCurve()
     // spreads each one across its days as a smoothly compounding ramp.
@@ -659,18 +660,56 @@
     return rows;
   }
 
-  // Compounding daily growth across the last `n` complete days. Returns null
-  // when there is not enough history, or when a zero start would make the rate
-  // infinite - the launch days start from almost nothing and would otherwise
-  // report a meaningless number.
-  function recentGrowth(volumeDays, n) {
-    const days = (volumeDays || []).filter(function (d) { return d.outcome > 0; });
-    if (days.length < 2) return null;
-    const window = days.slice(-Math.max(2, n || 4));
-    const first = window[0].outcome;
-    const last = window[window.length - 1].outcome;
-    if (!(first > 0)) return null;
-    return Math.pow(last / first, 1 / (window.length - 1)) - 1;
+  // Volume through 1-5 Sept fell 40% from Tue-Thu to Fri-Sat, and total HIP-4
+  // fell 45% - the whole venue, not just Outcome, whose share actually rose to
+  // its campaign high of 79% on the Friday.
+  //
+  // That dip was NOT weekly seasonality to model away: there were simply no
+  // weekend sports markets to trade until match markets launched on 6 Sept.
+  // It was missing supply, and the supply has now changed, so nothing here
+  // assumes weekends are quiet - an assumption baked in now would be wrong
+  // from this week onward.
+  //
+  // What it does mean is that a short-window day-on-day growth rate measures
+  // which days happened to have markets, not the trend. Hence the two measures
+  // below, both of which compare like with like.
+  //
+  // So growth is measured between the same weekday a week apart, where the
+  // seasonal component cancels.
+  function weekOverWeekGrowth(volumeDays) {
+    const by = {};
+    (volumeDays || []).forEach(function (d) { if (d.outcome > 0) by[d.date] = d.outcome; });
+    const dates = Object.keys(by).sort();
+    if (!dates.length) return null;
+    const last = dates[dates.length - 1];
+    const prior = addDays(last, -7);
+    if (!by[prior]) return null;
+    return {
+      from: prior, to: last,
+      previous: by[prior], latest: by[last],
+      growth: by[last] / by[prior] - 1,
+    };
+  }
+
+  // Trailing-window totals for actual and plan. A 7-day window spans every
+  // weekday exactly once, so comparing the two is seasonality-neutral on both
+  // sides - unlike a single day, which can be 40% off purely by falling on a
+  // Saturday.
+  function rollingPace(pacingRows, windowDays) {
+    const n = windowDays || 7;
+    const withActual = (pacingRows || []).filter(function (r) { return r.actual !== null; });
+    if (!withActual.length) return null;
+    const w = withActual.slice(-n);
+    let a = 0;
+    let g = 0;
+    w.forEach(function (r) { a += r.actual; g += r.goal; });
+    return {
+      days: w.length,
+      from: w[0].date, to: w[w.length - 1].date,
+      actual: a, goal: g,
+      ratio: g > 0 ? a / g : 0,
+      complete: w.length >= n,
+    };
   }
 
   // What the remainder of the current month needs per day to still land on target.
@@ -928,7 +967,8 @@
     daysInMonth: daysInMonth,
     goalCurve: goalCurve,
     goalPacing: goalPacing,
-    recentGrowth: recentGrowth,
+    weekOverWeekGrowth: weekOverWeekGrowth,
+    rollingPace: rollingPace,
     requiredRunRate: requiredRunRate,
     channelBlock: channelBlock,
     activeChannels: activeChannels,

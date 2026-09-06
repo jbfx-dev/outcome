@@ -644,6 +644,7 @@ body {
       <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>ACTUAL (CUMULATIVE)</div>
       <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>GOAL</div>
       <div class="legend-item" id="goalNote" style="color:rgba(255,255,255,0.45)"></div>
+      <div class="legend-item" id="goalWow"></div>
     </div>
     <div class="card-source">stats.outcome.xyz · live vs plan</div>
   </div>
@@ -1239,12 +1240,10 @@ body {
 
     var last = rows[rows.length - 1];
     var rr = P.requiredRunRate(rows, today);
-    var growth = P.recentGrowth(days.filter(function (d) { return d.date < today; }), 4);
+    var complete = days.filter(function (d) { return d.date < today; });
+    var wow = P.weekOverWeekGrowth(complete);
+    var roll = P.rollingPace(rows.filter(function (r) { return r.date < today; }), 7);
     var curve = P.goalCurve();
-
-    // Required growth is the plan's own rate for the month we are in.
-    var reqGrowth = 0;
-    curve.forEach(function (c) { if (c.date === last.date) reqGrowth = c.growth; });
 
     // --- headline stats -----------------------------------------------------
     var ahead = last.ratio - 1;
@@ -1258,10 +1257,16 @@ body {
       { label: 'NEEDED PER DAY', color: '#3B82F6',
         value: rr ? P.fmtMoney(rr.perDay) : '—',
         sub: rr ? 'to finish ' + rr.monthKey + ' on target' : '' },
-      { label: 'GROWTH · ACTUAL vs PLAN',
-        color: (growth !== null && growth >= reqGrowth) ? C.outcome : '#F58220',
-        value: growth === null ? '—' : (growth >= 0 ? '+' : '') + (growth * 100).toFixed(1) + '%',
-        sub: 'plan needs +' + (reqGrowth * 100).toFixed(1) + '%/day' },
+      // A 7-day window spans every weekday once, so it is not thrown by which
+      // days happened to have markets. A single day can be 40% off for that
+      // reason alone.
+      { label: roll && roll.complete ? '7-DAY vs PLAN' : (roll ? roll.days + '-DAY vs PLAN' : 'vs PLAN'),
+        color: roll && roll.ratio >= 1 ? C.outcome : '#F58220',
+        value: roll ? ((roll.ratio - 1) >= 0 ? '+' : '') + ((roll.ratio - 1) * 100).toFixed(0) + '%' : '—',
+        sub: roll
+          ? P.fmtMoney(roll.actual) + ' vs ' + P.fmtMoney(roll.goal) +
+            (roll.complete ? '' : ' · partial window')
+          : '' },
     ];
     stats.innerHTML = cards.map(function (c) {
       return '<div class="kpi-card">' +
@@ -1344,6 +1349,15 @@ body {
     }
 
     el.innerHTML = svgWrap(f, inner);
+
+    // Week-over-week on the matching weekday, where a market-supply difference
+    // between weekdays and weekends cancels out.
+    var wowText = wow
+      ? 'wk/wk ' + (wow.growth >= 0 ? '+' : '') + (wow.growth * 100).toFixed(0) + '% (' +
+        wow.from.slice(5) + ' → ' + wow.to.slice(5) + ')'
+      : 'wk/wk needs 8 days';
+    $('goalWow').textContent = wowText;
+    $('goalWow').style.color = wow && wow.growth >= 0 ? '#45E85C' : 'rgba(255,255,255,0.45)';
 
     $('goalNote').textContent = view === 'month'
       ? last.date.slice(0, 7) + ' · plan ' + P.fmtMoney(series[series.length - 1].cumGoal - base)

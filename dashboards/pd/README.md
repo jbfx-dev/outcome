@@ -187,9 +187,26 @@ small step, which the cumulative line the dashboard plots absorbs.
 The card shows cumulative actual against cumulative goal, because "are we
 tracking" is a cumulative question. Alongside it: position vs plan, the current
 month's target and what remains, the per-day rate needed to finish the month,
-and **recent actual growth against the rate the plan requires** — the last of
-which is the leading indicator, since cumulative position lags a trend change by
-days.
+and a **7-day rolling actual-vs-plan**.
+
+### Why the trend measure is a 7-day window
+
+Volume fell 40% from Tue–Thu to Fri–Sat in the first week of September, and
+total HIP-4 fell 45% — the whole venue, not just Outcome, whose share rose to a
+campaign-high 79% on that Friday.
+
+That was **not** weekly seasonality: there were no weekend sports markets to
+trade until match markets launched on 6 Sept. It was missing supply, and the
+supply has changed, so nothing here assumes weekends are quiet. On the World Cup
+campaign — which did have weekend fixtures — Saturday was the *strongest* day at
++51% against the campaign mean and Monday the weakest at −60%.
+
+A short day-on-day growth rate therefore measures which days had markets, not
+the trend: it read −26%/day across that first weekend. The card instead uses a
+7-day rolling window, which spans every weekday exactly once, plus a
+week-over-week figure on the matching weekday. Both are still distorted while
+the campaign is inside its launch ramp, and the week-over-week figure will jump
+structurally the first weekend that has matches against one that did not.
 
 ## Campaign pacing vs World Cup
 
