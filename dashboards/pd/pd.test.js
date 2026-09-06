@@ -424,27 +424,47 @@ test('goalPacing does not run past the days the campaign has reached', () => {
   assert.equal(rows.length, 1);
 });
 
-test('recentGrowth measures compounding daily change', () => {
+test('weekOverWeekGrowth compares the same weekday a week apart', () => {
+  // Day-on-day would read this as a collapse; the like-for-like pair is flat.
   const days = [
-    { date: '2026-09-01', outcome: 100 },
-    { date: '2026-09-02', outcome: 110 },
-    { date: '2026-09-03', outcome: 121 },
+    { date: '2026-08-29', outcome: 100 },  // Saturday
+    { date: '2026-08-30', outcome: 400 },
+    { date: '2026-09-04', outcome: 400 },
+    { date: '2026-09-05', outcome: 120 },  // Saturday
   ];
-  assert.ok(Math.abs(P.recentGrowth(days, 3) - 0.1) < 1e-9);
+  const r = P.weekOverWeekGrowth(days);
+  assert.equal(r.from, '2026-08-29');
+  assert.equal(r.to, '2026-09-05');
+  assert.ok(Math.abs(r.growth - 0.2) < 1e-9);
 });
 
-test('recentGrowth reports a decline as negative', () => {
-  const days = [
-    { date: '2026-09-01', outcome: 121 },
-    { date: '2026-09-02', outcome: 110 },
-    { date: '2026-09-03', outcome: 100 },
-  ];
-  assert.ok(P.recentGrowth(days, 3) < 0);
+test('weekOverWeekGrowth returns null before a week of history exists', () => {
+  assert.equal(P.weekOverWeekGrowth([]), null);
+  assert.equal(P.weekOverWeekGrowth([{ date: '2026-09-05', outcome: 100 }]), null);
 });
 
-test('recentGrowth returns null rather than an infinite launch-day rate', () => {
-  assert.equal(P.recentGrowth([], 3), null);
-  assert.equal(P.recentGrowth([{ date: '2026-08-28', outcome: 5 }], 3), null);
+test('rollingPace compares equal windows of actual and plan', () => {
+  const rows = [
+    { date: '2026-09-01', actual: 3, goal: 1 },
+    { date: '2026-09-02', actual: 3, goal: 1 },
+    { date: '2026-09-03', actual: 2, goal: 2 },
+  ];
+  const r = P.rollingPace(rows, 7);
+  assert.equal(r.days, 3);
+  assert.equal(r.actual, 8);
+  assert.equal(r.goal, 4);
+  assert.equal(r.ratio, 2);
+  assert.equal(r.complete, false); // fewer than 7 days so far
+});
+
+test('rollingPace ignores days with no actual yet', () => {
+  const rows = [
+    { date: '2026-09-01', actual: 5, goal: 1 },
+    { date: '2026-09-02', actual: null, goal: 1 },
+  ];
+  const r = P.rollingPace(rows, 7);
+  assert.equal(r.days, 1);
+  assert.equal(r.actual, 5);
 });
 
 test('requiredRunRate says what the rest of the month needs per day', () => {
