@@ -614,21 +614,6 @@ body {
     <div class="card-source" id="pacingSource">sheet</div>
   </div>
 
-  <!-- CAMPAIGN PACING vs WORLD CUP -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><div class="dot" style="background:#9B7CFF"></div>CAMPAIGN PACING · PD vs WORLD CUP</div>
-      <div class="metric-switcher" id="campaignSwitcher"></div>
-    </div>
-    <div class="chart-container" id="campaignChart" style="height:310px"></div>
-    <div class="chart-legend">
-      <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>PD LAUNCH</div>
-      <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>WORLD CUP</div>
-      <div class="legend-item" id="campaignDelta" style="color:rgba(255,255,255,0.7)"></div>
-    </div>
-    <div class="card-source">pd + world cup trackers · daily totals</div>
-  </div>
-
   <!-- VOLUME vs GOAL -->
   <div class="card">
     <div class="card-header">
@@ -712,13 +697,25 @@ body {
     <div class="card-source">sheet · channel summary</div>
   </div>
 
-  <!-- 5.10 SCORECARD -->
+  <!-- 5.10 WORLD CUP COMPARISON — pacing chart + scorecard, collapsed together -->
   <div class="card">
     <button class="collapse-btn" id="scoreToggle">
-      <span class="collapse-arrow">▼</span> WORLD CUP vs PD SCORECARD
+      <span class="collapse-arrow">▼</span> WORLD CUP vs PD
     </button>
-    <div class="collapse-body" id="scoreBody"></div>
-    <div class="card-source">sheet · wc vs pd comparison</div>
+    <div class="collapse-body" id="scoreBody">
+      <div class="card-header" style="margin-bottom:16px">
+        <div class="card-title"><div class="dot" style="background:#9B7CFF"></div>CAMPAIGN PACING · BY CAMPAIGN DAY</div>
+        <div class="metric-switcher" id="campaignSwitcher"></div>
+      </div>
+      <div class="chart-container" id="campaignChart" style="height:310px"></div>
+      <div class="chart-legend" style="margin-bottom:28px">
+        <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>PD LAUNCH</div>
+        <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>WORLD CUP</div>
+        <div class="legend-item" id="campaignDelta" style="color:rgba(255,255,255,0.7)"></div>
+      </div>
+      <div id="scoreTables"></div>
+    </div>
+    <div class="card-source">pd + world cup trackers</div>
   </div>
 
 </div>
@@ -1936,7 +1933,7 @@ body {
   // ----------------------------------------------------------- scorecard ----
 
   function renderScorecard() {
-    var el = $('scoreBody');
+    var el = $('scoreTables');
     if (state.errors.comparison) return panelError(el, 'comparison', loadSheets);
     if (!state.comparison) return skeleton(el, 5);
 
@@ -2129,7 +2126,11 @@ body {
 
     $('scoreToggle').addEventListener('click', function () {
       this.classList.toggle('open');
-      $('scoreBody').classList.toggle('open');
+      var open = $('scoreBody').classList.toggle('open');
+      // The chart lives inside the collapsible, so while it is closed the
+      // container measures zero and the chart would be drawn at the fallback
+      // width. Redraw once it has real layout.
+      if (open) renderCampaignChart();
     });
 
     // Arrow keys walk the day strip.
