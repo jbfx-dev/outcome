@@ -37,6 +37,20 @@
     // Milestones drawn on the market-share chart. Empty by default; add
     // { date, label } entries to annotate a day.
     annotations: [],
+
+    // Six-month volume plan, $4.621B total. Targets are monthly; goalCurve()
+    // spreads each one across its days as a smoothly compounding ramp.
+    volumeGoal: {
+      start: '2026-09-01',
+      months: [
+        { key: 'M1', month: '2026-09', target: 73000000 },
+        { key: 'M2', month: '2026-10', target: 205000000 },
+        { key: 'M3', month: '2026-11', target: 475000000 },
+        { key: 'M4', month: '2026-12', target: 828000000 },
+        { key: 'M5', month: '2027-01', target: 1300000000 },
+        { key: 'M6', month: '2027-02', target: 1740000000 },
+      ],
+    },
   };
 
   // The tabs the dashboard reads, and nothing else. Budget Tracker and Cost
@@ -559,6 +573,130 @@
     return out;
   }
 
+  // -------------------------------------------------------- volume goal ----
+
+  // Spreads the monthly volume plan across days as a compounding ramp.
+  //
+  // The monthly targets do not follow one exponential - month-on-month growth
+  // decelerates from 2.81x to 1.34x - so a single global rate cannot hit all
+  // six. Forcing exact monthly sums AND a continuous daily rate instead produces
+  // a saw-tooth that alternates between negative and positive growth, which is
+  // not a plan anyone would set.
+  //
+  // So each month gets its own rate, derived from where its daily average sits
+  // relative to the next month's, then scaled so the month sums to its target
+  // exactly. The result rises every single day (+3.4%/day in Sep easing to
+  // +1.4% by Feb) and hits all six targets and the $4.621B total on the nose.
+  // Month boundaries carry a small step, which is invisible in the cumulative
+  // line the dashboard actually plots.
+  function daysInMonth(ym) {
+    const y = +ym.slice(0, 4);
+    const m = +ym.slice(5, 7);
+    return new Date(Date.UTC(y, m, 0)).getUTCDate();
+  }
+
+  function goalCurve() {
+    const months = PD.volumeGoal.months;
+    const avg = months.map(function (m) { return m.target / daysInMonth(m.month); });
+
+    const out = [];
+    months.forEach(function (m, idx) {
+      const n = daysInMonth(m.month);
+      // Hand over smoothly to the next month's average; the last month keeps
+      // its own trajectory rather than flattening.
+      const next = idx + 1 < avg.length
+        ? avg[idx + 1]
+        : avg[idx] * (avg[idx] / avg[idx - 1]);
+      const g = Math.pow(next / avg[idx], 1 / n);
+
+      let ramp = [];
+      let sum = 0;
+      for (let i = 0; i < n; i++) { const v = Math.pow(g, i); ramp.push(v); sum += v; }
+      const scale = m.target / sum;
+
+      for (let i = 0; i < n; i++) {
+        out.push({
+          date: m.month + '-' + String(i + 1).padStart(2, '0'),
+          month: m.month,
+          monthKey: m.key,
+          goal: scale * ramp[i],
+          growth: g - 1,
+        });
+      }
+    });
+
+    let cum = 0;
+    out.forEach(function (d) { cum += d.goal; d.cumGoal = cum; });
+    return out;
+  }
+
+  // Joins actual daily volume onto the goal curve. Only days the campaign has
+  // actually reached are returned, so the chart never draws a flat actual line
+  // stretching months into the future.
+  function goalPacing(volumeDays, todayIso) {
+    const curve = goalCurve();
+    const actual = {};
+    (volumeDays || []).forEach(function (d) { actual[d.date] = d.outcome; });
+
+    const rows = [];
+    let cumA = 0;
+    for (let i = 0; i < curve.length; i++) {
+      const c = curve[i];
+      if (todayIso && c.date > todayIso) break;
+      const a = actual[c.date];
+      if (a === undefined && !rows.length) continue; // campaign not started yet
+      cumA += a || 0;
+      rows.push({
+        date: c.date,
+        monthKey: c.monthKey,
+        actual: a === undefined ? null : a,
+        goal: c.goal,
+        cumActual: cumA,
+        cumGoal: c.cumGoal,
+        ratio: c.cumGoal > 0 ? cumA / c.cumGoal : 0,
+      });
+    }
+    return rows;
+  }
+
+  // Compounding daily growth across the last `n` complete days. Returns null
+  // when there is not enough history, or when a zero start would make the rate
+  // infinite - the launch days start from almost nothing and would otherwise
+  // report a meaningless number.
+  function recentGrowth(volumeDays, n) {
+    const days = (volumeDays || []).filter(function (d) { return d.outcome > 0; });
+    if (days.length < 2) return null;
+    const window = days.slice(-Math.max(2, n || 4));
+    const first = window[0].outcome;
+    const last = window[window.length - 1].outcome;
+    if (!(first > 0)) return null;
+    return Math.pow(last / first, 1 / (window.length - 1)) - 1;
+  }
+
+  // What the remainder of the current month needs per day to still land on target.
+  function requiredRunRate(pacingRows, todayIso) {
+    if (!pacingRows || !pacingRows.length) return null;
+    const last = pacingRows[pacingRows.length - 1];
+    const month = last.date.slice(0, 7);
+    const spec = PD.volumeGoal.months.filter(function (m) { return m.month === month; })[0];
+    if (!spec) return null;
+
+    const inMonth = pacingRows.filter(function (r) { return r.date.slice(0, 7) === month; });
+    const done = inMonth.reduce(function (a, r) { return a + (r.actual || 0); }, 0);
+    const n = daysInMonth(month);
+    const elapsed = +last.date.slice(8, 10);
+    const remaining = n - elapsed;
+    return {
+      month: month,
+      monthKey: spec.key,
+      target: spec.target,
+      achieved: done,
+      remainingDays: remaining,
+      perDay: remaining > 0 ? Math.max(0, spec.target - done) / remaining : 0,
+      onTrack: done >= (spec.target * elapsed) / n,
+    };
+  }
+
   // ----------------------------------------------------- world cup daily ----
 
   // Metrics that exist on both sides of the comparison. The World Cup tracker
@@ -787,6 +925,11 @@
     mergeSnapshots: mergeSnapshots,
     CAMPAIGN_METRICS: CAMPAIGN_METRICS,
     campaignPacing: campaignPacing,
+    daysInMonth: daysInMonth,
+    goalCurve: goalCurve,
+    goalPacing: goalPacing,
+    recentGrowth: recentGrowth,
+    requiredRunRate: requiredRunRate,
     channelBlock: channelBlock,
     activeChannels: activeChannels,
     comparisonBlocks: comparisonBlocks,

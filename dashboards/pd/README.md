@@ -168,6 +168,29 @@ into a clean `07:00:00Z` one. The timestamp-precedence rule absorbs that.
 exactly as it did before. `POSTHOG_PROJECT_ID` (default `407955`) and
 `POSTHOG_HOST` (default `https://us.posthog.com`) override the rest.
 
+## Volume vs the $4.62B plan
+
+Monthly targets (Sep–Feb: 73 / 205 / 475 / 828 / 1300 / 1740, $M) are spread
+across days as a compounding ramp by `goalCurve()`.
+
+Month-on-month growth in the plan decelerates from 2.81x to 1.34x, so **one
+global daily rate cannot hit all six months**. Forcing exact monthly sums plus a
+continuous daily rate is worse: it yields a saw-tooth alternating between
+negative and positive growth, which is not a plan anyone would set.
+
+So each month gets its own rate, derived from where its daily average sits
+relative to the next month's, then scaled to hit that month's target exactly.
+The curve rises **every single day** (+3.4%/day in Sep easing to +1.4% by Feb),
+hits all six targets and totals $4.621B on the nose. Month boundaries carry a
+small step, which the cumulative line the dashboard plots absorbs.
+
+The card shows cumulative actual against cumulative goal, because "are we
+tracking" is a cumulative question. Alongside it: position vs plan, the current
+month's target and what remains, the per-day rate needed to finish the month,
+and **recent actual growth against the rate the plan requires** — the last of
+which is the leading indicator, since cumulative position lags a trend change by
+days.
+
 ## Campaign pacing vs World Cup
 
 Cumulative totals indexed by **campaign day**, so PD day 1 (28 Aug) is compared

@@ -629,6 +629,25 @@ body {
     <div class="card-source">pd + world cup trackers · daily totals</div>
   </div>
 
+  <!-- VOLUME vs GOAL -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="dot" style="background:#C4E84A"></div>VOLUME vs GOAL · $4.62B PLAN</div>
+      <div class="metric-switcher" id="goalSwitcher">
+        <button class="metric-btn active" data-view="month">THIS MONTH</button>
+        <button class="metric-btn" data-view="plan">FULL PLAN</button>
+      </div>
+    </div>
+    <div class="kpi-grid" id="goalStats" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px"></div>
+    <div class="chart-container" id="goalChart" style="height:300px"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>ACTUAL (CUMULATIVE)</div>
+      <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>GOAL</div>
+      <div class="legend-item" id="goalNote" style="color:rgba(255,255,255,0.45)"></div>
+    </div>
+    <div class="card-source">stats.outcome.xyz · live vs plan</div>
+  </div>
+
   <!-- 5.5 FUNNEL -->
   <div class="grid-2">
     <div class="card">
@@ -729,6 +748,7 @@ body {
     errors: {}, lastOk: {},
     pacingMetric: 'outcomeVolume',
     campaignMetric: 'volume',
+    goalView: 'month',
     shareMode: 'share',
     selectedDay: null,
     channelFilter: 'all',
@@ -1201,6 +1221,145 @@ body {
         fmt(wcSame.value) + ' — ' + P.fmtDelta(ratio);
       deltaEl.style.color = ratio >= 0 ? '#45E85C' : '#FF5C9E';
     }
+  }
+
+  // Cumulative volume against the six-month plan. Cumulative rather than daily
+  // on purpose: the plan's month boundaries carry a small step, which the
+  // cumulative line absorbs, and "are we tracking" is a cumulative question.
+  function renderGoalChart() {
+    var el = $('goalChart');
+    var stats = $('goalStats');
+    if (state.errors.volume) return panelError(el, 'volume', loadVolume);
+    if (!state.volume) return skeleton(el, 5);
+
+    var days = state.volume.days || [];
+    var today = todayUTC();
+    var rows = P.goalPacing(days, today);
+    if (!rows.length) { el.innerHTML = '<div class="empty-note">Plan starts 1 Sept.</div>'; return; }
+
+    var last = rows[rows.length - 1];
+    var rr = P.requiredRunRate(rows, today);
+    var growth = P.recentGrowth(days.filter(function (d) { return d.date < today; }), 4);
+    var curve = P.goalCurve();
+
+    // Required growth is the plan's own rate for the month we are in.
+    var reqGrowth = 0;
+    curve.forEach(function (c) { if (c.date === last.date) reqGrowth = c.growth; });
+
+    // --- headline stats -----------------------------------------------------
+    var ahead = last.ratio - 1;
+    var cards = [
+      { label: 'VS PLAN TO DATE', color: ahead >= 0 ? C.outcome : '#FF5C9E',
+        value: (ahead >= 0 ? '+' : '') + (ahead * 100).toFixed(0) + '%',
+        sub: P.fmtMoney(last.cumActual) + ' vs ' + P.fmtMoney(last.cumGoal) },
+      { label: (rr ? rr.monthKey : 'M1') + ' TARGET', color: C.share,
+        value: rr ? P.fmtMoney(rr.target) : '—',
+        sub: rr ? P.fmtMoney(rr.achieved) + ' banked · ' + rr.remainingDays + ' days left' : '' },
+      { label: 'NEEDED PER DAY', color: '#3B82F6',
+        value: rr ? P.fmtMoney(rr.perDay) : '—',
+        sub: rr ? 'to finish ' + rr.monthKey + ' on target' : '' },
+      { label: 'GROWTH · ACTUAL vs PLAN',
+        color: (growth !== null && growth >= reqGrowth) ? C.outcome : '#F58220',
+        value: growth === null ? '—' : (growth >= 0 ? '+' : '') + (growth * 100).toFixed(1) + '%',
+        sub: 'plan needs +' + (reqGrowth * 100).toFixed(1) + '%/day' },
+    ];
+    stats.innerHTML = cards.map(function (c) {
+      return '<div class="kpi-card">' +
+        '<div class="kpi-bar" style="background:' + c.color + '"></div>' +
+        '<div class="kpi-label" style="color:' + c.color + '">' + c.label + '</div>' +
+        '<div class="kpi-value" style="font-size:26px">' + c.value + '</div>' +
+        '<div class="kpi-sub">' + esc(c.sub) + '</div></div>';
+    }).join('');
+
+    // --- chart --------------------------------------------------------------
+    var view = state.goalView;
+    var series = view === 'month'
+      ? curve.filter(function (c) { return c.date.slice(0, 7) === last.date.slice(0, 7); })
+      : curve;
+    // Cumulative goal restarts at zero for the single-month view so the two
+    // lines are comparing the same thing.
+    var base = view === 'month' ? (series[0].cumGoal - series[0].goal) : 0;
+    var actualBase = 0;
+    if (view === 'month') {
+      rows.forEach(function (r) { if (r.date < series[0].date) actualBase = r.cumActual; });
+    }
+
+    var byDate = {};
+    rows.forEach(function (r) { byDate[r.date] = r; });
+
+    var max = 0;
+    series.forEach(function (c) { if (c.cumGoal - base > max) max = c.cumGoal - base; });
+    rows.forEach(function (r) { if (r.cumActual - actualBase > max) max = r.cumActual - actualBase; });
+    max = max * 1.08 || 1;
+
+    var f = chartFrame(el, 300, { l: 74, r: 20, t: 20, b: 42 });
+    var inner = gridLines(f, max, P.fmtMoney);
+    function x(i) { return f.pad.l + (i / Math.max(1, series.length - 1)) * f.cw; }
+    function y(v) { return f.pad.t + f.ch - (v / max) * f.ch; }
+
+    var goalPts = series.map(function (c, i) { return x(i) + ',' + y(c.cumGoal - base); }).join(' ');
+    inner += '<polyline fill="none" stroke="' + C.hl + '" stroke-width="2" stroke-dasharray="6 4" points="' + goalPts + '"/>';
+
+    var act = [];
+    series.forEach(function (c, i) {
+      var r = byDate[c.date];
+      if (r) act.push(x(i) + ',' + y(r.cumActual - actualBase));
+    });
+    if (act.length > 1) {
+      inner += '<polyline fill="none" stroke="' + C.outcome + '" stroke-width="2.5" stroke-linejoin="round" points="' + act.join(' ') + '"/>';
+    }
+    if (act.length) {
+      var lastPt = act[act.length - 1].split(',');
+      inner += '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="4" fill="' + C.outcome + '"/>';
+    }
+
+    // Month boundaries on the full-plan view.
+    if (view === 'plan') {
+      var seen = {};
+      series.forEach(function (c, i) {
+        if (seen[c.month]) return;
+        seen[c.month] = 1;
+        if (i === 0) return;
+        inner += '<line x1="' + x(i) + '" y1="' + f.pad.t + '" x2="' + x(i) +
+          '" y2="' + (f.pad.t + f.ch) + '" stroke="rgba(255,255,255,0.07)"/>';
+      });
+    }
+
+    if (view === 'month') {
+      series.forEach(function (c, i) {
+        if (i % 5 !== 0 && i !== series.length - 1) return;
+        inner += '<text x="' + x(i) + '" y="' + (f.pad.t + f.ch + 20) + '" class="chart-label">' +
+          c.date.slice(8) + '</text>';
+      });
+    } else {
+      // One label per month, at its first day - months are 28-31 days, so a
+      // fixed step drifts and duplicates the last one.
+      var labelled = {};
+      series.forEach(function (c, i) {
+        if (labelled[c.month]) return;
+        labelled[c.month] = 1;
+        inner += '<text x="' + x(i) + '" y="' + (f.pad.t + f.ch + 20) + '" class="chart-label">' +
+          c.monthKey + '</text>';
+      });
+    }
+
+    el.innerHTML = svgWrap(f, inner);
+
+    $('goalNote').textContent = view === 'month'
+      ? last.date.slice(0, 7) + ' · plan ' + P.fmtMoney(series[series.length - 1].cumGoal - base)
+      : 'SEP 2026 – FEB 2027 · $4.62B';
+
+    attachTip('goalChart', series.map(function (c, i) {
+      var r = byDate[c.date];
+      var rowsT = [{ label: 'Goal (cumulative)', color: C.hl, value: P.fmtMoney(c.cumGoal - base) }];
+      if (r) {
+        rowsT.unshift({ label: 'Actual (cumulative)', color: C.outcome, value: P.fmtMoney(r.cumActual - actualBase) });
+        rowsT.push({ label: 'vs plan', color: r.ratio >= 1 ? C.outcome : '#FF5C9E',
+          value: (r.ratio >= 1 ? '+' : '') + ((r.ratio - 1) * 100).toFixed(0) + '%' });
+      }
+      rowsT.push({ label: 'Daily goal', color: 'rgba(255,255,255,0.35)', value: P.fmtMoney(c.goal) });
+      return { x: x(i), head: c.date + ' · ' + c.monthKey, rows: rowsT };
+    }), f);
   }
 
   function sparkline(values, w, h, color) {
@@ -1824,7 +1983,7 @@ body {
     return getJSON('/api/pd/volume?startDate=' + PD.campaignStart)
       .then(function (j) { state.volume = j; markOk('volume'); })
       .catch(function () { state.errors.volume = 1; })
-      .then(function () { renderHero(); renderShareChart(); renderTotals(); updateBadges(); });
+      .then(function () { renderHero(); renderShareChart(); renderTotals(); renderGoalChart(); updateBadges(); });
   }
 
   function loadHourlyApi() {
@@ -1912,6 +2071,15 @@ body {
       renderShareChart();
     });
 
+    $('goalSwitcher').addEventListener('click', function (e) {
+      var b = e.target.closest('.metric-btn');
+      if (!b) return;
+      Array.prototype.forEach.call(this.children, function (c) { c.classList.remove('active'); });
+      b.classList.add('active');
+      state.goalView = b.dataset.view;
+      renderGoalChart();
+    });
+
     $('campaignSwitcher').innerHTML = P.CAMPAIGN_METRICS.map(function (m, i) {
       return '<button class="metric-btn' + (i === 0 ? ' active' : '') + '" data-metric="' +
         m.key + '">' + m.label.toUpperCase() + '</button>';
@@ -1962,7 +2130,7 @@ body {
     });
 
     window.addEventListener('resize', debounce(function () {
-      renderShareChart(); renderPacingChart(); renderCampaignChart(); renderPostSpark();
+      renderShareChart(); renderPacingChart(); renderCampaignChart(); renderGoalChart(); renderPostSpark();
     }, 180));
 
     loadWidgets();
