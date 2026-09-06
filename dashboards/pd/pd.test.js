@@ -369,6 +369,94 @@ test('merged rows still drive pacing and same-hour-yesterday', () => {
   assert.deepEqual(series.map((p) => p.value), [438, 538, 663, 677]);
 });
 
+// ------------------------------------------------------------ volume goal ----
+
+test('daysInMonth handles month lengths and a non-leap February', () => {
+  assert.equal(P.daysInMonth('2026-09'), 30);
+  assert.equal(P.daysInMonth('2026-10'), 31);
+  assert.equal(P.daysInMonth('2027-02'), 28);
+  assert.equal(P.daysInMonth('2028-02'), 29);
+});
+
+test('goalCurve hits every monthly target exactly', () => {
+  const curve = P.goalCurve();
+  const byMonth = {};
+  curve.forEach((d) => { byMonth[d.month] = (byMonth[d.month] || 0) + d.goal; });
+  P.PD.volumeGoal.months.forEach((m) => {
+    // Within a dollar - these are the numbers the plan is quoted in.
+    assert.ok(Math.abs(byMonth[m.month] - m.target) < 1, `${m.month} off by ${byMonth[m.month] - m.target}`);
+  });
+});
+
+test('goalCurve totals the full plan and spans every day of it', () => {
+  const curve = P.goalCurve();
+  const total = P.PD.volumeGoal.months.reduce((a, m) => a + m.target, 0);
+  assert.equal(total, 4621000000);
+  assert.ok(Math.abs(curve[curve.length - 1].cumGoal - total) < 1);
+  assert.equal(curve.length, 30 + 31 + 30 + 31 + 31 + 28);
+  assert.equal(curve[0].date, '2026-09-01');
+  assert.equal(curve[curve.length - 1].date, '2027-02-28');
+});
+
+test('goalCurve rises every single day', () => {
+  // A plan that dips would be read as a target to do less, which it is not.
+  const curve = P.goalCurve();
+  for (let i = 1; i < curve.length; i++) {
+    assert.ok(curve[i].goal > curve[i - 1].goal, `dip at ${curve[i].date}`);
+  }
+});
+
+test('goalPacing joins actuals and stops at today', () => {
+  const vol = [
+    { date: '2026-09-01', outcome: 2906369 },
+    { date: '2026-09-02', outcome: 3131872 },
+  ];
+  const rows = P.goalPacing(vol, '2026-09-02');
+  assert.equal(rows.length, 2);
+  assert.equal(rows[0].actual, 2906369);
+  assert.equal(rows[1].cumActual, 2906369 + 3131872);
+  assert.ok(rows[1].cumGoal > 0);
+  assert.ok(rows[1].ratio > 1); // ahead of plan on these numbers
+});
+
+test('goalPacing does not run past the days the campaign has reached', () => {
+  const rows = P.goalPacing([{ date: '2026-09-01', outcome: 1000 }], '2026-09-01');
+  assert.equal(rows.length, 1);
+});
+
+test('recentGrowth measures compounding daily change', () => {
+  const days = [
+    { date: '2026-09-01', outcome: 100 },
+    { date: '2026-09-02', outcome: 110 },
+    { date: '2026-09-03', outcome: 121 },
+  ];
+  assert.ok(Math.abs(P.recentGrowth(days, 3) - 0.1) < 1e-9);
+});
+
+test('recentGrowth reports a decline as negative', () => {
+  const days = [
+    { date: '2026-09-01', outcome: 121 },
+    { date: '2026-09-02', outcome: 110 },
+    { date: '2026-09-03', outcome: 100 },
+  ];
+  assert.ok(P.recentGrowth(days, 3) < 0);
+});
+
+test('recentGrowth returns null rather than an infinite launch-day rate', () => {
+  assert.equal(P.recentGrowth([], 3), null);
+  assert.equal(P.recentGrowth([{ date: '2026-08-28', outcome: 5 }], 3), null);
+});
+
+test('requiredRunRate says what the rest of the month needs per day', () => {
+  const vol = [{ date: '2026-09-01', outcome: 3000000 }];
+  const rr = P.requiredRunRate(P.goalPacing(vol, '2026-09-01'), '2026-09-01');
+  assert.equal(rr.monthKey, 'M1');
+  assert.equal(rr.target, 73000000);
+  assert.equal(rr.remainingDays, 29);
+  assert.ok(Math.abs(rr.perDay - (73000000 - 3000000) / 29) < 1);
+  assert.equal(rr.onTrack, true); // 3M on day 1 beats the 2.43M/day flat pace
+});
+
 // ---------------------------------------------------------- pacingSeries ----
 
 test('pacingSeries interpolates a gap and flags the filled points', () => {

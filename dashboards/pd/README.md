@@ -125,6 +125,27 @@ Impressions are **not** available here — they are X post impressions from the 
 API, and stay laptop-bound. Note PostHog has an unrelated `market_impression`
 event; conflating the two would be badly wrong.
 
+### Two different trader counts
+
+`Active Traders` and `Outcome Traders (API, hourly)` measure different things
+and will never agree:
+
+| | Active Traders | Outcome Traders (API, hourly) |
+|---|---|---|
+| Source | PostHog `trade_placed` | stats.outcome.xyz builder API |
+| Counts | distinct PostHog persons | distinct wallet addresses on-chain |
+| Sees | the web app only | every trade carrying the builder code, including API and bots |
+| Shape | cumulative for the day | **that hour alone** |
+
+The chain figure runs ~2.6–3.6x higher, mostly because API/bot flow never
+touches the frontend and because ad blockers suppress PostHog. The PostHog one
+is the attributable number, which is why the funnel uses it.
+
+The API column is hourly, not cumulative, because per-hour distinct counts
+cannot be summed into a running unique — doing so overstates by 1.5x–4.5x
+depending on the day. A true cumulative would need per-hour user sets, which
+the API does not expose.
+
 ### Hour semantics — the sharp edge
 
 The sheet files two different instants under the same `Hour (UTC) = H`:
@@ -146,6 +167,29 @@ into a clean `07:00:00Z` one. The timestamp-precedence rule absorbs that.
 `configured: false` and returns no rows, and the dashboard runs sheet-only
 exactly as it did before. `POSTHOG_PROJECT_ID` (default `407955`) and
 `POSTHOG_HOST` (default `https://us.posthog.com`) override the rest.
+
+## Volume vs the $4.62B plan
+
+Monthly targets (Sep–Feb: 73 / 205 / 475 / 828 / 1300 / 1740, $M) are spread
+across days as a compounding ramp by `goalCurve()`.
+
+Month-on-month growth in the plan decelerates from 2.81x to 1.34x, so **one
+global daily rate cannot hit all six months**. Forcing exact monthly sums plus a
+continuous daily rate is worse: it yields a saw-tooth alternating between
+negative and positive growth, which is not a plan anyone would set.
+
+So each month gets its own rate, derived from where its daily average sits
+relative to the next month's, then scaled to hit that month's target exactly.
+The curve rises **every single day** (+3.4%/day in Sep easing to +1.4% by Feb),
+hits all six targets and totals $4.621B on the nose. Month boundaries carry a
+small step, which the cumulative line the dashboard plots absorbs.
+
+The card shows cumulative actual against cumulative goal, because "are we
+tracking" is a cumulative question. Alongside it: position vs plan, the current
+month's target and what remains, the per-day rate needed to finish the month,
+and **recent actual growth against the rate the plan requires** — the last of
+which is the leading indicator, since cumulative position lags a trend change by
+days.
 
 ## Campaign pacing vs World Cup
 

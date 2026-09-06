@@ -147,7 +147,20 @@ can never invent the money. Verified: with the API stubbed out, caller-supplied
 at the true 9,040 / $5,246.32 / $9,040.
 
 Cards for resolved positions are immutable, so they are cached on disk by
-`(trader, coin, closedAt, theme)` and served with a long `Cache-Control`.
+`(trader, coin, closedAt, style, title, avatar)` and served with a long
+`Cache-Control`.
+
+### Sharing a card URL
+
+`/card/<any-slug>.png?…` is a rewrite onto the same function. The slug is
+cosmetic; every real parameter still travels in the query string. It exists
+because most link unfurlers (Discord, Slack, X, Telegram) key off a `.png`
+extension rather than the `Content-Type` header, so this form embeds far more
+reliably than `/api/card?…`.
+
+The endpoint answers `HEAD` as well as `GET` — several unfurlers probe with HEAD
+before embedding, and `BaseHTTPRequestHandler` answers 501 to any method without
+a `do_*`, which silently prevented embedding.
 
 ## Two card designs
 
