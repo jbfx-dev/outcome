@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><title>Outcome: private briefs</title><link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<style>
+@font-face{font-family:"PPN";src:url(/deck/_shared/PPNeueCorp-NarrowUltrabold.otf) format("opentype");font-display:block}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050506;color:#F5F8FF;font-family:Inter,Arial,sans-serif}
+main{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:48px 24px;max-width:720px;margin:0 auto;gap:28px}
+.eye{font-size:13px;font-weight:600;letter-spacing:.24em;color:#1AFF57}
+h1{font-family:PPN,Impact,sans-serif;font-weight:800;text-transform:uppercase;line-height:.86;font-size:clamp(64px,14vw,132px);margin:0}
+p{font-size:18px;line-height:1.5;color:rgba(245,248,255,.75);margin:0}
+form{display:flex;gap:10px;flex-wrap:wrap}
+.in{flex:1 1 260px;display:flex;align-items:center;background:#14161B;border:1px solid #2A2E37;border-radius:10px;padding:0 16px}
+.in:focus-within{border-color:#1AFF57}
+.in span{font-size:20px;color:rgba(245,248,255,.45);margin-right:4px}
+input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#F5F8FF;font:500 20px Inter,Arial,sans-serif;padding:16px 0}
+button{background:#1AFF57;color:#0A2E1A;border:0;border-radius:10px;font:700 18px Inter,Arial,sans-serif;padding:16px 26px;cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+.msg{min-height:24px;font-size:15px;color:#FF8A9C}
+.lock{height:24px;width:auto;align-self:flex-start;opacity:.9}
+</style></head><body><main>
+<img class="lock" src="/deck/_shared/logo_light.png" alt="Outcome">
+<div class="eye">PRIVATE BRIEFS</div>
+<h1>Enter your handle.</h1>
+<p>Your brief is made for you. Type your X handle to open it.</p>
+<form id="f" autocomplete="off"><label class="in"><span>@</span><input id="h" name="h" placeholder="yourhandle" autocapitalize="none" spellcheck="false" aria-label="Your X handle"></label><button id="b">Open my brief</button></form>
+<div class="msg" id="m" role="status"></div>
+</main><script>
+const f=document.getElementById('f'),h=document.getElementById('h'),b=document.getElementById('b'),m=document.getElementById('m');
+f.addEventListener('submit',async e=>{e.preventDefault();m.textContent='';
+ let v=h.value.trim().replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i,'').replace(/^@/,'').split(/[/?#]/)[0].toLowerCase();
+ if(!/^[a-z0-9_]{1,15}$/.test(v)){m.textContent='That doesn’t look like an X handle.';return}
+ b.disabled=true;
+ try{const r=await fetch('/deck/'+v+'/',{method:'HEAD',cache:'no-store'});
+  if(r.ok){location.href='/deck/'+v+'/';return}
+  m.textContent='We couldn’t find a brief for @'+v+'. Check the spelling, or message Jack on Telegram.'}
+ catch(_){m.textContent='Something went wrong. Try again.'}
+ b.disabled=false});
+</script></body></html>
