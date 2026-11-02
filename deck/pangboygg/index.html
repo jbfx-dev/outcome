@@ -10,6 +10,9 @@
 section p,section h1,section h2,section h3,section table{margin:0}section h1,section h2,section h3{font-weight:800}
 section table{border-collapse:collapse}section td,section th{padding:.35em .6em;border-bottom:1px solid #23262D}
 section a{text-decoration:underline}aside{display:none}
+.snd{position:absolute;right:24px;top:24px;z-index:3;display:flex;align-items:center;gap:12px;padding:14px 22px;border:0;border-radius:999px;background:rgba(5,5,6,.82);color:#F5F8FF;font:600 24px Inter,Arial,sans-serif;cursor:pointer;backdrop-filter:blur(6px)}
+section img[src$="wm.png"]{pointer-events:none}
+.snd:hover{background:rgba(5,5,6,.95)}.snd svg{width:30px;height:30px;flex:none}.snd[aria-pressed=true]{color:#1AFF57}
 .bar{position:sticky;top:0;z-index:5;width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:rgba(5,5,6,.92);backdrop-filter:blur(8px);font-size:14px;letter-spacing:.06em;color:rgba(245,248,255,.6);border-bottom:1px solid #1B1D22}
 .bar b{color:#1AFF57;font-weight:700}
 @media print{.bar{display:none}.deck{gap:0;padding:0}.frame{width:100vw;border-radius:0;box-shadow:none;break-after:page}}</style></head><body><div class="bar"><span><b>OUTCOME</b> &nbsp;/&nbsp; V3 BETA  /  PRIVATE BRIEF FOR @pangboygg</span><span>Use arrow keys or scroll</span></div>
@@ -269,4 +272,13 @@ const fr=[...document.querySelectorAll('.frame')];
 addEventListener('keydown',e=>{const y=scrollY+80;let i=fr.findIndex(f=>f.offsetTop+f.offsetHeight/2>y);if(i<0)i=fr.length-1;
 if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();(fr[i+1]||fr[i]).scrollIntoView({behavior:'smooth',block:'center'})}
 if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();(fr[i-1]||fr[0]).scrollIntoView({behavior:'smooth',block:'center'})}});
-document.querySelectorAll('video').forEach(v=>{v.addEventListener('click',()=>v.paused?v.play():v.pause())});</script></body></html>
+document.querySelectorAll('video').forEach(v=>{v.addEventListener('click',()=>v.paused?v.play():v.pause())});
+(()=>{const SP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/>',
+ON=SP+'<path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>',OFF=SP+'<path d="m23 9-6 6"/><path d="m17 9 6 6"/></svg>';
+let want=true,act=!!(navigator.userActivation&&navigator.userActivation.hasBeenActive);const P=[];
+document.querySelectorAll('video').forEach(v=>{const b=v.parentElement.querySelector('.snd');if(!b)return;const o={v,b,vis:false};P.push(o);
+ o.draw=()=>{const on=!v.muted;b.setAttribute('aria-pressed',on);b.innerHTML=on?ON+'Sound on':OFF+(want&&!act?'Tap for sound':'Sound off')};
+ o.sync=()=>{if(o.vis&&want&&act){v.muted=false;if(v.paused)v.play().catch(()=>{})}else v.muted=true;o.draw()};
+ b.addEventListener('click',e=>{e.stopPropagation();act=true;want=v.muted;P.forEach(p=>p.sync())});
+ new IntersectionObserver(es=>es.forEach(en=>{o.vis=en.isIntersecting;o.sync()}),{threshold:.5}).observe(v);o.draw()});
+['pointerdown','keydown','touchend'].forEach(t=>addEventListener(t,e=>{if(e.target&&e.target.closest&&e.target.closest('.snd'))return;if(!act){act=true;P.forEach(p=>p.sync())}},{capture:true}))})();</script></body></html>
