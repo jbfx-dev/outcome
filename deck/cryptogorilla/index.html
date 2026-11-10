@@ -388,7 +388,7 @@ section img[src$="wm.png"]{pointer-events:none}
 <div class="frame"><section id="close" data-transition="fade" style="background:#1AFF57;color:#0A2E1A;font-family:Inter, Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:row;gap:72px;align-items:center">
 <div style="width:820px;display:flex;flex-direction:column;gap:36px">
 <h2 style="font-family:'PP Neue Corp Narrow', Impact, sans-serif;font-weight:800;font-size:176px;line-height:0.86;text-transform:uppercase;color:#0A2E1A">Let’s go, Gorilla.</h2>
-<p style="font-size:32px;line-height:1.4;color:#0A2E1A">Confirm with Stratosphere, book your briefing call with Jack, and we’ll add you to the ambassador group.</p>
+<p style="font-size:32px;line-height:1.4;color:#0A2E1A">Confirm with Myriad, book your briefing call with Jack, and we’ll add you to the ambassador group.</p>
 <p style="font-size:28px;line-height:1.4;color:#0A2E1A"><b>Jack</b>, CMO, Outcome · Telegram <a href="https://t.me/jackk" style="color:#0A2E1A">t.me/jackk</a></p>
 </div>
 <div style="flex:1;display:flex;gap:20px">
@@ -401,11 +401,18 @@ section img[src$="wm.png"]{pointer-events:none}
 
 </section>
 </div>
-</div><script>document.querySelectorAll('.frame>section').forEach(s=>{let first=-1;[...s.children].forEach((k,i)=>{const abs=k.style.position==='absolute';if(!abs&&first<0)first=i;if(!abs)k.style.position='relative';k.style.zIndex=abs?i:first})});
+</div><script>(()=>{const r=document.getElementById('cr');if(!r)return;const $=id=>document.getElementById(id);
+const V=x=>{const v=1e5*Math.pow(5000,x/1000);const q=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/q)*q};
+const fm=v=>v>=1e6?'$'+(+(v/1e6).toFixed(v>=1e8?0:v>=1e7?1:2))+'M':'$'+Math.round(v/1e3)+'K';const fd=v=>'$'+Math.round(v).toLocaleString('en-GB');
+function up(){const v=V(+r.value);const t=v>=1e6?['Gold',.4]:v>=2.5e5?['Silver',.3]:['Base',.2];const lk=$('cl').checked;const rt=lk?.4:t[1];
+$('cv').textContent=fm(v);$('ct').textContent=(lk?'Invited':t[0])+' · '+Math.round(rt*100)+'%';$('cf').textContent=fd(v*.01);$('cc').textContent=fd(v*.0096);$('cp').textContent=fd(v*.0096*rt);$('cy').textContent=fd(v*.0096*rt*12)+' a year'}
+r.addEventListener('input',up);$('cl').addEventListener('change',up);
+document.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>{r.value=Math.round(1000*Math.log(+b.dataset.v/1e5)/Math.log(5000));up()}));up()})();
+document.querySelectorAll('.frame>section').forEach(s=>{let first=-1;[...s.children].forEach((k,i)=>{const abs=k.style.position==='absolute';if(!abs&&first<0)first=i;if(!abs)k.style.position='relative';k.style.zIndex=abs?i:first})});
 function fit(){document.querySelectorAll('.frame').forEach(f=>{const s=f.firstElementChild;s.style.transform='scale('+(f.clientWidth/1920)+')'})}
 addEventListener('resize',fit);fit();document.fonts&&document.fonts.ready.then(fit);
 const fr=[...document.querySelectorAll('.frame')];
-addEventListener('keydown',e=>{const y=scrollY+80;let i=fr.findIndex(f=>f.offsetTop+f.offsetHeight/2>y);if(i<0)i=fr.length-1;
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;const y=scrollY+80;let i=fr.findIndex(f=>f.offsetTop+f.offsetHeight/2>y);if(i<0)i=fr.length-1;
 if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();(fr[i+1]||fr[i]).scrollIntoView({behavior:'smooth',block:'center'})}
 if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();(fr[i-1]||fr[0]).scrollIntoView({behavior:'smooth',block:'center'})}});
 document.querySelectorAll('video').forEach(v=>{v.addEventListener('click',()=>v.paused?v.play():v.pause())});
