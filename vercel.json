@@ -14,6 +14,18 @@
   },
   "redirects": [
     {
+      "source": "/:path((?!deck|api/|card/|gate\\.html|favicon|apple-touch-icon|meta-image\\.png|robots\\.txt).*)",
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "oc_gate",
+          "value": "ef8caa0020f077a2ea424141b02bcbca2a3d03ff8fd26b77f9ea3a05934f6f00"
+        }
+      ],
+      "destination": "/gate.html?next=/:path",
+      "permanent": false
+    },
+    {
       "source": "/",
       "destination": "/dashboards/pd",
       "permanent": false
