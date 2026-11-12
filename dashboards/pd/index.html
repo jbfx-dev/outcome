@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-campaign="pd">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -542,7 +542,7 @@ body {
       <path d="M1735.42 255.305V255.055C1735.42 206.188 1764.15 172.031 1824.37 172.031C1877.08 172.031 1908.32 202.199 1908.32 255.305V263.283H1770.9C1773.15 290.709 1789.14 309.657 1824.62 309.657C1853.35 309.657 1865.59 296.692 1868.59 284.476L1869.09 282.98H1906.57L1906.32 284.476C1901.57 314.394 1874.84 339.077 1824.12 339.077C1764.15 339.077 1735.42 304.92 1735.42 255.305ZM1772.4 238.6H1873.09L1872.84 238.101C1869.09 214.665 1851.35 201.451 1822.87 201.451C1793.13 201.451 1777.39 216.161 1772.4 238.6Z"/>
     </svg>
     <span class="nav-divider">/</span>
-    <span class="nav-subtitle">PERMISSIONLESS DEPLOYMENT</span>
+    <span class="nav-subtitle" id="navSubtitle">PERMISSIONLESS DEPLOYMENT</span>
   </div>
   <div class="nav-right">
     <div class="live-badge" id="liveBadge">
@@ -550,6 +550,7 @@ body {
       <span id="liveText">LIVE</span>
     </div>
     <div class="date-badge" id="updatedBadge">SYNCING…</div>
+    <a class="nav-link" id="altLink" href="#" style="display:none"></a>
   </div>
 </nav>
 
@@ -557,7 +558,7 @@ body {
 
   <!-- 5.1 TITLE -->
   <div class="title-row">
-    <h1 class="title-h1">PERMISSIONLESS<br>DEPLOYMENT <span class="green">LIVE</span></h1>
+    <h1 class="title-h1" id="titleH1">PERMISSIONLESS<br>DEPLOYMENT <span class="green">LIVE</span></h1>
     <div class="title-badges">
       <div class="badge green" id="dayBadge">DAY —</div>
       <div class="badge" id="poolBadge">$1M REWARDS POOL</div>
@@ -700,7 +701,7 @@ body {
   <!-- 5.10 WORLD CUP COMPARISON — pacing chart + scorecard, collapsed together -->
   <div class="card">
     <button class="collapse-btn" id="scoreToggle">
-      <span class="collapse-arrow">▼</span> WORLD CUP vs PD
+      <span class="collapse-arrow">▼</span> <span id="scoreToggleLabel">WORLD CUP vs PD</span>
     </button>
     <div class="collapse-body" id="scoreBody">
       <div class="card-header" style="margin-bottom:16px">
@@ -709,13 +710,13 @@ body {
       </div>
       <div class="chart-container" id="campaignChart" style="height:310px"></div>
       <div class="chart-legend" style="margin-bottom:28px">
-        <div class="legend-item"><div class="legend-line" style="background:#45E85C"></div>PD LAUNCH</div>
-        <div class="legend-item"><div class="legend-line" style="background:#5A6272"></div>WORLD CUP</div>
+        <span id="campaignLegend" style="display:contents"></span>
         <div class="legend-item" id="campaignDelta" style="color:rgba(255,255,255,0.7)"></div>
+        <div class="legend-item" id="campaignNote" style="color:rgba(255,255,255,0.35)"></div>
       </div>
       <div id="scoreTables"></div>
     </div>
-    <div class="card-source">pd + world cup trackers</div>
+    <div class="card-source" id="scoreSource">pd + world cup trackers</div>
   </div>
 
 </div>
@@ -727,6 +728,15 @@ body {
 
   var P = window.PDDerive;
   var PD = P.PD;
+
+  // Which campaign this page shows. dashboards/pd and dashboards/v3 are the
+  // same file apart from this attribute and the <head> meta; everything that
+  // differs between campaigns lives in P.CAMPAIGNS.
+  var CAMP = P.CAMPAIGNS[document.documentElement.getAttribute('data-campaign')] || P.CAMPAIGNS.pd;
+  var Q_CAMP = '&c=' + CAMP.key;
+  // The volume plan starts 1 Sept. A campaign that starts later cannot feed
+  // the plan card from its own (clipped) volume, so it loads whole days apart.
+  var GOAL_SEPARATE = CAMP.start > PD.volumeGoal.start;
 
   // Series colours. Outcome takes the brand green; HL Frontend is deliberately
   // neutral and other builders are muted, so the eye reads Outcome first.
@@ -742,7 +752,8 @@ body {
   var state = {
     volume: null, daily: null, hourly: null, hourlyApi: null,
     hourlySheet: null, hourlyPh: null, phConfigured: null,
-    content: null, channels: null, comparison: null, wcDaily: null,
+    content: null, channels: null, comparison: null, wcDaily: null, pdDaily: null,
+    goalVolume: null,
     errors: {}, lastOk: {},
     pacingMetric: 'outcomeVolume',
     campaignMetric: 'volume',
@@ -760,7 +771,9 @@ body {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function todayUTC() { return new Date().toISOString().slice(0, 10); }
+  // Pinned to the campaign's last day once it has ended, so a locked campaign
+  // keeps showing its final day.
+  function todayUTC() { return P.campaignToday(CAMP.key, new Date().toISOString()); }
   function fmtDayLabel(iso) {
     var d = P.parseSheetDate(iso);
     if (!d) return iso;
@@ -968,12 +981,13 @@ body {
 
       inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t + f.ch + 18) + '" class="chart-label">' +
         fmtDayLabel(d.date) + '</text>';
-      if (isToday) {
+      if (isToday || d.partDay) {
         inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t + f.ch + 33) +
-          '" class="chart-label" style="font-size:8px;fill:#F58220">PARTIAL</text>';
+          '" class="chart-label" style="font-size:8px;fill:#F58220">' +
+          (isToday && !P.campaignEnded(CAMP.key, new Date().toISOString()) ? 'PARTIAL' : 'PART DAY') + '</text>';
       }
 
-      PD.annotations.forEach(function (a) {
+      CAMP.annotations.forEach(function (a) {
         if (a.date !== d.date) return;
         inner += '<text x="' + (x + barW / 2) + '" y="' + (f.pad.t - 9) + '" class="chart-annotation">' +
           esc(a.label) + '</text>';
@@ -1019,14 +1033,21 @@ body {
 
     // Volume comes from the live hourly endpoint so the curve is current
     // rather than as-of the last sheet write; everything else is sheet-only.
-    var todaySeries = (isVolume && state.hourlyApi)
-      ? P.hourlyCumulative(state.hourlyApi, today)
-      : P.pacingSeries(state.hourly, today, metric);
-    var yestSeries = (isVolume && state.hourlyApi)
-      ? P.hourlyCumulative(state.hourlyApi, yest)
-      : P.pacingSeries(state.hourly, yest, metric);
+    // Only the campaign's own hours of a day count, and once the live window
+    // (48h) no longer reaches a day, the sheet's rows stand in.
+    function daySeries(day) {
+      if (isVolume && state.hourlyApi) {
+        var hrs = P.campaignDayHours(CAMP.key, day);
+        var liveSeries = P.hourlyCumulative(state.hourlyApi, day, hrs.from, hrs.to);
+        if (liveSeries.length) return { s: liveSeries, live: true };
+      }
+      return { s: P.pacingSeries(state.hourly, day, metric), live: false };
+    }
+    var todayRes = daySeries(today);
+    var todaySeries = todayRes.s;
+    var yestSeries = daySeries(yest).s;
 
-    $('pacingSource').textContent = isVolume && state.hourlyApi
+    $('pacingSource').textContent = todayRes.live
       ? 'stats.outcome.xyz · live' : 'sheet · hourly snapshots';
 
     // Average across earlier complete days, up to seven.
@@ -1133,27 +1154,55 @@ body {
     );
   }
 
-  // Cumulative PD against the World Cup baseline, indexed by campaign day so
-  // day 1 meets day 1. The World Cup series stops at day 14 - only weeks 1-2
-  // of that dashboard carry the full metric set.
+  // This campaign's cumulative totals against the earlier campaigns, indexed
+  // by campaign day so day 1 meets day 1. PD compares against the World Cup;
+  // V3 against PD and the World Cup.
+  var BASE_STYLE = {
+    pd: { color: C.avg, label: 'PD LAUNCH', tip: 'PD' },
+    wc: { color: C.hl, label: 'WORLD CUP', tip: 'WC' },
+  };
+  function baseRows(k) { return k === 'pd' ? state.pdDaily : state.wcDaily; }
+  function baseErr(k) { return k === 'pd' ? state.errors.pdDaily : state.errors.wcDaily; }
+
   function renderCampaignChart() {
     var el = $('campaignChart');
-    if (state.errors.daily || state.errors.wcDaily) {
+    var bases = CAMP.baselines;
+    if (state.errors.daily || bases.some(baseErr)) {
       return panelError(el, 'campaign comparison', loadSheets);
     }
-    if (!state.daily || !state.wcDaily) return skeleton(el, 5);
+    if (!state.daily || bases.some(function (k) { return !baseRows(k); })) return skeleton(el, 5);
 
     var metric = state.campaignMetric;
     var spec = null;
     P.CAMPAIGN_METRICS.forEach(function (m) { if (m.key === metric) spec = m; });
     var fmt = spec && spec.money ? P.fmtMoney : P.fmtNum;
 
-    var series = P.campaignPacing(state.daily, state.wcDaily, metric);
-    if (!series.pd.length) { el.innerHTML = '<div class="empty-note">No campaign days yet.</div>'; return; }
+    var all = P.campaignSeries(
+      [{ key: 'self', rows: state.daily }].concat(bases.map(function (k) {
+        return { key: k, rows: baseRows(k) };
+      })), metric);
+    var self = all.self;
+    var deltaEl = $('campaignDelta');
+    if (!self.length) {
+      el.innerHTML = '<div class="empty-note">No campaign days yet.</div>';
+      deltaEl.textContent = '';
+      return;
+    }
 
-    var maxDay = Math.max(series.pd.length, series.wc.length);
+    // Early in a campaign a long baseline would squash the live line into the
+    // corner, so the window runs a week past the current day (two weeks at
+    // least) and never past the longest baseline.
+    var longest = 0;
+    bases.forEach(function (k) { longest = Math.max(longest, all[k].length); });
+    var maxDay = Math.max(self.length, Math.min(longest, Math.max(14, self.length + 7)));
+    var shown = {};
+    bases.forEach(function (k) {
+      shown[k] = all[k].filter(function (p) { return p.day <= maxDay; });
+    });
+
     var max = 0;
-    series.pd.concat(series.wc).forEach(function (p) { if (p.value > max) max = p.value; });
+    self.forEach(function (p) { if (p.value > max) max = p.value; });
+    bases.forEach(function (k) { shown[k].forEach(function (p) { if (p.value > max) max = p.value; }); });
     max = max * 1.1 || 1;
 
     var f = chartFrame(el, 310, { l: 66, r: 20, t: 22, b: 42 });
@@ -1162,8 +1211,9 @@ body {
     function x(day) { return f.pad.l + ((day - 1) / Math.max(1, maxDay - 1)) * f.cw; }
     function y(v) { return f.pad.t + f.ch - (v / max) * f.ch; }
 
+    var step = maxDay > 40 ? 7 : (maxDay > 10 ? 2 : 1);
     for (var d = 1; d <= maxDay; d++) {
-      if (maxDay > 10 && d % 2 === 0 && d !== maxDay) continue;
+      if ((d - 1) % step !== 0 && d !== maxDay) continue;
       inner += '<text x="' + x(d) + '" y="' + (f.pad.t + f.ch + 20) + '" class="chart-label">D' + d + '</text>';
     }
 
@@ -1175,50 +1225,68 @@ body {
         pts.map(function (p) { return x(p.day) + ',' + y(p.value); }).join(' ') + '"/>';
     }
 
-    inner += line(series.wc, C.hl, '6 4');
-    inner += line(series.pd, C.outcome, null, 2.5);
-
-    series.wc.forEach(function (p) {
-      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="2.5" fill="' + C.hl + '"/>';
+    // Baselines first so the live campaign always sits on top.
+    bases.slice().reverse().forEach(function (k) {
+      inner += line(shown[k], BASE_STYLE[k].color, '6 4');
     });
-    series.pd.forEach(function (p) {
-      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="3.5" fill="' + C.outcome + '"/>';
+    inner += line(self, C.outcome, null, 2.5);
+
+    if (maxDay <= 45) {
+      bases.forEach(function (k) {
+        shown[k].forEach(function (p) {
+          inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="2.5" fill="' + BASE_STYLE[k].color + '"/>';
+        });
+      });
+    }
+    self.forEach(function (p) {
+      inner += '<circle cx="' + x(p.day) + '" cy="' + y(p.value) + '" r="' + (maxDay <= 45 ? 3.5 : 2) +
+        '" fill="' + C.outcome + '"/>';
     });
 
     el.innerHTML = svgWrap(f, inner);
 
-    // Both campaigns at the same campaign day, plus the gap between them.
-    var pdBy = {};
-    var wcBy = {};
-    series.pd.forEach(function (p) { pdBy[p.day] = p; });
-    series.wc.forEach(function (p) { wcBy[p.day] = p; });
+    // Every campaign at the same campaign day, plus the gap to each baseline.
+    var selfBy = {};
+    self.forEach(function (p) { selfBy[p.day] = p; });
+    var baseBy = {};
+    bases.forEach(function (k) {
+      baseBy[k] = {};
+      shown[k].forEach(function (p) { baseBy[k][p.day] = p; });
+    });
     var dayKeys = [];
-    for (var dd = 1; dd <= maxDay; dd++) if (pdBy[dd] || wcBy[dd]) dayKeys.push(dd);
+    for (var dd = 1; dd <= maxDay; dd++) {
+      if (selfBy[dd] || bases.some(function (k) { return baseBy[k][dd]; })) dayKeys.push(dd);
+    }
 
     attachTip('campaignChart', dayKeys.map(function (dd) {
       var rows = [];
-      if (pdBy[dd]) rows.push({ label: 'PD · ' + pdBy[dd].label, color: C.outcome, value: fmt(pdBy[dd].value) });
-      if (wcBy[dd]) rows.push({ label: 'WC · ' + wcBy[dd].label, color: C.hl, value: fmt(wcBy[dd].value) });
-      if (pdBy[dd] && wcBy[dd] && wcBy[dd].value > 0) {
-        var diff = (pdBy[dd].value - wcBy[dd].value) / wcBy[dd].value;
-        rows.push({ label: 'Difference', color: diff >= 0 ? C.outcome : '#FF5C9E', value: P.fmtDelta(diff) });
-      }
+      if (selfBy[dd]) rows.push({ label: CAMP.short + ' · ' + selfBy[dd].label, color: C.outcome, value: fmt(selfBy[dd].value) });
+      bases.forEach(function (k) {
+        var b = baseBy[k][dd];
+        if (!b) return;
+        rows.push({ label: BASE_STYLE[k].tip + ' · ' + b.label, color: BASE_STYLE[k].color, value: fmt(b.value) });
+        if (selfBy[dd] && b.value > 0) {
+          var diff = (selfBy[dd].value - b.value) / b.value;
+          rows.push({ label: 'vs ' + BASE_STYLE[k].tip, color: diff >= 0 ? C.outcome : '#FF5C9E', value: P.fmtDelta(diff) });
+        }
+      });
       return { x: x(dd), head: 'Campaign day ' + dd, rows: rows };
     }), f);
 
-    // Headline: where PD stands against the World Cup on the same campaign day.
-    var lastPd = series.pd[series.pd.length - 1];
-    var wcSame = series.wc[lastPd.day - 1];
-    var deltaEl = $('campaignDelta');
-    if (!wcSame) {
-      deltaEl.textContent = 'NO WC BASELINE PAST DAY ' + series.wc.length;
-      deltaEl.style.color = 'rgba(255,255,255,0.35)';
-    } else {
-      var ratio = wcSame.value > 0 ? (lastPd.value - wcSame.value) / wcSame.value : 0;
-      deltaEl.textContent = 'DAY ' + lastPd.day + ': ' + fmt(lastPd.value) + ' vs ' +
-        fmt(wcSame.value) + ' — ' + P.fmtDelta(ratio);
-      deltaEl.style.color = ratio >= 0 ? '#45E85C' : '#FF5C9E';
-    }
+    // Headline: where this campaign stands against each earlier one on the
+    // same campaign day. Colour follows the first baseline.
+    var last = self[self.length - 1];
+    var parts = [];
+    var lead = null;
+    bases.forEach(function (k) {
+      var same = all[k][last.day - 1];
+      if (!same) { parts.push('NO ' + BASE_STYLE[k].tip + ' PAST DAY ' + all[k].length); return; }
+      var ratio = same.value > 0 ? (last.value - same.value) / same.value : 0;
+      if (lead === null) lead = ratio;
+      parts.push('vs ' + BASE_STYLE[k].tip + ' ' + fmt(same.value) + ' ' + P.fmtDelta(ratio));
+    });
+    deltaEl.textContent = 'DAY ' + last.day + ': ' + fmt(last.value) + ' · ' + parts.join(' · ');
+    deltaEl.style.color = lead === null ? 'rgba(255,255,255,0.35)' : (lead >= 0 ? '#45E85C' : '#FF5C9E');
   }
 
   // Cumulative volume against the six-month plan. Cumulative rather than daily
@@ -1228,9 +1296,10 @@ body {
     var el = $('goalChart');
     var stats = $('goalStats');
     if (state.errors.volume) return panelError(el, 'volume', loadVolume);
-    if (!state.volume) return skeleton(el, 5);
+    var gv = GOAL_SEPARATE ? state.goalVolume : state.volume;
+    if (!gv) return skeleton(el, 5);
 
-    var days = state.volume.days || [];
+    var days = gv.days || [];
     var today = todayUTC();
     var rows = P.goalPacing(days, today);
     if (!rows.length) { el.innerHTML = '<div class="empty-note">Plan starts 1 Sept.</div>'; return; }
@@ -1455,7 +1524,7 @@ body {
     }).join('');
 
     $('shareBadge').textContent = 'SHARE ' + P.fmtPct(live.share);
-    $('dayBadge').textContent = 'DAY ' + (P.daysBetween(PD.campaignStart, today) + 1);
+    $('dayBadge').textContent = 'DAY ' + (P.daysBetween(CAMP.start, today) + 1);
   }
 
   // Campaign totals. Volume comes from the live API, so it already includes
@@ -1742,7 +1811,7 @@ body {
   function campaignDays() {
     var out = [];
     var today = todayUTC();
-    var d = PD.campaignStart;
+    var d = CAMP.start;
     while (d && d <= today) { out.push(d); d = P.addDays(d, 1); }
     return out;
   }
@@ -1943,18 +2012,23 @@ body {
     });
     if (!blocks.length) { el.innerHTML = '<div class="empty-note">No comparison rows.</div>'; return; }
 
+    // "<this campaign> ahead" is good news; any other campaign ahead is not.
+    var mine = new RegExp('^' + CAMP.short + '\\s+ahead', 'i');
     el.innerHTML = blocks.map(function (b) {
+      var three = !!b.v3Label;
       return '<div style="margin-bottom:26px">' +
         '<div class="card-meta" style="margin-bottom:12px">' + esc(b.title) + '</div>' +
         '<div class="table-scroll"><table class="breakdown-table" style="min-width:640px"><thead><tr>' +
         '<th>METRIC</th><th>' + esc(b.worldCupLabel) + '</th><th>' + esc(b.pdLabel) + '</th>' +
-        '<th>DELTA</th><th>% CHANGE</th><th>VERDICT</th></tr></thead><tbody>' +
+        (three ? '<th>' + esc(b.v3Label) + '</th><th>V3 VS PD</th>' : '<th>DELTA</th>') +
+        '<th>% CHANGE</th><th>VERDICT</th></tr></thead><tbody>' +
         b.rows.map(function (r) {
-          var v = /ahead/i.test(r.verdict) ? 'verdict-ahead'
-            : (/behind/i.test(r.verdict) ? 'verdict-behind' : 'verdict-flat');
-          var up = /^\+/.test(r.pctChange);
+          var v = mine.test(r.verdict) ? 'verdict-ahead'
+            : (/ahead|behind/i.test(r.verdict) ? 'verdict-behind' : 'verdict-flat');
+          var up = /^\+/.test(r.pctChange) || (!/^-/.test(r.pctChange) && P.parseMoney(r.pctChange) > 0);
           return '<tr><td class="strong">' + esc(r.metric) + '</td>' +
             '<td>' + esc(r.worldCup) + '</td><td>' + esc(r.pd) + '</td>' +
+            (three ? '<td class="strong">' + esc(r.v3) + '</td>' : '') +
             '<td>' + esc(r.delta) + '</td>' +
             '<td class="' + (up ? 'green' : '') + '">' + esc(r.pctChange) + '</td>' +
             '<td><span class="verdict-pill ' + v + '">' + esc(r.verdict) + '</span></td></tr>';
@@ -1972,7 +2046,10 @@ body {
   // partial hour, which is why the dashboard runs ahead of the spreadsheet.
   function recomputeHourly() {
     if (!state.hourlySheet && !state.hourlyPh) return;
-    state.hourly = P.mergeSnapshots(state.hourlySheet || [], state.hourlyPh || []);
+    // Clipped to the campaign window: PostHog knows nothing about campaigns,
+    // and a locked campaign must not pick up hours after its lock.
+    state.hourly = P.clipSnapshots(
+      P.mergeSnapshots(state.hourlySheet || [], state.hourlyPh || []), CAMP.key);
     renderHero();
     renderPacingChart();
     renderTotals();
@@ -1980,7 +2057,7 @@ body {
   }
 
   function loadPostHog() {
-    return getJSON('/api/pd/posthog?days=2')
+    return getJSON('/api/pd/posthog?days=2' + Q_CAMP)
       .then(function (j) {
         state.phConfigured = j.configured !== false;
         state.hourlyPh = j.rows || [];
@@ -1991,10 +2068,19 @@ body {
   }
 
   function loadVolume() {
-    return getJSON('/api/pd/volume?startDate=' + PD.campaignStart)
+    return getJSON('/api/pd/volume?startDate=' + CAMP.start + Q_CAMP)
       .then(function (j) { state.volume = j; markOk('volume'); })
       .catch(function () { state.errors.volume = 1; })
       .then(function () { renderHero(); renderShareChart(); renderTotals(); renderGoalChart(); updateBadges(); });
+  }
+
+  // Whole UTC days from the start of the volume plan, for the plan card only.
+  function loadGoalVolume() {
+    if (!GOAL_SEPARATE) return Promise.resolve();
+    return getJSON('/api/pd/volume?startDate=' + PD.volumeGoal.start + '&clip=0')
+      .then(function (j) { state.goalVolume = j; })
+      .catch(function () {})
+      .then(renderGoalChart);
   }
 
   function loadHourlyApi() {
@@ -2005,7 +2091,7 @@ body {
   }
 
   function loadTab(tab, key, after) {
-    return getJSON('/api/pd/sheet?tab=' + tab)
+    return getJSON('/api/pd/sheet?tab=' + tab + Q_CAMP)
       .then(function (j) {
         state[key] = tab === 'comparison' ? j : j.rows;
         markOk(key);
@@ -2024,11 +2110,13 @@ body {
       loadTab('channels', 'channels', renderChannels),
       loadTab('comparison', 'comparison', renderScorecard),
       loadTab('wcdaily', 'wcDaily', renderCampaignChart),
+      CAMP.baselines.indexOf('pd') !== -1
+        ? loadTab('pddaily', 'pdDaily', renderCampaignChart) : Promise.resolve(),
     ]);
   }
 
   function loadAll() {
-    return Promise.all([loadVolume(), loadHourlyApi(), loadPostHog(), loadSheets()]);
+    return Promise.all([loadVolume(), loadGoalVolume(), loadHourlyApi(), loadPostHog(), loadSheets()]);
   }
 
   // The badge reports the sheet's own freshness, which is what can actually go
@@ -2036,6 +2124,29 @@ body {
   function updateBadges() {
     var badge = $('updatedBadge');
     var live = $('liveBadge');
+
+    // The hand-over day is split using a row in the PD tracker. Until that row
+    // exists the day is shown whole, so say so rather than show a number that
+    // quietly includes the other campaign's hours.
+    var unclipped = state.volume && (state.volume.days || []).some(function (d) { return d.unclipped; });
+    var ended = P.campaignEnded(CAMP.key, new Date().toISOString());
+    var pool = $('poolBadge');
+    if (unclipped && (ended || CAMP.startHour > 0)) {
+      pool.textContent = '12 NOV VOLUME NOT SPLIT YET · PD LOCK ROW MISSING';
+      pool.className = 'badge orange';
+    } else {
+      pool.textContent = CAMP.badge;
+      pool.className = 'badge';
+    }
+
+    // A locked campaign is not live and never goes stale.
+    if (ended) {
+      badge.textContent = 'LOCKED ' + fmtDayLabel(CAMP.end) + ' · ' +
+        (CAMP.endHour < 10 ? '0' : '') + CAMP.endHour + ':00Z';
+      live.className = 'live-badge';
+      $('liveText').textContent = 'FINAL';
+      return;
+    }
     var snap = state.hourly ? P.latestSnapshot(state.hourly) : null;
 
     // Report the sheet's own freshness, and say plainly when the leading hours
@@ -2071,7 +2182,25 @@ body {
   }
 
   function init() {
-    $('poolBadge').textContent = '$' + (PD.rewardsPool / 1e6) + 'M REWARDS POOL';
+    var ended = P.campaignEnded(CAMP.key, new Date().toISOString());
+    $('poolBadge').textContent = CAMP.badge;
+    $('navSubtitle').textContent = CAMP.navTitle;
+    $('titleH1').innerHTML = CAMP.titleHtml + ' <span class="green">' + (ended ? 'FINAL' : 'LIVE') + '</span>';
+    $('scoreToggleLabel').textContent = CAMP.compareTitle;
+    $('scoreSource').textContent = CAMP.source;
+    $('campaignNote').textContent = CAMP.dayOneNote || '';
+    $('campaignLegend').innerHTML =
+      '<div class="legend-item"><div class="legend-line" style="background:' + C.outcome + '"></div>' + esc(CAMP.name) + '</div>' +
+      CAMP.baselines.map(function (k) {
+        return '<div class="legend-item"><div class="legend-line" style="background:' + BASE_STYLE[k].color + '"></div>' +
+          BASE_STYLE[k].label + '</div>';
+      }).join('');
+    if (CAMP.alt) {
+      var alt = $('altLink');
+      alt.href = CAMP.alt.href;
+      alt.textContent = CAMP.alt.label;
+      alt.style.display = '';
+    }
 
     $('shareSwitcher').addEventListener('click', function (e) {
       var b = e.target.closest('.metric-btn');
@@ -2153,6 +2282,7 @@ body {
 
     // Volume is real-time; the sheet only changes when a Cowork task writes it.
     setInterval(function () { loadVolume(); loadHourlyApi(); loadPostHog(); }, 60 * 1000);
+    setInterval(loadGoalVolume, 5 * 60 * 1000);
     setInterval(loadSheets, 5 * 60 * 1000);
     setInterval(updateBadges, 30 * 1000);
   }

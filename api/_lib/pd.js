@@ -14,12 +14,21 @@
 const D = require('../../dashboards/pd/pd.js');
 
 const STATS = process.env.OUTCOME_STATS_BASE || 'https://stats.outcome.xyz';
-// Two spreadsheets: the PD tracker, and the World Cup tracker that supplies
-// the campaign-pacing baseline. Both are read-only and link-readable.
+// Three spreadsheets: one tracker per campaign (PD, V3) and the World Cup
+// tracker that supplies a campaign-pacing baseline. All read-only and
+// link-readable.
 const SHEET_IDS = {
   pd: process.env.PD_SHEET_ID || D.PD.sheetId,
+  v3: process.env.V3_SHEET_ID || D.PD.v3SheetId,
   wc: process.env.WC_SHEET_ID || D.PD.wcSheetId,
 };
+
+// ?c=pd|v3 picks the campaign. Anything else is PD, which keeps every URL that
+// existed before V3 behaving exactly as it did.
+function campaignOf(req) {
+  const c = String(((req && req.query) || {}).c || 'pd').toLowerCase();
+  return D.CAMPAIGNS[c] ? c : 'pd';
+}
 
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
@@ -97,14 +106,15 @@ const TABS = {
   channels: D.TABS.channels,
   comparison: D.TABS.comparison,
   wcdaily: D.TABS.wcdaily,
+  pddaily: D.TABS.pddaily,
 };
 
 // The plain CSV export, addressed by gid. Not gviz: gviz infers a header row,
 // which merges a banner row into the header and blanks cells whose type it
 // disagrees with - Channel Summary loses its Posts column that way. This
 // endpoint returns the grid exactly as the sheet shows it.
-function sheetCsvUrl(key) {
-  const src = D.TAB_SOURCES[key];
+function sheetCsvUrl(key, campaign) {
+  const src = D.tabSource(key, campaign);
   return (
     'https://docs.google.com/spreadsheets/d/' + SHEET_IDS[src.sheet] +
     '/export?format=csv&gid=' + encodeURIComponent(src.gid)
@@ -114,17 +124,31 @@ function sheetCsvUrl(key) {
 // Returns the raw cell matrix for a tab. Google serves an HTML sign-in page
 // with a 200 when the sheet is not link-readable, so the shape is checked
 // rather than trusted.
-function sheetRows(key) {
-  const src = D.TAB_SOURCES[key];
+function sheetRows(key, campaign) {
+  const camp = D.CAMPAIGNS[campaign] ? campaign : 'pd';
+  const src = D.tabSource(key, camp);
   if (!TABS[key] || !src || !SHEET_IDS[src.sheet]) throw new UpstreamError('unknown_tab', 400);
-  return cached('sheet:' + key, 60000, async () => {
-    const text = await fetchText(sheetCsvUrl(key), { accept: 'text/csv' });
+  return cached('sheet:' + src.sheet + ':' + key, 60000, async () => {
+    const text = await fetchText(sheetCsvUrl(key, camp), { accept: 'text/csv' });
     if (/^\s*<!DOCTYPE html/i.test(text) || /<html/i.test(text.slice(0, 200))) {
       // Sharing was turned off, or the tab was renamed.
       throw new UpstreamError('sheet_not_readable', 502);
     }
     return D.parseCSV(text);
   });
+}
+
+// -------------------------------------------------------------- boundary --
+
+// The hand-over row between PD and V3 (see BOUNDARY in dashboards/pd/pd.js).
+// It lives in the PD tracker whichever campaign is asking. Resolves to null
+// rather than throwing when the row is not there yet or the sheet cannot be
+// read: callers then pass the boundary day through whole and flag it.
+function boundary() {
+  return cached('boundary', 60000, async () => {
+    const rows = await sheetRows('hourly', 'pd');
+    return D.boundaryFromHourly(D.rowsToObjects(rows, D.COLS.hourly));
+  }).catch(() => null);
 }
 
 // --------------------------------------------------------------- helpers --
@@ -148,6 +172,8 @@ module.exports = {
   STATS,
   SHEET_IDS,
   TABS,
+  campaignOf,
+  boundary,
   UpstreamError,
   cached,
   fetchText,

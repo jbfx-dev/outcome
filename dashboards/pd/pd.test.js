@@ -676,6 +676,165 @@ test('truncate cuts on a word boundary', () => {
   assert.ok(!s.includes('jumpsx'));
 });
 
+// --------------------------------------------------------------- campaigns ----
+
+test('PD ends and V3 starts at the same instant', () => {
+  assert.equal(P.campaignEndInstant(P.CAMPAIGNS.pd), '2026-11-12T14:00:00Z');
+  assert.equal(P.campaignStartInstant(P.CAMPAIGNS.v3), '2026-11-12T14:00:00Z');
+  assert.equal(P.campaignEndInstant(P.CAMPAIGNS.v3), null);
+});
+
+test('campaignToday pins an ended campaign to its last day', () => {
+  assert.equal(P.campaignToday('pd', '2026-11-10T09:00:00Z'), '2026-11-10');
+  assert.equal(P.campaignToday('pd', '2026-12-01T09:00:00Z'), '2026-11-12');
+  assert.equal(P.campaignToday('v3', '2026-12-01T09:00:00Z'), '2026-12-01');
+});
+
+test('campaignEnded flips exactly at the lock', () => {
+  assert.equal(P.campaignEnded('pd', '2026-11-12T13:59:59Z'), false);
+  assert.equal(P.campaignEnded('pd', '2026-11-12T14:00:00Z'), true);
+  assert.equal(P.campaignEnded('v3', '2027-01-01T00:00:00Z'), false);
+});
+
+test('campaignDayHours splits the hand-over day and nothing else', () => {
+  assert.deepEqual(P.campaignDayHours('pd', '2026-11-12'), { from: 0, to: 14 });
+  assert.deepEqual(P.campaignDayHours('v3', '2026-11-12'), { from: 14, to: 24 });
+  assert.deepEqual(P.campaignDayHours('v3', '2026-11-13'), { from: 0, to: 24 });
+  assert.deepEqual(P.campaignDayHours('pd', '2026-09-01'), { from: 0, to: 24 });
+});
+
+test('tabSource sends a campaign to its own tracker and keeps baselines fixed', () => {
+  assert.deepEqual(P.tabSource('daily', 'pd'), { sheet: 'pd', gid: '291194403' });
+  assert.deepEqual(P.tabSource('daily', 'v3'), { sheet: 'v3', gid: '291194403' });
+  assert.deepEqual(P.tabSource('comparison', 'v3'), { sheet: 'v3', gid: '520954207' });
+  assert.deepEqual(P.tabSource('pddaily', 'v3'), { sheet: 'pd', gid: '291194403' });
+  assert.deepEqual(P.tabSource('wcdaily', 'v3'), { sheet: 'wc', gid: '291194403' });
+  assert.equal(P.tabSource('budget', 'v3'), null);
+});
+
+const HANDOVER = [
+  { date: '2026-11-12', hour: 13, timestamp: '2026-11-12T13:00:00Z', outcomeVolume: 8400000, hlVolume: 460000, totalVolume: 9200000 },
+  { date: '2026-11-12', hour: 14, timestamp: '2026-11-12T14:16:08Z', outcomeVolume: 8700000, hlVolume: 480000, totalVolume: 9500000 },
+  { date: '2026-11-12', hour: 14, timestamp: '2026-11-12T14:00:00Z', outcomeVolume: 8500000, hlVolume: 470000, totalVolume: 9300000 },
+];
+
+test('boundaryFromHourly takes the on-the-hour row, not a live mid-hour one', () => {
+  assert.deepEqual(P.boundaryFromHourly(HANDOVER), { outcome: 8500000, hlFrontend: 470000, total: 9300000 });
+  assert.equal(P.boundaryFromHourly(HANDOVER.slice(0, 2)), null);
+  assert.equal(P.boundaryFromHourly([]), null);
+});
+
+const SPLIT_DAYS = [
+  { date: '2026-11-11', outcome: 14664399, hlFrontend: 756676, total: 16135837, other: 714762, share: 0.9088 },
+  { date: '2026-11-12', outcome: 12000000, hlFrontend: 700000, total: 13400000, other: 700000, share: 0.8955 },
+  { date: '2026-11-13', outcome: 9000000, hlFrontend: 500000, total: 10000000, other: 500000, share: 0.9 },
+];
+const B = { outcome: 8500000, hlFrontend: 470000, total: 9300000 };
+
+test('clipVolumeDays: PD takes the hand-over row as its last day', () => {
+  const d = P.clipVolumeDays(SPLIT_DAYS, 'pd', B);
+  assert.equal(d.length, 2);
+  assert.equal(d[1].date, '2026-11-12');
+  assert.equal(d[1].outcome, 8500000);
+  assert.equal(d[1].total, 9300000);
+  assert.equal(d[1].other, 330000);
+  assert.equal(d[1].partDay, true);
+  assert.equal(d[0].outcome, 14664399); // earlier days untouched
+});
+
+test('clipVolumeDays: V3 takes the day minus the hand-over row', () => {
+  const d = P.clipVolumeDays(SPLIT_DAYS, 'v3', B);
+  assert.equal(d.length, 2);
+  assert.equal(d[0].date, '2026-11-12');
+  assert.equal(d[0].outcome, 3500000);
+  assert.equal(d[0].hlFrontend, 230000);
+  assert.equal(d[0].total, 4100000);
+  assert.ok(Math.abs(d[0].share - 3500000 / 4100000) < 1e-12);
+  assert.equal(d[1].outcome, 9000000);
+});
+
+test('clipVolumeDays: the two halves add back to the whole day', () => {
+  const pd = P.clipVolumeDays(SPLIT_DAYS, 'pd', B)[1];
+  const v3 = P.clipVolumeDays(SPLIT_DAYS, 'v3', B)[0];
+  assert.equal(pd.outcome + v3.outcome, 12000000);
+  assert.equal(pd.total + v3.total, 13400000);
+});
+
+test('clipVolumeDays: no hand-over row means the day is flagged, not guessed', () => {
+  const d = P.clipVolumeDays(SPLIT_DAYS, 'v3', null);
+  assert.equal(d[0].unclipped, true);
+  assert.equal(d[0].outcome, 12000000);
+  assert.equal(d[1].unclipped, undefined);
+});
+
+test('clipSnapshots: the hand-over row belongs to PD only', () => {
+  const rows = [
+    { date: '2026-11-12', hour: 13, timestamp: '2026-11-12T13:00:00Z' },
+    { date: '2026-11-12', hour: 14, timestamp: '2026-11-12T14:00:00Z' },
+    { date: '2026-11-12', hour: 14, timestamp: '2026-11-12T14:20:00Z' },
+    { date: '2026-11-12', hour: 15, timestamp: '2026-11-12T15:00:00Z' },
+    { date: '2026-11-13', hour: 1, timestamp: '2026-11-13T01:00:00Z' },
+  ];
+  assert.deepEqual(P.clipSnapshots(rows, 'pd').map((r) => r.timestamp),
+    ['2026-11-12T13:00:00Z', '2026-11-12T14:00:00Z']);
+  assert.deepEqual(P.clipSnapshots(rows, 'v3').map((r) => r.timestamp),
+    ['2026-11-12T14:20:00Z', '2026-11-12T15:00:00Z', '2026-11-13T01:00:00Z']);
+});
+
+test('hourlyCumulative honours a part-day window', () => {
+  const api = {
+    hours: ['2026-11-12 12:00:00', '2026-11-12 13:00:00', '2026-11-12 14:00:00', '2026-11-12 15:00:00'],
+    series: { volume: [100, 200, 300, 400] },
+  };
+  assert.deepEqual(P.hourlyCumulative(api, '2026-11-12'),
+    [{ hour: 12, value: 100 }, { hour: 13, value: 300 }, { hour: 14, value: 600 }, { hour: 15, value: 1000 }]);
+  assert.deepEqual(P.hourlyCumulative(api, '2026-11-12', 14, 24),
+    [{ hour: 14, value: 300 }, { hour: 15, value: 700 }]);
+  assert.deepEqual(P.hourlyCumulative(api, '2026-11-12', 0, 14),
+    [{ hour: 12, value: 100 }, { hour: 13, value: 300 }]);
+});
+
+test('campaignSeries lines up any number of campaigns by campaign day', () => {
+  const v3 = [{ date: '12/11/2026', outcomeVolume: 5, signups: 1 }];
+  const pd = [
+    { date: '28/08/2026', outcomeVolume: 10, signups: 2 },
+    { date: '29/08/2026', outcomeVolume: 20, signups: 3 },
+  ];
+  const s = P.campaignSeries([{ key: 'self', rows: v3 }, { key: 'pd', rows: pd }, { key: 'wc', rows: [] }], 'volume');
+  assert.deepEqual(s.self, [{ day: 1, value: 5, label: '2026-11-12' }]);
+  assert.equal(s.pd[1].value, 30);
+  assert.deepEqual(s.wc, []);
+});
+
+test('comparisonBlocks reads the three-campaign tab', () => {
+  const rows = [
+    ['WORLD CUP vs PD LAUNCH vs V3 COMPARISON'],
+    [],
+    ['WEEK 1', 'World Cup (Jun 10-16)', 'PD Launch (Aug 28 - Sep 3)', 'V3 (Nov 12-18)', 'V3 vs PD', '% Change', 'Verdict'],
+    ['Signups', '1,660', '3,259', '4,000', '741', '+22.7%', 'V3 ahead'],
+    [],
+  ];
+  const b = P.comparisonBlocks(rows);
+  assert.equal(b.length, 1);
+  assert.equal(b[0].v3Label, 'V3 (Nov 12-18)');
+  assert.deepEqual(b[0].rows[0], {
+    metric: 'Signups', worldCup: '1,660', pd: '3,259',
+    delta: '741', pctChange: '+22.7%', verdict: 'V3 ahead', v3: '4,000',
+  });
+});
+
+test('comparisonBlocks still reads the two-campaign tab unchanged', () => {
+  const rows = [
+    ['WEEK 1', 'World Cup (Jun 10-16)', 'PD Launch (Aug 28 - Sep 3)', 'Delta', '% Change', 'Verdict'],
+    ['Signups', '1,660', '3,259', '1,599', '+96.3%', 'PD ahead'],
+  ];
+  const b = P.comparisonBlocks(rows);
+  assert.equal(b[0].v3Label, '');
+  assert.equal(b[0].rows[0].delta, '1,599');
+  assert.equal(b[0].rows[0].verdict, 'PD ahead');
+  assert.equal(b[0].rows[0].v3, undefined);
+});
+
 // ----------------------------------------------------------------- report ----
 
 for (const f of failures) {

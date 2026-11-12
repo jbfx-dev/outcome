@@ -1,4 +1,8 @@
-// GET /api/pd/posthog?days=2
+// GET /api/pd/posthog?days=2[&c=pd|v3]
+//
+// `c` clamps the query to that campaign's window. V3 started at 14:00 UTC on
+// 12 Nov, so its first day is cumulative from 14:00 rather than from midnight;
+// PD ended at that instant, so nothing after it is returned for PD.
 //
 // Cumulative-per-hour campaign metrics straight from PostHog, in the same shape
 // as a Hourly Snapshots row. This is what keeps the dashboard current when the
@@ -69,11 +73,26 @@ function utcStamp(d) {
   return d.toISOString().slice(0, 19).replace('T', ' ');
 }
 
-async function queryPostHog(days) {
+async function queryPostHog(days, campaign) {
   const now = new Date();
-  const to = new Date(now.getTime() + 3600000); // through the current partial hour
-  const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  let to = new Date(now.getTime() + 3600000); // through the current partial hour
+  let from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   from.setUTCDate(from.getUTCDate() - (days - 1));
+
+  // Clamp to the campaign window. Clamping `from` to a mid-day start is what
+  // makes the first day's running totals begin at that hour: the window
+  // function partitions by day, so the day simply has no earlier buckets.
+  const camp = L.D.CAMPAIGNS[campaign];
+  if (camp) {
+    const start = new Date(L.D.campaignStartInstant(camp));
+    if (from < start) from = start;
+    const endIso = L.D.campaignEndInstant(camp);
+    if (endIso) {
+      const end = new Date(endIso);
+      if (to > end) to = end;
+    }
+    if (from >= to) return [];
+  }
 
   const url = `${HOST}/api/projects/${encodeURIComponent(PROJECT_ID)}/query/`;
   const body = JSON.stringify({
@@ -157,11 +176,12 @@ module.exports = async (req, res) => {
     if (!Number.isFinite(days) || days < 1) days = 2;
     days = Math.min(days, 7);
 
-    const rows = await L.cached(`ph:${days}`, 60000, () => queryPostHog(days));
+    const campaign = L.campaignOf(req);
+    const rows = await L.cached(`ph:${campaign}:${days}`, 60000, () => queryPostHog(days, campaign));
 
     L.send(
       res, 200,
-      { ok: true, configured: true, days, count: rows.length, rows, fetchedAt: new Date().toISOString() },
+      { ok: true, configured: true, campaign, days, count: rows.length, rows, fetchedAt: new Date().toISOString() },
       's-maxage=60, stale-while-revalidate=120'
     );
   } catch (err) {
