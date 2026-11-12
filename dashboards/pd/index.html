@@ -350,6 +350,7 @@ body {
 .chan-x { background: rgba(69,232,92,0.12); color: #45E85C; }
 .chan-kol { background: rgba(155,124,255,0.12); color: #9B7CFF; }
 .chan-inf { background: rgba(245,130,32,0.12); color: #F58220; }
+.chan-amb { background: rgba(31,207,160,0.12); color: #1FCFA0; }
 .chan-cc { background: rgba(59,130,246,0.12); color: #3B82F6; }
 .chan-other { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
 .top-copy {
@@ -678,6 +679,7 @@ body {
         <button class="metric-btn" data-chan="X Organic">X ORGANIC</button>
         <button class="metric-btn" data-chan="Stratosphere (KOL)">KOL</button>
         <button class="metric-btn" data-chan="Arcadia (Influencers)">INFLUENCERS</button>
+        <button class="metric-btn" data-chan="Ambassadors">AMBASSADORS</button>
       </div>
     </div>
     <div class="chart-container" id="postSpark" style="height:70px;margin-top:0"></div>
@@ -1718,7 +1720,7 @@ body {
       { key: 'traders', label: 'TRADERS' },
     ];
 
-    var highlight = { 'X Organic': 1, 'CoConnect Communities': 1 };
+    var highlight = { 'X Organic': 1, 'CoConnect Communities': 1, Ambassadors: 1 };
     var body = rows.map(function (r) {
       return '<tr class="' + (highlight[r.channel] ? 'highlight-row' : '') + '">' +
         '<td class="strong">' + esc(r.channel) + '</td>' +
@@ -1741,6 +1743,7 @@ body {
     if (ch === 'X Organic') return 'chan-x';
     if (ch === 'Stratosphere (KOL)') return 'chan-kol';
     if (ch === 'Arcadia (Influencers)') return 'chan-inf';
+    if (ch === 'Ambassadors') return 'chan-amb';
     if (ch === 'CoConnect Communities') return 'chan-cc';
     return 'chan-other';
   }
