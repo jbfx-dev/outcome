@@ -27,12 +27,17 @@
     },
     {
       "source": "/",
-      "destination": "/dashboards/pd",
+      "destination": "/dashboards/v3",
       "permanent": false
     },
     {
       "source": "/index.html",
-      "destination": "/dashboards/pd",
+      "destination": "/dashboards/v3",
+      "permanent": false
+    },
+    {
+      "source": "/v3",
+      "destination": "/dashboards/v3",
       "permanent": false
     },
     {

@@ -24,6 +24,7 @@
     outcomeBuilder: '0xab5dbc057628bc18523c4cdfc0e1e2ebdbecb704',
     hlFrontendBuilder: 'null',
     sheetId: '1WnBeQxu_bVQA5tdOvRQBK6-pNv0mIJvwbOaDhLJ1Qqw',
+    v3SheetId: '1rnrK9-AitXJBL5fa_6Hmurn-SUq5PpvbLxuD5NWoLwY',
     wcSheetId: '1D8UPwj3pF6m4hNSEisXp9LvEu7u4lf5HpWB3UPnGd-U',
     rewardsPool: 1000000,
     worldCupFirst4Days: {
@@ -54,6 +55,86 @@
     },
   };
 
+  // Campaigns that run on this dashboard. One page and one set of routes serve
+  // all of them; the campaign key decides which tracker sheet is read and where
+  // the window starts and ends.
+  //
+  // Boundaries are UTC instants, not dates. PD was locked and V3 started at
+  // 09:00 ET on 12 Nov 2026 (14:00 UTC), so that calendar day belongs to both:
+  // hours 0-13 to PD, hours 14-23 to V3. Nothing is counted twice and nothing
+  // falls between them.
+  const CAMPAIGNS = {
+    pd: {
+      key: 'pd', short: 'PD', name: 'PD LAUNCH', sheet: 'pd',
+      start: '2026-08-28', startHour: 0,
+      end: '2026-11-12', endHour: 14,
+      navTitle: 'PERMISSIONLESS DEPLOYMENT',
+      titleHtml: 'PERMISSIONLESS<br>DEPLOYMENT',
+      badge: '$1M REWARDS POOL',
+      annotations: PD.annotations,
+      baselines: ['wc'],
+      compareTitle: 'WORLD CUP vs PD',
+      source: 'pd + world cup trackers',
+      alt: { href: '/dashboards/v3', label: 'V3 LIVE' },
+    },
+    v3: {
+      key: 'v3', short: 'V3', name: 'V3 LAUNCH', sheet: 'v3',
+      start: '2026-11-12', startHour: 14,
+      end: null, endHour: 24,
+      navTitle: 'V3 LAUNCH',
+      titleHtml: 'V3<br>LAUNCH',
+      badge: 'FROM 12 NOV · 09:00 ET',
+      annotations: [{ date: '2026-11-12', label: 'V3 live 09:00 ET' }],
+      baselines: ['pd', 'wc'],
+      compareTitle: 'WORLD CUP vs PD vs V3',
+      source: 'v3 + pd + world cup trackers',
+      dayOneNote: 'V3 DAY 1 IS A PART DAY · 09:00 ET TO MIDNIGHT UTC',
+      alt: { href: '/dashboards/pd', label: 'PD ARCHIVE' },
+    },
+  };
+
+  // The one row both campaigns hinge on. The PD tracker's Hourly Snapshots row
+  // for this date and hour is PD's final state and V3's zero point: PD's last
+  // day IS this row, and V3's first day is the full UTC day minus this row.
+  const BOUNDARY = { date: '2026-11-12', hour: 14 };
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+  // ISO instant a campaign starts / ends at, or null for an open end.
+  function campaignStartInstant(c) {
+    return c.start + 'T' + pad2(c.startHour || 0) + ':00:00Z';
+  }
+  function campaignEndInstant(c) {
+    if (!c.end) return null;
+    if (c.endHour >= 24) return addDays(c.end, 1) + 'T00:00:00Z';
+    return c.end + 'T' + pad2(c.endHour) + ':00:00Z';
+  }
+
+  // "Today" as the campaign sees it: the real UTC date while it is running,
+  // pinned to its last day once it has ended, so a finished campaign's page
+  // keeps showing its final day rather than an empty one.
+  function campaignToday(campaign, nowIso) {
+    const c = CAMPAIGNS[campaign];
+    const today = String(nowIso || '').slice(0, 10);
+    if (c && c.end && today > c.end) return c.end;
+    return today;
+  }
+
+  function campaignEnded(campaign, nowIso) {
+    const c = CAMPAIGNS[campaign];
+    const end = c && campaignEndInstant(c);
+    return !!end && String(nowIso || '') >= end;
+  }
+
+  // The [from, to) hour buckets of a UTC day that belong to the campaign.
+  function campaignDayHours(campaign, isoDay) {
+    const c = CAMPAIGNS[campaign] || {};
+    return {
+      from: isoDay === c.start ? (c.startHour || 0) : 0,
+      to: c.end && isoDay === c.end ? c.endHour : 24,
+    };
+  }
+
   // The tabs the dashboard reads, and nothing else. Budget Tracker and Cost
   // Projections are deliberately absent.
   //
@@ -69,6 +150,7 @@
     channels: 'Channel Summary',
     comparison: 'WC vs PD Comparison',
     wcdaily: 'Daily Totals (World Cup)',
+    pddaily: 'Daily Totals (PD)',
   };
 
   // Which spreadsheet each tab lives in, and its gid. `wcdaily` is the World
@@ -81,7 +163,19 @@
     channels: { sheet: 'pd', gid: '1355573911' },
     comparison: { sheet: 'pd', gid: '520954207' },
     wcdaily: { sheet: 'wc', gid: '291194403' },
+    pddaily: { sheet: 'pd', gid: '291194403' },
   };
+
+  // Resolves a tab for a campaign. A campaign's own tabs sit at the same gids
+  // in its own tracker - the V3 tracker is a copy of the PD one, and a copy
+  // keeps its gids. wcdaily and pddaily are baselines and never move.
+  function tabSource(key, campaign) {
+    const src = TAB_SOURCES[key];
+    if (!src) return null;
+    const c = CAMPAIGNS[campaign];
+    if (c && src.sheet === 'pd' && key !== 'pddaily') return { sheet: c.sheet, gid: src.gid };
+    return src;
+  }
 
   // Column name -> field, kept in ONE place. The sheet headers are the
   // contract; if a header changes, it changes here and in the PRD.
@@ -161,6 +255,7 @@
   // The World Cup tracker carries the same Daily Totals headers, so it maps
   // through the same column contract.
   COLS.wcdaily = COLS.daily;
+  COLS.pddaily = COLS.daily;
 
   // Fields that are text, not numbers, and must survive parsing untouched.
   const TEXT_FIELDS = {
@@ -377,18 +472,104 @@
 
   // Cumulative Outcome volume per UTC hour for one day, from the hourly
   // endpoint's sliding window.
-  function hourlyCumulative(hourlyApi, isoDay) {
+  //
+  // fromHour / toHour bound the buckets counted, for a campaign that starts or
+  // ends part-way through a day: [fromHour, toHour). Omitted, the whole day.
+  function hourlyCumulative(hourlyApi, isoDay, fromHour, toHour) {
     if (!hourlyApi || !hourlyApi.hours) return [];
     const vols = (hourlyApi.series && hourlyApi.series.volume) || [];
+    const lo = fromHour || 0;
+    const hi = toHour === undefined || toHour === null ? 24 : toHour;
     const out = [];
     let running = 0;
     for (let i = 0; i < hourlyApi.hours.length; i++) {
       const stamp = String(hourlyApi.hours[i] || '');
       if (stamp.slice(0, 10) !== isoDay) continue;
+      const h = +stamp.slice(11, 13);
+      if (h < lo || h >= hi) continue;
       running += parseMoney(vols[i]);
-      out.push({ hour: +stamp.slice(11, 13), value: running });
+      out.push({ hour: h, value: running });
     }
     return out;
+  }
+
+  // ----------------------------------------------------------- boundary ----
+
+  // Reads the hand-over row out of the PD tracker's Hourly Snapshots. Only a
+  // clean on-the-hour row counts: a live mid-hour row carries the same Hour but
+  // a later instant, and would move the boundary.
+  function boundaryFromHourly(hourlyRows) {
+    const stamp = BOUNDARY.date + 'T' + pad2(BOUNDARY.hour) + ':00:00Z';
+    for (let i = 0; i < (hourlyRows || []).length; i++) {
+      const r = hourlyRows[i];
+      if (r._blank) continue;
+      if (dayKey(r.date) !== BOUNDARY.date || r.hour !== BOUNDARY.hour) continue;
+      if (r.timestamp && String(r.timestamp) !== stamp) continue;
+      if (!(r.totalVolume > 0)) continue;
+      return { outcome: r.outcomeVolume || 0, hlFrontend: r.hlVolume || 0, total: r.totalVolume };
+    }
+    return null;
+  }
+
+  // Fits daily volume to a campaign's window. Days outside it are dropped. The
+  // boundary day is split using the hand-over row: an ending campaign takes the
+  // row as its final day, a starting one takes the full day minus the row.
+  //
+  // Without the row the day is passed through whole and flagged `unclipped`,
+  // so the page can say the figure still includes the other campaign's hours
+  // rather than quietly showing a number that is too big.
+  function clipVolumeDays(days, campaign, boundary) {
+    const c = CAMPAIGNS[campaign];
+    if (!c) return days || [];
+    const b = boundary && boundary.total > 0 ? boundary : null;
+    return (days || [])
+      .filter(function (d) { return d.date >= c.start && (!c.end || d.date <= c.end); })
+      .map(function (d) {
+        const startsHere = c.startHour > 0 && d.date === c.start;
+        const endsHere = !!c.end && c.endHour < 24 && d.date === c.end;
+        if (!startsHere && !endsHere) return d;
+        if (!b || d.date !== BOUNDARY.date) return Object.assign({}, d, { unclipped: true });
+        let o;
+        let h;
+        let t;
+        if (endsHere) {
+          o = b.outcome; h = b.hlFrontend; t = b.total;
+        } else {
+          o = Math.max(0, d.outcome - b.outcome);
+          h = Math.max(0, d.hlFrontend - b.hlFrontend);
+          t = Math.max(0, d.total - b.total);
+        }
+        return {
+          date: d.date, outcome: o, hlFrontend: h, total: t,
+          other: Math.max(0, t - o - h),
+          share: t > 0 ? o / t : 0,
+          partDay: true,
+        };
+      });
+  }
+
+  // Drops snapshot rows outside a campaign's window. A row AT the start instant
+  // is the other campaign's final state, so it goes too; a row at the end
+  // instant is this campaign's own final state and stays.
+  function clipSnapshots(rows, campaign) {
+    const c = CAMPAIGNS[campaign];
+    if (!c) return rows || [];
+    const start = campaignStartInstant(c);
+    const end = campaignEndInstant(c);
+    return (rows || []).filter(function (r) {
+      const day = dayKey(r.date);
+      if (!day) return false;
+      if (day < c.start || (c.end && day > c.end)) return false;
+      const ts = String(r.timestamp || '');
+      if (ts) {
+        if (c.startHour > 0 && ts <= start) return false;
+        if (end && ts > end) return false;
+        return true;
+      }
+      if (day === c.start && c.startHour > 0 && r.hour <= c.startHour) return false;
+      if (c.end && day === c.end && r.hour > c.endHour) return false;
+      return true;
+    });
   }
 
   // ------------------------------------------------------------ snapshots --
@@ -768,6 +949,23 @@
     return { pd: cumulative(pdDaily), wc: cumulative(wcDaily) };
   }
 
+  // The same, for any number of campaigns: [{ key, rows }] in, { key: series }
+  // out. Used once there are three campaigns to line up rather than two.
+  function campaignSeries(list, metric) {
+    const key = metric === 'volume' ? 'outcomeVolume' : metric;
+    const out = {};
+    (list || []).forEach(function (item) {
+      const series = [];
+      let run = 0;
+      populatedDays(item.rows).forEach(function (r, i) {
+        run += r[key] || 0;
+        series.push({ day: i + 1, value: run, label: dayKey(r.date) });
+      });
+      out[item.key] = series;
+    });
+    return out;
+  }
+
   // ------------------------------------------------------------ channels ----
 
   // Channel Summary does not end at the channel table: below it sit a POST TYPE
@@ -805,24 +1003,34 @@
       const title = String(head[0] || '').trim();
       if (!/^(FIRST \d+ DAYS|WEEK \d+)$/i.test(title)) continue;
 
+      // The V3 tracker's tab carries a third campaign column (World Cup, PD,
+      // V3) ahead of the delta columns. Detected from the heading, so the PD
+      // tracker's two-campaign tab still parses unchanged.
+      const three = /^V3\b/i.test(String(head[3] || '').trim());
+
       const out = [];
       for (let k = r + 1; k < rows.length; k++) {
         const cells = rows[k] || [];
         const metric = String(cells[0] || '').trim();
         if (!metric) break; // a blank row ends the block
-        out.push({
+        // Three-campaign layout shifts delta / % / verdict one column right.
+        const o = three ? 1 : 0;
+        const row = {
           metric: metric,
           worldCup: String(cells[1] || '').trim(),
           pd: String(cells[2] || '').trim(),
-          delta: String(cells[3] || '').trim(),
-          pctChange: String(cells[4] || '').trim(),
-          verdict: String(cells[5] || '').trim(),
-        });
+          delta: String(cells[3 + o] || '').trim(),
+          pctChange: String(cells[4 + o] || '').trim(),
+          verdict: String(cells[5 + o] || '').trim(),
+        };
+        if (three) row.v3 = String(cells[3] || '').trim();
+        out.push(row);
       }
       blocks.push({
         title: title,
         worldCupLabel: String(head[1] || '').trim(),
         pdLabel: String(head[2] || '').trim(),
+        v3Label: three ? String(head[3] || '').trim() : '',
         rows: out,
       });
     }
@@ -937,6 +1145,18 @@
 
   return {
     PD: PD,
+    CAMPAIGNS: CAMPAIGNS,
+    BOUNDARY: BOUNDARY,
+    campaignStartInstant: campaignStartInstant,
+    campaignEndInstant: campaignEndInstant,
+    campaignToday: campaignToday,
+    campaignEnded: campaignEnded,
+    campaignDayHours: campaignDayHours,
+    tabSource: tabSource,
+    boundaryFromHourly: boundaryFromHourly,
+    clipVolumeDays: clipVolumeDays,
+    clipSnapshots: clipSnapshots,
+    campaignSeries: campaignSeries,
     TABS: TABS,
     TAB_SOURCES: TAB_SOURCES,
     COLS: COLS,

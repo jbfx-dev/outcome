@@ -5,6 +5,56 @@ Served at https://outcome.labs.tg/dashboards/pd/ (`/pd` redirects here).
 Live view of the Permissionless Deployment (HIP-4) launch campaign. Read-only:
 the Google Sheet is the system of record and this page never writes to it.
 
+## Campaigns: PD and V3 share this code
+
+There are two campaign dashboards and they are the same page:
+
+| Campaign | URL | Tracker sheet | Window (UTC) |
+|---|---|---|---|
+| V3 (live, the site's home page) | `/dashboards/v3/` (`/` and `/v3` redirect here) | `1rnrK9-AitXJBL5fa_6Hmurn-SUq5PpvbLxuD5NWoLwY` | from 12 Nov 2026 14:00 |
+| PD (locked archive) | `/dashboards/pd/` (`/pd`) | `1WnBeQxu_bVQA5tdOvRQBK6-pNv0mIJvwbOaDhLJ1Qqw` | 28 Aug 00:00 to 12 Nov 2026 14:00 |
+
+- `dashboards/v3/index.html` is **generated** from `dashboards/pd/index.html`
+  by `python3 dashboards/sync-v3.py`. Edit the PD page, then run the script.
+  The two differ only in `data-campaign` on `<html>` and the `<head>` meta.
+- Everything else that varies by campaign is in `CAMPAIGNS` in `pd.js`: start
+  and end, titles, baselines for the pacing chart, the nav link to the other
+  dashboard.
+- Every `/api/pd/*` route takes `&c=pd|v3`. No `c` means PD, so every URL that
+  existed before V3 behaves as it did.
+- The V3 tracker is a copy of the PD tracker, and a copy keeps its gids, so the
+  same `TAB_SOURCES` gids address both. `tabSource()` swaps the document.
+
+### The hand-over at 09:00 ET on 12 Nov
+
+PD was locked and V3 started at the same instant, 14:00 UTC on 12 Nov. That UTC
+day belongs to both: hours 0-13 to PD, hours 14-23 to V3.
+
+One row carries the split: **Hourly Snapshots (2026-11-12, Hour 14) in the PD
+tracker** (`BOUNDARY` in `pd.js`). It is PD's final state and V3's zero point.
+
+- **Volume.** `stats.outcome.xyz` only gives whole UTC days, so
+  `/api/pd/volume` reads that row and `clipVolumeDays()` uses it: PD's 12 Nov
+  *is* the row, V3's 12 Nov is the whole day minus the row. The two halves add
+  back to the day exactly. If the row is missing the day is passed through whole
+  and flagged `unclipped`, and the page shows an orange badge saying so.
+- **PostHog.** `/api/pd/posthog` clamps the query to the campaign window, so
+  V3's first day is cumulative from 14:00 and PD gets nothing after it.
+- **Snapshots.** `clipSnapshots()` drops rows outside the window. The row at
+  exactly 14:00:00Z stays with PD and is dropped for V3.
+- **Volume vs plan.** The $4.62B plan is a company number, so on V3 that card
+  loads whole days from 1 Sept with `clip=0` rather than the campaign's volume.
+- **Unique counts overlap.** Someone active before and after 14:00 on 12 Nov
+  counts once in each campaign. Events (signups, trades, clicks) do not.
+
+A locked campaign pins "today" to its last day (`campaignToday()`), shows
+`FINAL` instead of `LIVE`, and never reads as stale.
+
+The scorecard reads the tracker's comparison tab. The V3 tracker's tab has a
+third campaign column (World Cup, PD, V3); `comparisonBlocks()` detects it from
+the heading. The pacing chart on V3 plots V3 against PD and the World Cup; PD's
+daily rows come from the `pddaily` tab key, which always reads the PD tracker.
+
 ## Layout
 
 | File | Role |
@@ -60,9 +110,10 @@ row into the header line and blanks cells whose type it disagrees with —
 Channel Summary loses its `Posts` column that way. The export endpoint returns
 the grid exactly as the sheet shows it.
 
-Only six tabs are reachable, by key rather than by name, so this route can
-never be used to read `Budget Tracker` or `Cost Projections` in either
-document: `daily`, `hourly`, `content`, `channels`, `comparison`, `wcdaily`.
+Only seven tabs are reachable, by key rather than by name, so this route can
+never be used to read `Budget Tracker` or `Cost Projections` in any
+document: `daily`, `hourly`, `content`, `channels`, `comparison`, `wcdaily`,
+`pddaily`.
 
 Note that link-readability applies to the **whole** document: anyone with either
 spreadsheet URL can export any tab, including the cost ones. Tightening that
